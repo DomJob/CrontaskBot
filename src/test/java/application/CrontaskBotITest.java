@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import configuration.MessageFormatter;
+import configuration.Messages;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CrontaskBotITest {
@@ -46,8 +46,8 @@ public class CrontaskBotITest {
 
         bot.handleMessage(new Message(OTHER_SENDER_ID, NEW_TASK_COMMAND));
 
-        verify(api).sendMessage(SENDER_ID, MessageFormatter.getCronRequestMessage());
-        verify(api).sendMessage(OTHER_SENDER_ID, MessageFormatter.getNameRequestMessage());
+        verify(api).sendMessage(SENDER_ID, Messages.cronRequestedMessage());
+        verify(api).sendMessage(OTHER_SENDER_ID, Messages.nameRequestedMessage());
     }
 
     @Test

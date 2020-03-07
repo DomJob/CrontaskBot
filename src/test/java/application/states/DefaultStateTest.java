@@ -4,7 +4,7 @@ import static org.mockito.Mockito.verify;
 
 import application.BotStateTest;
 import application.command.Command;
-import configuration.MessageFormatter;
+import configuration.Messages;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,34 +23,34 @@ public class DefaultStateTest extends BotStateTest {
     public void notACommand_thenDefaultMessage() {
         handleMessage("hello");
 
-        verify(bot).sendMessage(SENDER_ID, MessageFormatter.getDefaultMessage());
+        verify(bot).sendMessage(SENDER_ID, Messages.defaultMessage());
     }
 
     @Test
     public void startCommand_thenStartMessage() {
         handleMessage(Command.START);
 
-        verify(bot).sendMessage(SENDER_ID, MessageFormatter.getStartMessage());
+        verify(bot).sendMessage(SENDER_ID, Messages.startMessage());
     }
 
     @Test
     public void helpCommand_thenHelpMessage() {
         handleMessage(Command.HELP);
 
-        verify(bot).sendMessage(SENDER_ID, MessageFormatter.getHelpMessage());
+        verify(bot).sendMessage(SENDER_ID, Messages.helpMessage());
     }
 
     @Test
     public void newTaskCommand_thenNameRequestedMessage() {
         handleMessage(Command.NEWTASK);
 
-        verify(bot).sendMessage(SENDER_ID, MessageFormatter.getNameRequestMessage());
+        verify(bot).sendMessage(SENDER_ID, Messages.nameRequestedMessage());
     }
 
     @Test
     public void unknownCommand_thenDefaultMessage() {
         handleMessage("/whatever");
 
-        verify(bot).sendMessage(SENDER_ID, MessageFormatter.getDefaultMessage());
+        verify(bot).sendMessage(SENDER_ID, Messages.defaultMessage());
     }
 }

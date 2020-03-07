@@ -6,7 +6,7 @@ import application.command.Command;
 import application.command.NotACommandException;
 import application.command.UnknownCommandException;
 import application.entities.Message;
-import configuration.MessageFormatter;
+import configuration.Messages;
 
 public class DefaultState implements BotState {
     @Override
@@ -15,23 +15,26 @@ public class DefaultState implements BotState {
 
         try {
             command = Command.parse(message.text);
-        } catch (NotACommandException | UnknownCommandException e) {
-            bot.sendMessage(message.sender, MessageFormatter.getDefaultMessage());
+        } catch (NotACommandException e) {
+            bot.sendMessage(message.sender, Messages.defaultMessage());
+            return this;
+        } catch (UnknownCommandException e) {
+            bot.sendMessage(message.sender, Messages.unknownCommand());
             return this;
         }
 
         switch (command) {
             case START:
-                bot.sendMessage(message.sender, MessageFormatter.getStartMessage());
+                bot.sendMessage(message.sender, Messages.startMessage());
                 return this;
             case NEWTASK:
-                bot.sendMessage(message.sender, MessageFormatter.getNameRequestMessage());
+                bot.sendMessage(message.sender, Messages.nameRequestedMessage());
                 return new NameRequestedState();
             case HELP:
-                bot.sendMessage(message.sender, MessageFormatter.getHelpMessage());
+                bot.sendMessage(message.sender, Messages.helpMessage());
                 return this;
             default:
-                bot.sendMessage(message.sender, MessageFormatter.getDefaultMessage());
+                bot.sendMessage(message.sender, Messages.defaultMessage());
                 return this;
         }
     }

@@ -36,4 +36,8 @@ public class Time {
     public int minute() {
         return 0;
     }
+
+    public int weekday() {
+        return 0;
+    }
 }
