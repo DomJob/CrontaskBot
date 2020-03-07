@@ -1,9 +1,9 @@
 package domain;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface TaskRepository {
-    List<Task> findAll();
+    Collection<Task> findAll();
 
     Task findById(long id);
 

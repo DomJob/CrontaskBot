@@ -9,6 +9,6 @@ public class NameRequestedState implements BotState {
     @Override
     public BotState handleMessage(Message message, CrontaskBot bot) {
         bot.sendMessage(message.sender, MessageFormatter.getCronRequestMessage());
-        return new ScheduleRequestedState();
+        return new ScheduleRequestedState(message.text);
     }
 }

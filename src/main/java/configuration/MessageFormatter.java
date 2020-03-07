@@ -14,6 +14,15 @@ public class MessageFormatter {
         return "Pick a cron schedule";
     }
 
-    public static String getTaskCreatedMessage() { return "Task created!"; }
+    public static String getTaskCreatedMessage() {
+        return "Task created!";
+    }
 
+    public static String getDefaultMessage() {
+        return "You can create a new task with /newtask, or type /help for additional information.";
+    }
+
+    public static String getStartMessage() {
+        return "Hello! " + getDefaultMessage();
+    }
 }

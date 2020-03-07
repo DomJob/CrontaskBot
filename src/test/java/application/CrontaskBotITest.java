@@ -1,7 +1,8 @@
 package application;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import application.command.Command;
 import application.entities.Message;
@@ -17,10 +18,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import configuration.MessageFormatter;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CrontaskBotTest {
+public class CrontaskBotITest {
     public static final long SENDER_ID = 123465L;
     public static final long OTHER_SENDER_ID = 456789L;
     public static final String TASK_NAME = "task name";
+    public static final String TASK_SCHEDULE = "0 0 * * *";
     public static final String NEW_TASK_COMMAND = Command.NEWTASK.toString();
 
     @Mock
@@ -49,18 +51,11 @@ public class CrontaskBotTest {
     }
 
     @Test
-    public void createTask_callsFactory() {
-        bot.createTask(TASK_NAME, SENDER_ID, schedule);
+    public void createTask_happyPath() {
+        bot.handleMessage(new Message(SENDER_ID, NEW_TASK_COMMAND));
+        bot.handleMessage(new Message(SENDER_ID, TASK_NAME));
+        bot.handleMessage(new Message(SENDER_ID, TASK_SCHEDULE));
 
-        verify(factory).create(TASK_NAME, SENDER_ID, schedule);
-    }
-
-    @Test
-    public void createTask_savesToRepo() {
-        when(factory.create(TASK_NAME, SENDER_ID, schedule)).thenReturn(task);
-
-        bot.createTask(TASK_NAME, SENDER_ID, schedule);
-
-        verify(repository).save(task);
+        verify(factory).create(eq(TASK_NAME), eq(SENDER_ID), any(Schedule.class));
     }
 }

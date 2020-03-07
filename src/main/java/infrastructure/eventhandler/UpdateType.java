@@ -1,4 +1,4 @@
-package telegram;
+package infrastructure.eventhandler;
 
 public enum UpdateType {
     CALLBACK, MESSAGE

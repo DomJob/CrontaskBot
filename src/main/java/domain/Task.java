@@ -30,4 +30,16 @@ public class Task {
 
         return false;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getOwnerId() {
+        return ownerId;
+    }
 }

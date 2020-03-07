@@ -3,16 +3,24 @@ package application;
 import application.entities.CallbackQuery;
 import application.entities.Message;
 import application.states.DefaultState;
+import domain.Schedule;
+import domain.Task;
+import domain.TaskFactory;
+import domain.TaskRepository;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CrontaskBot {
-    private TelegramAPI api;
+    private TelegramApi api;
+    private TaskRepository taskRepository;
+    private TaskFactory taskFactory;
 
     private Map<Long, BotState> states = new HashMap<>();
 
-    public CrontaskBot(TelegramAPI api) {
+    public CrontaskBot(TelegramApi api, TaskRepository taskRepository, TaskFactory taskFactory) {
         this.api = api;
+        this.taskRepository = taskRepository;
+        this.taskFactory = taskFactory;
     }
 
     public void handleMessage(Message message) {
@@ -27,5 +35,11 @@ public class CrontaskBot {
 
     public void sendMessage(long user, String text) {
         api.sendMessage(user, text);
+    }
+
+    public void createTask(String name, long ownerId, Schedule schedule) {
+        Task task = taskFactory.create(name, ownerId, schedule);
+
+        taskRepository.save(task);
     }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public enum Command {
+    START("start"),
     NEWTASK("newtask"),
     HELP("help");
 

@@ -1,4 +1,4 @@
-package telegram;
+package infrastructure.eventhandler;
 
 import application.entities.CallbackQuery;
 import application.entities.Message;
