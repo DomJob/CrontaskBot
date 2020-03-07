@@ -51,6 +51,6 @@ public class DefaultStateTest extends BotStateTest {
     public void unknownCommand_thenDefaultMessage() {
         handleMessage("/whatever");
 
-        verify(bot).sendMessage(SENDER_ID, Messages.defaultMessage());
+        verify(bot).sendMessage(SENDER_ID, Messages.unknownCommand());
     }
 }

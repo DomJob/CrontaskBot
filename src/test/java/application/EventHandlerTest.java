@@ -80,7 +80,7 @@ public class EventHandlerTest {
         handler.run();
         handler.run();
 
-        verify(fetcher).getUpdates(UPDATE_ID);
+        verify(fetcher).getUpdates(UPDATE_ID+1);
     }
 
 

@@ -1,11 +1,19 @@
 package domain;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Objects;
+import java.util.TimeZone;
+
 public class Time {
+    private long minutesSinceEpoch;
+    private LocalDateTime time;
 
-    private int minutesSinceEpoch;
-
-    public Time(int minutesSinceEpoch) {
+    public Time(long minutesSinceEpoch) {
         this.minutesSinceEpoch = minutesSinceEpoch;
+        this.time = Instant.ofEpochSecond(minutesSinceEpoch*60).atZone(ZoneId.of("UTC")).toLocalDateTime();
     }
 
     public Time nextMinute() {
@@ -13,31 +21,66 @@ public class Time {
     }
 
     public static Time now() {
-        // TODO - DateTime stuff
-        return new Time(0);
+        long secondsSinceEpoch = Instant.now().getEpochSecond();
+
+        long minutes = secondsSinceEpoch / 60;
+
+        return new Time(minutes);
+    }
+
+    public static Time fromDate(int year, int month, int day, int hour, int minute) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.set(year, month-1, day, hour, minute, 0);
+
+        return new Time(calendar.getTimeInMillis() / (60*1000));
     }
 
     public int year() {
-        return 0;
+        return time.getYear();
     }
 
     public int month() {
-        return 0;
+        return time.getMonth().getValue();
     }
 
     public int day() {
-        return 0;
+        return time.getDayOfMonth();
     }
 
     public int hour() {
-        return 0;
+        return time.getHour();
     }
 
     public int minute() {
-        return 0;
+        return time.getMinute();
     }
 
     public int weekday() {
-        return 0;
+        return time.getDayOfWeek().getValue();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Time time = (Time) o;
+        return minutesSinceEpoch == time.minutesSinceEpoch;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(minutesSinceEpoch);
+    }
+
+    @Override
+    public String toString() {
+        return "Time{" +
+            "minutesSinceEpoch=" + minutesSinceEpoch +
+            '}';
     }
 }
