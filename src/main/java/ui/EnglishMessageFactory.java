@@ -1,7 +1,7 @@
 package ui;
 
-import application.Message;
-import application.MessageFactory;
+import application.message.Message;
+import application.message.MessageFactory;
 import domain.Task;
 
 public class EnglishMessageFactory implements MessageFactory {
@@ -13,7 +13,7 @@ public class EnglishMessageFactory implements MessageFactory {
 
     @Override
     public Message createTaskTriggeredMessage(Task task) {
-        return message(String.format("<b>Task:</b>\n\n%s", task.getName()));
+        return message(task.getName());
     }
 
     @Override

@@ -1,16 +1,13 @@
 import application.CrontaskBot;
-import application.MessageFactory;
+import application.message.MessageFactory;
 import domain.TaskFactory;
 import domain.TaskRepository;
-import domain.Time;
+import infrastructure.Scheduler;
 import infrastructure.persistence.inmemory.TaskRepositoryInMemory;
 import infrastructure.telegram.HttpWrapper;
 import infrastructure.telegram.JsonWrapper;
 import infrastructure.telegram.TelegramHttpApi;
 import infrastructure.util.RandomLongGenerator;
-import java.time.Instant;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import ui.EnglishMessageFactory;
 
 public class Application {
@@ -21,19 +18,11 @@ public class Application {
         String token = args[0];
 
         TaskRepository taskRepository = new TaskRepositoryInMemory();
-        TelegramHttpApi api = new TelegramHttpApi(token, new HttpWrapper(), new JsonWrapper());
         MessageFactory messageFactory = new EnglishMessageFactory();
 
+        TelegramHttpApi api = new TelegramHttpApi(token, new HttpWrapper(), new JsonWrapper());
         CrontaskBot bot = new CrontaskBot(api, taskRepository, new TaskFactory(new RandomLongGenerator()), messageFactory);
 
-        startSchedules(bot);
-    }
-
-    private static void startSchedules(CrontaskBot bot) {
-        long timeUntilStartOfMinute = 60 - Instant.now().getEpochSecond() % 60;
-
-        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
-        executor.scheduleAtFixedRate(bot::handleEvents, 0, 1, TimeUnit.SECONDS);
-        executor.scheduleAtFixedRate(bot::checkTasks, timeUntilStartOfMinute, 60, TimeUnit.SECONDS);
+        new Scheduler(bot, api).start();
     }
 }

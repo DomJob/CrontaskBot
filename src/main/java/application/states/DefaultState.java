@@ -1,6 +1,5 @@
 package application.states;
 
-import application.BotState;
 import application.entities.ReceivedMessage;
 
 class DefaultState implements BotState {

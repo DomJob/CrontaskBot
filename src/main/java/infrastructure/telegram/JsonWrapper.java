@@ -6,37 +6,41 @@ import application.entities.ReceivedMessage;
 import application.entities.Update;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import infrastructure.telegram.entities.AnswerCallbackQueryRequest;
-import infrastructure.telegram.entities.GetUpdatesRequest;
-import infrastructure.telegram.entities.InlineKeyboardButton;
-import infrastructure.telegram.entities.InlineKeyboardMarkup;
 import infrastructure.telegram.entities.ResultsEntity;
-import infrastructure.telegram.entities.SendMessageRequest;
 import infrastructure.telegram.entities.UpdateEntity;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class JsonWrapper {
     private ObjectMapper mapper = new ObjectMapper();
 
     public String formatMessageRequest(long chatId, String text, List<Button> buttons) {
-        SendMessageRequest parameters = new SendMessageRequest(chatId, text);
-
-        if (buttons != null && !buttons.isEmpty()) {
-            parameters.reply_markup = serializeButtons(buttons);
-        }
+        List<Parameter> parameters = new ArrayList<Parameter>() {{
+            add(new Parameter("chat_id", chatId));
+            add(new Parameter("text", text));
+            add(new Parameter("parse_mode", "HTML"));
+            add(new Parameter("disable_web_page_preview", true));
+            if (buttons != null && !buttons.isEmpty()) {
+                add(new Parameter("reply_markup", serializeButtons(buttons)));
+            }
+        }};
 
         return serializeParameters(parameters);
     }
 
     public String formatAnswerCallbackQueryRequest(String id, String text) {
-        return serializeParameters(new AnswerCallbackQueryRequest(id, text));
+        return serializeParameters(
+            new Parameter("callback_query_id", id),
+            new Parameter("text", text));
     }
 
     public String formatGetUpdatesRequest(long offset) {
-        return serializeParameters(new GetUpdatesRequest(offset));
+        return serializeParameters(new Parameter("offset", offset));
     }
 
     public List<Update> deSerializeUpdates(String updatesJson) {
@@ -79,20 +83,38 @@ public class JsonWrapper {
     }
 
     private String serializeButtons(List<Button> buttons) {
-        List<InlineKeyboardButton> buttonRow =
+        List<Map<String, String>> buttonRow =
             buttons.stream()
-                .map(b -> new InlineKeyboardButton(b.text, b.data))
+                .map(b -> new HashMap<String,String>() {{
+                    put("text", b.text);
+                    put("callback_data", b.data);
+                }})
                 .collect(Collectors.toList());
 
-        return serializeParameters(new InlineKeyboardMarkup(buttonRow));
+        return serializeParameters(new Parameter("inline_keyboard", Collections.singleton(buttonRow)));
     }
 
-    private String serializeParameters(Object parameters) {
+    public String formatDeleteMessageRequest(long chatId, long messageId) {
+        return serializeParameters(new Parameter("chat_id", chatId),
+            new Parameter("message_id", messageId));
+    }
+
+    private String serializeParameters(Parameter... parameters) {
+        Map<String, Object> mapParams = new HashMap<>();
+
+        for (Parameter p : parameters) {
+            mapParams.put(p.key, p.value);
+        }
+
         try {
-            return mapper.writeValueAsString(parameters);
+            return mapper.writeValueAsString(mapParams);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             throw new SerializerException();
         }
+    }
+
+    private String serializeParameters(List<Parameter> parameters) {
+        return serializeParameters(parameters.toArray(new Parameter[parameters.size()]));
     }
 }

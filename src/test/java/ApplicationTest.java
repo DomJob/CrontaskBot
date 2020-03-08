@@ -1,5 +1,4 @@
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -7,16 +6,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import application.CrontaskBot;
-import application.Message;
 import application.TelegramApi;
+import application.entities.CallbackQuery;
 import application.entities.ReceivedMessage;
+import application.message.Message;
 import domain.Task;
 import domain.TaskFactory;
 import domain.Time;
 import domain.util.LongGenerator;
 import infrastructure.persistence.inmemory.TaskRepositoryInMemory;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,10 +27,13 @@ import ui.EnglishMessageFactory;
 public class ApplicationTest {
     public static final String TASK_NAME = "task name";
     public static final String SCHEDULE_EVERY_MINUTE = "* * * * *";
+    public static final String SCHEDULE_NEVER = "65 * * * *";
     public static final String INVALIDE_SCHEDULE = "this aint a schedule";
     public static final Time ANY_TIME = Time.fromDate(2020, 3, 8, 1, 44);
     public static final long TASK_ID = 1234;
     public static final String CRON_SCHEDULE_EVERY_5_MINUTES = "*/5 * * * *";
+    public static final String CALLBACK_QUERY_ID = "8888845646";
+    public static final int MESSAGE_ID = 456;
     private static long USER_ID = 12345678L;
     private static long OTHER_USER_ID = 789456L;
 
@@ -168,6 +169,34 @@ public class ApplicationTest {
 
         verify(messageFactory).createTaskCreatedMessage();
         verify(messageFactory).createReminderCreatedMessage();
+    }
+
+    @Test
+    public void dismissTask_deletesId() {
+        sendMessage("/task");
+        sendMessage(TASK_NAME);
+        sendMessage(SCHEDULE_EVERY_MINUTE);
+
+        bot.handleCallbackQuery(new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "dismiss " + TASK_ID));
+
+        verify(api).deleteMessage(USER_ID, MESSAGE_ID);
+    }
+
+    @Test
+    public void snoozeTask_deletesItAndRetriggersItLater() {
+        sendMessage("/task");
+        sendMessage(TASK_NAME);
+        sendMessage(SCHEDULE_NEVER);
+
+        bot.handleCallbackQuery(new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "snooze " + TASK_ID));
+
+        verify(api).answerCallbackQuery(eq(CALLBACK_QUERY_ID), any(String.class));
+        verify(api).deleteMessage(USER_ID, MESSAGE_ID);
+
+        Task task = taskRepository.findById(TASK_ID);
+        bot.checkTasksAtTime(Time.now().plusMinutes(15));
+
+        verify(messageFactory).createTaskTriggeredMessage(task);
     }
 
     private void sendMessage(String text) {

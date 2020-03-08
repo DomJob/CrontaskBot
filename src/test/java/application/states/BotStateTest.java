@@ -1,8 +1,9 @@
-package application;
+package application.states;
 
 import application.command.Command;
 import application.entities.ReceivedMessage;
 import application.states.BotContext;
+import application.states.BotState;
 import org.mockito.Mock;
 
 public class BotStateTest {

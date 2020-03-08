@@ -30,6 +30,7 @@ public class ReminderSchedule implements Schedule {
     public static ReminderSchedule parse(String string) {
         Time now = Time.now();
         Time scheduledTime = null;
+        string = string.toLowerCase();
 
         if (string.matches(EXACT_TIME_PATTERN)) {
             List<Integer> values = extractIntegers(string);

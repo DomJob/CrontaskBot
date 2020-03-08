@@ -1,8 +1,7 @@
 package infrastructure.telegram;
 
-import application.Message;
+import application.message.Message;
 import application.TelegramApi;
-import application.entities.Button;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import application.entities.Update;
 import java.util.List;
@@ -38,6 +37,13 @@ public class TelegramHttpApi implements TelegramApi {
     public void answerCallbackQuery(String id, String text) {
         String url = formatUrl("answerCallbackQuery");
         String request = jsonWrapper.formatAnswerCallbackQueryRequest(id, text);
+        httpWrapper.post(url, request);
+    }
+
+    @Override
+    public void deleteMessage(long chatId, long messageId) {
+        String url = formatUrl("deleteMessage");
+        String request = jsonWrapper.formatDeleteMessageRequest(chatId, messageId);
         httpWrapper.post(url, request);
     }
 

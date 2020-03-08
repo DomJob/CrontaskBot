@@ -1,6 +1,7 @@
 package application;
 
 import application.entities.Update;
+import application.message.Message;
 import java.util.List;
 
 public interface TelegramApi {
@@ -9,4 +10,6 @@ public interface TelegramApi {
     void sendMessage(Message message);
 
     void answerCallbackQuery(String id, String text);
+
+    void deleteMessage(long chatId, long messageId);
 }

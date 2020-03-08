@@ -2,7 +2,6 @@ package application.states;
 
 import static org.mockito.Mockito.verify;
 
-import application.BotStateTest;
 import application.command.Command;
 import org.junit.Before;
 import org.junit.Test;

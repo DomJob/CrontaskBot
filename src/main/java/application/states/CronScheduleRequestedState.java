@@ -1,7 +1,5 @@
 package application.states;
 
-import application.BotState;
-import application.CrontaskBot;
 import application.command.Command;
 import application.entities.ReceivedMessage;
 import domain.Schedule;

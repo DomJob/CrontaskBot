@@ -1,4 +1,4 @@
-package application;
+package application.message;
 
 import domain.Task;
 

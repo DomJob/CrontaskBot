@@ -1,14 +1,17 @@
 package application;
 
+import application.command.CallbackCommand;
 import application.entities.CallbackQuery;
 import application.entities.ReceivedMessage;
-import application.entities.Update;
+import application.message.Message;
+import application.message.MessageFactory;
 import application.states.BotContext;
 import domain.Schedule;
 import domain.Task;
 import domain.TaskFactory;
 import domain.TaskRepository;
 import domain.Time;
+import domain.reminderschedule.ReminderSchedule;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,8 +44,22 @@ public class CrontaskBot {
     }
 
     public void handleCallbackQuery(CallbackQuery query) {
-        // Todo
-        System.out.println("I am handling a call back query: " + query.data);
+        CallbackCommand command = CallbackCommand.parse(query.data);
+
+        Task task = taskRepository.findById(Long.parseLong(command.getParameters().get(1)));
+
+        switch (command) {
+            case SNOOZE:
+                api.answerCallbackQuery(query.id, "Snoozed for 15 minutes");
+                snoozeTask(task);
+            case DISMISS:
+                api.deleteMessage(query.sender, query.messageId);
+                break;
+        }
+    }
+
+    private void snoozeTask(Task task) {
+        createReminder(task.getName(), task.getOwnerId(), ReminderSchedule.minutesFromNow(15));
     }
 
     public void sendMessage(Message message) {
@@ -61,18 +78,14 @@ public class CrontaskBot {
         taskRepository.save(task);
     }
 
-    public void checkTasks() {
-        checkTasksAtTime(Time.now());
-    }
-
     public void checkTasksAtTime(Time time) {
         for(Task task : taskRepository.findAll()) {
             if(task.isTriggered(time)) {
                 Message message = messageFactory.createTaskTriggeredMessage(task);
                 message.setReceiver(task.getOwnerId());
 
-                message.addButton("Dismiss", "dismiss" + task.getId());
-                message.addButton("Snooze", "snooze" + task.getId());
+                message.addButton("Dismiss", "dismiss " + task.getId());
+                message.addButton("Snooze", "snooze " + task.getId());
 
                 api.sendMessage(message);
 
@@ -80,20 +93,6 @@ public class CrontaskBot {
                     taskRepository.delete(task);
                 }
             }
-        }
-    }
-
-    public void handleEvents() {
-        for(Update update : api.getUpdates(lastUpdate)) {
-            switch(update.type) {
-                case MESSAGE:
-                    handleMessage(update.message);
-                    break;
-                case CALLBACK:
-                    handleCallbackQuery(update.callbackQuery);
-                    break;
-            }
-            lastUpdate = update.id + 1;
         }
     }
 }
