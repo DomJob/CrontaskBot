@@ -21,7 +21,7 @@ public class TaskTest {
 
     @Before
     public void setUp() {
-        task = new Task(0, "Name", 0, schedule, false);
+        task = new Task(0, "Name", 0, schedule);
         when(schedule.isTriggered(any(Time.class))).thenReturn(false);
     }
 

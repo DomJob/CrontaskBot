@@ -51,15 +51,11 @@ public class CrontaskBot {
         switch (command) {
             case SNOOZE:
                 api.answerCallbackQuery(query.id, "Snoozed for 15 minutes");
-                snoozeTask(task);
+                createTask(task.getName(), task.getOwnerId(), ReminderSchedule.minutesFromNow(15));
             case DISMISS:
                 api.deleteMessage(query.sender, query.messageId);
                 break;
         }
-    }
-
-    private void snoozeTask(Task task) {
-        createReminder(task.getName(), task.getOwnerId(), ReminderSchedule.minutesFromNow(15));
     }
 
     public void sendMessage(Message message) {
@@ -67,18 +63,12 @@ public class CrontaskBot {
     }
 
     public void createTask(String name, long ownerId, Schedule schedule) {
-        Task task = taskFactory.create(name, ownerId, schedule, false);
+        Task task = taskFactory.create(name, ownerId, schedule);
 
         taskRepository.save(task);
     }
 
-    public void createReminder(String name, long ownerId, Schedule schedule) {
-        Task task = taskFactory.create(name, ownerId, schedule, true);
-
-        taskRepository.save(task);
-    }
-
-    public void checkTasksAtTime(Time time) {
+    public void checkTasks(Time time) {
         for(Task task : taskRepository.findAll()) {
             if(task.isTriggered(time)) {
                 Message message = messageFactory.createTaskTriggeredMessage(task);
@@ -88,10 +78,6 @@ public class CrontaskBot {
                 message.addButton("Snooze", "snooze " + task.getId());
 
                 api.sendMessage(message);
-
-                if(task.isReminder()) {
-                    taskRepository.delete(task);
-                }
             }
         }
     }

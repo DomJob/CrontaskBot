@@ -44,12 +44,12 @@ public class CrontaskBotTest {
     public void createTask_callsFactory() {
         bot.createTask(TASK_NAME, SENDER_ID, schedule);
 
-        verify(taskFactory).create(TASK_NAME, SENDER_ID, schedule, false);
+        verify(taskFactory).create(TASK_NAME, SENDER_ID, schedule);
     }
 
     @Test
     public void createTask_savesToRepo() {
-        when(taskFactory.create(TASK_NAME, SENDER_ID, schedule, false)).thenReturn(task);
+        when(taskFactory.create(TASK_NAME, SENDER_ID, schedule)).thenReturn(task);
 
         bot.createTask(TASK_NAME, SENDER_ID, schedule);
 

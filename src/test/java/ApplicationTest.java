@@ -96,7 +96,7 @@ public class ApplicationTest {
         Task task = taskRepository.findById(TASK_ID);
         when(messageFactory.createTaskTriggeredMessage(task)).thenReturn(message);
 
-        bot.checkTasksAtTime(ANY_TIME);
+        bot.checkTasks(ANY_TIME);
 
         verify(messageFactory).createTaskTriggeredMessage(task);
         verify(api).sendMessage(message);
@@ -112,7 +112,7 @@ public class ApplicationTest {
         when(messageFactory.createTaskTriggeredMessage(task)).thenReturn(message);
 
         for(int i=0; i<60; i++) {
-            bot.checkTasksAtTime(ANY_TIME.plusMinutes(i));
+            bot.checkTasks(ANY_TIME.plusMinutes(i));
         }
 
         verify(messageFactory, times(12)).createTaskTriggeredMessage(task);
@@ -152,7 +152,7 @@ public class ApplicationTest {
         Task task = taskRepository.findById(TASK_ID);
         when(messageFactory.createTaskTriggeredMessage(task)).thenReturn(message);
 
-        bot.checkTasksAtTime(Time.now().plusMinutes(5));
+        bot.checkTasks(Time.now().plusMinutes(5));
 
         verify(messageFactory).createTaskTriggeredMessage(task);
         verify(api).sendMessage(message);
@@ -194,7 +194,7 @@ public class ApplicationTest {
         verify(api).deleteMessage(USER_ID, MESSAGE_ID);
 
         Task task = taskRepository.findById(TASK_ID);
-        bot.checkTasksAtTime(Time.now().plusMinutes(15));
+        bot.checkTasks(Time.now().plusMinutes(15));
 
         verify(messageFactory).createTaskTriggeredMessage(task);
     }

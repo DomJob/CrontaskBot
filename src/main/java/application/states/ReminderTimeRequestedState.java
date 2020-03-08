@@ -22,7 +22,7 @@ class ReminderTimeRequestedState implements BotState {
 
         try {
             ReminderSchedule schedule = ReminderSchedule.parse(message.text);
-            context.createReminder(reminderName, schedule);
+            context.createTask(reminderName, schedule);
             context.sendReminderCreatedMessage();
 
             return new DefaultState();

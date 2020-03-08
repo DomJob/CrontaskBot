@@ -27,7 +27,7 @@ public class Scheduler {
     }
 
     public void checkTasks() {
-        bot.checkTasksAtTime(Time.now());
+        bot.checkTasks(Time.now());
     }
 
     public void handleEvents() {

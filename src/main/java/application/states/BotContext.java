@@ -32,10 +32,6 @@ public class BotContext {
         bot.createTask(taskName, userId, schedule);
     }
 
-    protected void createReminder(String reminderName, Schedule schedule) {
-        bot.createReminder(reminderName, userId, schedule);
-    }
-
     protected void sendDefaultMessage() {
         send(messageFactory.createDefaultMessage());
     }
