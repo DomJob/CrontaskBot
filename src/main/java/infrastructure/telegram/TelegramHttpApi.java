@@ -29,7 +29,7 @@ public class TelegramHttpApi implements TelegramApi {
     @Override
     public void sendMessage(Message message) {
         String url = formatUrl("sendMessage");
-        String request = jsonWrapper.formatMessageRequest(message.getReceiver(), message.getText(), message.getButtons());
+        String request = jsonWrapper.formatMessageRequest(message.getReceiverId(), message.getText(), message.getButtons());
         httpWrapper.post(url, request);
     }
 

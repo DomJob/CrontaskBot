@@ -1,7 +1,8 @@
 package domain.cronschedule;
 
 import domain.Schedule;
-import domain.Time;
+import domain.time.Time;
+import domain.time.Timezone;
 
 public class CronSchedule implements Schedule {
     private String code;
@@ -21,7 +22,8 @@ public class CronSchedule implements Schedule {
     }
 
     @Override
-    public boolean isTriggered(Time time) {
+    public boolean isTriggered(Time time, Timezone timezone) {
+        time = time.withTimezone(timezone);
         return minute.match(time.minute())
             && hour.match(time.hour())
             && day.match(time.day())

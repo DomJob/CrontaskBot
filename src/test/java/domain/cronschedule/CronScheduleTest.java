@@ -5,7 +5,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import domain.Schedule;
-import domain.Time;
+import domain.time.Time;
+import domain.time.Timezone;
 import org.junit.Test;
 
 public class CronScheduleTest {
@@ -23,32 +24,20 @@ public class CronScheduleTest {
     public void allAnyMatchers_matchAnyDate() {
         Schedule schedule = CronSchedule.parse("* * * * *");
 
-        assertTrue(schedule.isTriggered(createTime(27, 16, 7, 3, 6)));
+        assertTrue(schedule.isTriggered(Time.fromDate(2020,3,15,15,20), Timezone.UTC));
     }
 
     @Test
     public void specificHourMatcher_matchThatHour() {
         Schedule schedule = CronSchedule.parse("* 16 * * *");
 
-        assertTrue(schedule.isTriggered(createTime(27, 16, 7, 3, 6)));
+        assertTrue(schedule.isTriggered(Time.fromDate(2020,3,15,16,20), Timezone.UTC));
     }
 
     @Test
     public void specificHourMatcher_doesntMatchOtherHours() {
         Schedule schedule = CronSchedule.parse("* 15 * * *");
 
-        assertFalse(schedule.isTriggered(createTime(27, 16, 7, 3, 6)));
-    }
-
-    public static Time createTime(int minute, int hour, int day, int month, int weekday) {
-        Time time = mock(Time.class);
-
-        when(time.minute()).thenReturn(minute);
-        when(time.hour()).thenReturn(hour);
-        when(time.day()).thenReturn(day);
-        when(time.month()).thenReturn(month);
-        when(time.weekday()).thenReturn(weekday);
-
-        return time;
+        assertFalse(schedule.isTriggered(Time.fromDate(2020,3,15,16,20), Timezone.UTC));
     }
 }

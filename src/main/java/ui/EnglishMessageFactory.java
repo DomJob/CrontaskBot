@@ -90,4 +90,19 @@ public class EnglishMessageFactory implements MessageFactory {
     public Message createListOfCommandsMessage() {
         return message("list of commands goes here");
     }
+
+    @Override
+    public Message createSettingsMenuMessage() {
+        return message("<b>List of settings</b>:\n\n/timezone");
+    }
+
+    @Override
+    public Message createTimezoneOffsetRequestedMessage() {
+        return message("Enter the timezone offset");
+    }
+
+    @Override
+    public Message createInvalidOperationMessage() {
+        return message("Invalid operation");
+    }
 }

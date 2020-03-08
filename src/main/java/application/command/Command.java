@@ -13,6 +13,8 @@ public enum Command {
     CANCEL("cancel"),
     HELP("help"),
     COMMANDS("commands"),
+    SETTINGS("settings"),
+    TIMEZONE("timezone"),
     NOT_A_COMMAND,
     UNKNOWN;
 

@@ -10,7 +10,8 @@ import domain.Schedule;
 import domain.Task;
 import domain.TaskFactory;
 import domain.TaskRepository;
-import domain.Time;
+import domain.User;
+import domain.time.Time;
 import domain.reminderschedule.ReminderSchedule;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,10 +34,10 @@ public class CrontaskBot {
     }
 
     public void handleMessage(ReceivedMessage message) {
-        long sender = message.user;
+        long sender = message.userId;
 
         if(!contexts.containsKey(sender)) {
-            BotContext context = new BotContext(this, sender, messageFactory);
+            BotContext context = new BotContext(this, new User(sender), messageFactory);
             contexts.put(sender, context);
         }
 
@@ -51,9 +52,9 @@ public class CrontaskBot {
         switch (command) {
             case SNOOZE:
                 api.answerCallbackQuery(query.id, "Snoozed for 15 minutes");
-                createTask(task.getName(), task.getOwnerId(), ReminderSchedule.minutesFromNow(15));
+                createTask(task.getName(), task.getOwner(), ReminderSchedule.minutesFromNow(15));
             case DISMISS:
-                api.deleteMessage(query.sender, query.messageId);
+                api.deleteMessage(query.userId, query.messageId);
                 break;
         }
     }
@@ -62,8 +63,8 @@ public class CrontaskBot {
         api.sendMessage(message);
     }
 
-    public void createTask(String name, long ownerId, Schedule schedule) {
-        Task task = taskFactory.create(name, ownerId, schedule);
+    public void createTask(String name, User owner, Schedule schedule) {
+        Task task = taskFactory.create(name, owner, schedule);
 
         taskRepository.save(task);
     }
@@ -72,7 +73,7 @@ public class CrontaskBot {
         for(Task task : taskRepository.findAll()) {
             if(task.isTriggered(time)) {
                 Message message = messageFactory.createTaskTriggeredMessage(task);
-                message.setReceiver(task.getOwnerId());
+                message.setReceiver(task.getOwner());
 
                 message.addButton("Dismiss", "dismiss " + task.getId());
                 message.addButton("Snooze", "snooze " + task.getId());

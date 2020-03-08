@@ -2,6 +2,7 @@ package domain;
 
 import static org.junit.Assert.*;
 
+import domain.time.Time;
 import org.junit.Test;
 
 public class TimeTest {

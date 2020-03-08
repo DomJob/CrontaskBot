@@ -1,4 +1,4 @@
-package domain;
+package domain.time;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -19,10 +19,6 @@ public class Time {
 
     public Time nextMinute() {
         return plusMinutes(1);
-    }
-
-    public Time previousMinute() {
-        return plusMinutes(-1);
     }
 
     public static Time now() {
@@ -66,7 +62,7 @@ public class Time {
     }
 
     public int weekday() {
-        return time.getDayOfWeek().getValue();
+        return time.getDayOfWeek().getValue() % 7;
     }
 
     @Override
@@ -99,6 +95,14 @@ public class Time {
 
     public Time plusYears(int years) {
         return fromLocalDateTime(time.plusYears(years));
+    }
+
+    public Time withTimezone(Timezone timezone) {
+        return plusMinutes(timezone.getOffset());
+    }
+
+    public boolean isAfter(Time now) {
+        return minutesSinceEpoch > now.minutesSinceEpoch;
     }
 
     @Override

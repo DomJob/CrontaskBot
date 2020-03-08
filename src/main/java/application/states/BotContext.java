@@ -5,17 +5,19 @@ import application.message.Message;
 import application.message.MessageFactory;
 import application.entities.ReceivedMessage;
 import domain.Schedule;
+import domain.User;
+import domain.time.Timezone;
 
 public class BotContext {
     private CrontaskBot bot;
     private MessageFactory messageFactory;
-    private long userId;
+    private User user;
 
     private BotState state = new DefaultState();
 
-    public BotContext(CrontaskBot bot, long userId, MessageFactory messageFactory) {
+    public BotContext(CrontaskBot bot, User user, MessageFactory messageFactory) {
         this.bot = bot;
-        this.userId = userId;
+        this.user = user;
         this.messageFactory = messageFactory;
     }
 
@@ -24,12 +26,12 @@ public class BotContext {
     }
 
     protected void send(Message message) {
-        message.setReceiver(userId);
+        message.setReceiver(user);
         bot.sendMessage(message);
     }
 
     protected void createTask(String taskName, Schedule schedule) {
-        bot.createTask(taskName, userId, schedule);
+        bot.createTask(taskName, user, schedule);
     }
 
     protected void sendDefaultMessage() {
@@ -90,5 +92,21 @@ public class BotContext {
 
     protected void sendListOfCommandsMessage() {
         send(messageFactory.createListOfCommandsMessage());
+    }
+
+    public void sendSettingsMenuMessage() {
+        send(messageFactory.createSettingsMenuMessage());
+    }
+
+    public void sendTimezoneOffsetRequestedMessage() {
+        send(messageFactory.createTimezoneOffsetRequestedMessage());
+    }
+
+    public void sendInvalidOperationMessage() {
+        send(messageFactory.createInvalidOperationMessage());
+    }
+
+    public void setTimezoneOffset(Timezone timezone) {
+        user.setTimezone(timezone);
     }
 }

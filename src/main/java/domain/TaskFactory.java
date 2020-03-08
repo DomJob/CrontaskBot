@@ -9,7 +9,7 @@ public class TaskFactory {
         this.longGenerator = longGenerator;
     }
 
-    public Task create(String name, long ownerId, Schedule schedule) {
-        return new Task(longGenerator.generate(), name, ownerId, schedule);
+    public Task create(String name, User owner, Schedule schedule) {
+        return new Task(longGenerator.generate(), name, owner, schedule);
     }
 }

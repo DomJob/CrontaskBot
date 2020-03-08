@@ -12,7 +12,8 @@ import application.entities.ReceivedMessage;
 import application.message.Message;
 import domain.Task;
 import domain.TaskFactory;
-import domain.Time;
+import domain.User;
+import domain.time.Time;
 import domain.util.LongGenerator;
 import infrastructure.persistence.inmemory.TaskRepositoryInMemory;
 import org.junit.Before;
@@ -25,17 +26,20 @@ import ui.EnglishMessageFactory;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationTest {
-    public static final String TASK_NAME = "task name";
-    public static final String SCHEDULE_EVERY_MINUTE = "* * * * *";
-    public static final String SCHEDULE_NEVER = "65 * * * *";
-    public static final String INVALIDE_SCHEDULE = "this aint a schedule";
-    public static final Time ANY_TIME = Time.fromDate(2020, 3, 8, 1, 44);
-    public static final long TASK_ID = 1234;
-    public static final String CRON_SCHEDULE_EVERY_5_MINUTES = "*/5 * * * *";
-    public static final String CALLBACK_QUERY_ID = "8888845646";
-    public static final int MESSAGE_ID = 456;
-    private static long USER_ID = 12345678L;
-    private static long OTHER_USER_ID = 789456L;
+    private static final String TASK_NAME = "task name";
+    private static final String SCHEDULE_EVERY_MINUTE = "* * * * *";
+    private static final String SCHEDULE_NEVER = "65 * * * *";
+    private static final String INVALIDE_SCHEDULE = "this aint a schedule";
+    private static final Time ANY_TIME = Time.fromDate(2020, 3, 8, 1, 44);
+    private static final long TASK_ID = 1234;
+    private static final String CRON_SCHEDULE_EVERY_5_MINUTES = "*/5 * * * *";
+    private static final String CALLBACK_QUERY_ID = "8888845646";
+    private static final int MESSAGE_ID = 456;
+    private static final String AT_3_PM_EVERYDAY = "0 15 * * *";
+    private static final long USER_ID = 12345678L;
+    private static final long OTHER_USER_ID = 789456L;
+    private static User USER = new User(USER_ID);
+    private static User OTHER_USER = new User(OTHER_USER_ID);
 
     @Mock
     private TelegramApi api;
@@ -57,10 +61,10 @@ public class ApplicationTest {
         bot = new CrontaskBot(api, taskRepository, new TaskFactory(longGenerator), messageFactory);
         when(longGenerator.generate()).thenReturn(TASK_ID);
         message = new Message("any text");
-        message.setReceiver(USER_ID);
+        message.setReceiver(USER);
 
         otherMessage = new Message("other text");
-        otherMessage.setReceiver(OTHER_USER_ID);
+        otherMessage.setReceiver(OTHER_USER);
     }
 
     @Test
@@ -142,20 +146,33 @@ public class ApplicationTest {
     }
 
     @Test
-    public void createReminder_canBeTriggered() {
+    public void createReminder_relativeTime_canBeTriggered() {
         sendMessage("/reminder");
 
         sendMessage(TASK_NAME);
 
         sendMessage("in 5 minutes");
 
-        Task task = taskRepository.findById(TASK_ID);
-        when(messageFactory.createTaskTriggeredMessage(task)).thenReturn(message);
-
+        bot.checkTasks(Time.now().plusMinutes(4));
         bot.checkTasks(Time.now().plusMinutes(5));
+        bot.checkTasks(Time.now().plusMinutes(6));
 
-        verify(messageFactory).createTaskTriggeredMessage(task);
-        verify(api).sendMessage(message);
+        verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
+    }
+
+    @Test
+    public void createReminder_exactTime_canBeTriggered() {
+        sendMessage("/reminder");
+
+        sendMessage(TASK_NAME);
+
+        sendMessage("2020-03-15 15:20");
+
+        bot.checkTasks(Time.fromDate(2020,3,15,15,19));
+        bot.checkTasks(Time.fromDate(2020,3,15,15,20));
+        bot.checkTasks(Time.fromDate(2020,3,15,15,21));
+
+        verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
     }
 
     @Test
@@ -197,6 +214,60 @@ public class ApplicationTest {
         bot.checkTasks(Time.now().plusMinutes(15));
 
         verify(messageFactory).createTaskTriggeredMessage(task);
+    }
+
+    @Test
+    public void setTimezone_canTriggerTaskAtCorrectTimeInTimezone() {
+        sendMessage("/timezone");
+        sendMessage("-4:00");
+
+        sendMessage("/task");
+        sendMessage(TASK_NAME);
+        sendMessage(AT_3_PM_EVERYDAY);
+
+        Time threePmUTC = Time.fromDate(2020,3,15,15,0);
+
+        // Doesnt trigger at 3 PM UTC
+        bot.checkTasks(threePmUTC);
+        verify(messageFactory, never()).createTaskTriggeredMessage(any(Task.class));
+
+        // But it does trigger 4 hours later
+        bot.checkTasks(threePmUTC.plusHours(4));
+        verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
+    }
+
+    @Test
+    public void setTimezone_canTriggerReminderAtCorrectTimeInTimezone() {
+        sendMessage("/timezone");
+        sendMessage("-4:00");
+
+        sendMessage("/reminder");
+        sendMessage(TASK_NAME);
+        sendMessage("2020-03-15 15:20");
+
+        Time timeUTC = Time.fromDate(2020,3,15,15,20);
+
+        // Doesnt trigger at UTC time
+        bot.checkTasks(timeUTC);
+        verify(messageFactory, never()).createTaskTriggeredMessage(any(Task.class));
+
+        // But it does trigger 4 hours later
+        bot.checkTasks(timeUTC.plusHours(4));
+        verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
+    }
+
+    @Test
+    public void setTimezone_relativeReminders_unaffected() {
+        sendMessage("/timezone");
+        sendMessage("-4:00");
+
+        sendMessage("/task");
+        sendMessage(TASK_NAME);
+        sendMessage("in 5 minutes");
+
+        // Trigger 5 mins from now regardless of timezone
+        bot.checkTasks(Time.now().plusMinutes(5));
+        verify(messageFactory, never()).createTaskTriggeredMessage(any(Task.class));
     }
 
     private void sendMessage(String text) {

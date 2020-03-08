@@ -5,12 +5,11 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import application.command.Command;
-import application.entities.ReceivedMessage;
 import domain.Schedule;
 import domain.Task;
 import domain.TaskFactory;
 import domain.TaskRepository;
+import domain.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,7 +20,7 @@ import ui.EnglishMessageFactory;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CrontaskBotTest {
-    public static final long SENDER_ID = 123465L;
+    public static final User SENDER = new User(123L);
     public static final String TASK_NAME = "task name";
 
     @Mock
@@ -42,16 +41,16 @@ public class CrontaskBotTest {
 
     @Test
     public void createTask_callsFactory() {
-        bot.createTask(TASK_NAME, SENDER_ID, schedule);
+        bot.createTask(TASK_NAME, SENDER, schedule);
 
-        verify(taskFactory).create(TASK_NAME, SENDER_ID, schedule);
+        verify(taskFactory).create(TASK_NAME, SENDER, schedule);
     }
 
     @Test
     public void createTask_savesToRepo() {
-        when(taskFactory.create(TASK_NAME, SENDER_ID, schedule)).thenReturn(task);
+        when(taskFactory.create(TASK_NAME, SENDER, schedule)).thenReturn(task);
 
-        bot.createTask(TASK_NAME, SENDER_ID, schedule);
+        bot.createTask(TASK_NAME, SENDER, schedule);
 
         verify(repository).save(task);
     }

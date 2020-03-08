@@ -4,7 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import domain.Schedule;
-import domain.Time;
+import domain.time.Time;
+import domain.time.Timezone;
 import org.junit.Test;
 
 public class ReminderScheduleTest {
@@ -18,11 +19,11 @@ public class ReminderScheduleTest {
         Time now = Time.now();
 
         for (int i = 1; i <= m; i++) {
-            assertFalse(schedule.isTriggered(now));
+            assertFalse(schedule.isTriggered(now, Timezone.UTC));
             now = now.nextMinute();
         }
 
-        assertTrue(schedule.isTriggered(now));
+        assertTrue(schedule.isTriggered(now, Timezone.UTC));
     }
 
     @Test
@@ -32,7 +33,7 @@ public class ReminderScheduleTest {
 
         Schedule schedule = ReminderSchedule.parse(inputString);
 
-        assertTrue(schedule.isTriggered(time));
+        assertTrue(schedule.isTriggered(time, Timezone.UTC));
     }
 
     @Test
@@ -42,7 +43,7 @@ public class ReminderScheduleTest {
 
         Schedule schedule = ReminderSchedule.parse(inputString);
 
-        assertTrue(schedule.isTriggered(time));
+        assertTrue(schedule.isTriggered(time, Timezone.UTC));
     }
 
     @Test
@@ -52,7 +53,7 @@ public class ReminderScheduleTest {
 
         Schedule schedule = ReminderSchedule.parse(inputString);
 
-        assertTrue(schedule.isTriggered(time));
+        assertTrue(schedule.isTriggered(time, Timezone.UTC));
     }
     
     @Test
@@ -63,7 +64,7 @@ public class ReminderScheduleTest {
 
         Schedule schedule = ReminderSchedule.parse(string);
 
-        assertTrue(schedule.isTriggered(time));
+        assertTrue(schedule.isTriggered(time, Timezone.UTC));
     }
 
     @Test
@@ -74,7 +75,7 @@ public class ReminderScheduleTest {
 
         Schedule schedule = ReminderSchedule.parse(string);
 
-        assertTrue(schedule.isTriggered(time));
+        assertTrue(schedule.isTriggered(time, Timezone.UTC));
     }
 
     @Test
@@ -85,7 +86,7 @@ public class ReminderScheduleTest {
 
         Schedule schedule = ReminderSchedule.parse(string);
 
-        assertTrue(schedule.isTriggered(time));
+        assertTrue(schedule.isTriggered(time, Timezone.UTC));
     }
 
     @Test
@@ -96,7 +97,7 @@ public class ReminderScheduleTest {
 
         Schedule schedule = ReminderSchedule.parse(string);
 
-        assertTrue(schedule.isTriggered(time));
+        assertTrue(schedule.isTriggered(time, Timezone.UTC));
     }
 
     @Test
@@ -107,7 +108,7 @@ public class ReminderScheduleTest {
 
         Schedule schedule = ReminderSchedule.parse(string);
 
-        assertTrue(schedule.isTriggered(time));
+        assertTrue(schedule.isTriggered(time, Timezone.UTC));
     }
 
     @Test
@@ -118,7 +119,7 @@ public class ReminderScheduleTest {
 
         Schedule schedule = ReminderSchedule.parse(string);
 
-        assertTrue(schedule.isTriggered(time));
+        assertTrue(schedule.isTriggered(time, Timezone.UTC));
     }
 
     @Test
@@ -129,7 +130,7 @@ public class ReminderScheduleTest {
 
         Schedule schedule = ReminderSchedule.parse(string);
 
-        assertTrue(schedule.isTriggered(time));
+        assertTrue(schedule.isTriggered(time, Timezone.UTC));
     }
 
     @Test(expected = InvalidReminderFormatException.class)

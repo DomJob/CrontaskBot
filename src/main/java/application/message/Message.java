@@ -1,12 +1,13 @@
 package application.message;
 
 import application.entities.Button;
+import domain.User;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Message {
-    private long receiver;
+    private User receiver;
     private String text;
     private List<Button> buttons = new ArrayList<>();
 
@@ -22,12 +23,12 @@ public class Message {
         return Collections.unmodifiableList(buttons);
     }
 
-    public void setReceiver(long receiver) {
+    public void setReceiver(User receiver) {
         this.receiver = receiver;
     }
 
-    public long getReceiver() {
-        return receiver;
+    public long getReceiverId() {
+        return receiver.getId();
     }
 
     public String getText() {
