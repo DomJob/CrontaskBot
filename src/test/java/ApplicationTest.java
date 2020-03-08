@@ -3,8 +3,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 import application.CrontaskBot;
-import application.MessageFactory;
-import application.TaskExecutor;
 import application.TelegramApi;
 import domain.TaskFactory;
 import domain.TaskRepository;
