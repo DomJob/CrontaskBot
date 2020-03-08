@@ -10,12 +10,16 @@ import application.TelegramApi;
 import application.entities.CallbackQuery;
 import application.entities.ReceivedMessage;
 import application.message.Message;
-import domain.Task;
-import domain.TaskFactory;
-import domain.User;
+import application.message.MessageFactory;
+import application.message.MessageFactoryProvider;
+import domain.Task.Task;
+import domain.Task.TaskFactory;
+import domain.user.Language;
+import domain.user.User;
 import domain.time.Time;
 import domain.util.LongGenerator;
 import infrastructure.persistence.inmemory.TaskRepositoryInMemory;
+import infrastructure.persistence.inmemory.UserRepositoryInMemory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,10 +47,14 @@ public class ApplicationTest {
 
     @Mock
     private TelegramApi api;
+    @Mock
+    private MessageFactoryProvider messageFactoryProvider;
     @Spy
     private EnglishMessageFactory messageFactory = new EnglishMessageFactory();
     @Spy
     private TaskRepositoryInMemory taskRepository = new TaskRepositoryInMemory();
+    @Spy
+    private UserRepositoryInMemory userRepository = new UserRepositoryInMemory();
     @Mock
     private LongGenerator longGenerator;
 
@@ -55,11 +63,13 @@ public class ApplicationTest {
 
     private CrontaskBot bot;
 
-
     @Before
     public void setUp() {
-        bot = new CrontaskBot(api, taskRepository, new TaskFactory(longGenerator), messageFactory);
+        bot = new CrontaskBot(api, taskRepository, userRepository, new TaskFactory(longGenerator), messageFactoryProvider);
+
+        when(messageFactoryProvider.provide(any(Language.class))).thenReturn(messageFactory);
         when(longGenerator.generate()).thenReturn(TASK_ID);
+
         message = new Message("any text");
         message.setReceiver(USER);
 
@@ -189,7 +199,7 @@ public class ApplicationTest {
     }
 
     @Test
-    public void dismissTask_deletesId() {
+    public void dismissTask_deletesMessage() {
         sendMessage("/task");
         sendMessage(TASK_NAME);
         sendMessage(SCHEDULE_EVERY_MINUTE);

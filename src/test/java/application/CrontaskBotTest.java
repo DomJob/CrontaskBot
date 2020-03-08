@@ -6,10 +6,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import domain.Schedule;
-import domain.Task;
-import domain.TaskFactory;
-import domain.TaskRepository;
-import domain.User;
+import domain.Task.Task;
+import domain.Task.TaskFactory;
+import domain.Task.TaskRepository;
+import domain.user.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

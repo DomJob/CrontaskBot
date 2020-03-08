@@ -14,6 +14,7 @@ Try it on Telegram! [@CrontaskBot](https://t.me/CrontaskBot)
 
 - [x] Timezone support (-ish)
 - [ ] Actual persistence
+- [ ] View/delete tasks
 - [ ] Better message formatting
 - [ ] Customizable snooze time
 - [ ] ...

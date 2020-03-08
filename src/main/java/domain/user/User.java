@@ -1,4 +1,4 @@
-package domain;
+package domain.user;
 
 import domain.time.Timezone;
 
@@ -15,6 +15,8 @@ public class User {
         this.id = id;
         this.timezone = Timezone.UTC;
     }
+
+    public Language getLanguage() { return Language.ENGLISH; }
 
     public long getId() {
         return id;

@@ -1,5 +1,7 @@
-package domain;
+package domain.Task;
 
+import domain.Schedule;
+import domain.user.User;
 import domain.time.Time;
 
 public class Task {
@@ -25,10 +27,6 @@ public class Task {
 
     public String getName() {
         return name;
-    }
-
-    public long getOwnerId() {
-        return owner.getId();
     }
 
     public User getOwner() {

@@ -1,4 +1,4 @@
-package domain;
+package domain.Task;
 
 import java.util.Collection;
 

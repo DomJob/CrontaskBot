@@ -5,43 +5,43 @@ import application.entities.CallbackQuery;
 import application.entities.ReceivedMessage;
 import application.message.Message;
 import application.message.MessageFactory;
+import application.message.MessageFactoryProvider;
 import application.states.BotContext;
 import domain.Schedule;
-import domain.Task;
-import domain.TaskFactory;
-import domain.TaskRepository;
-import domain.User;
+import domain.Task.Task;
+import domain.Task.TaskFactory;
+import domain.Task.TaskRepository;
+import domain.time.Timezone;
+import domain.user.User;
 import domain.reminderschedule.ReminderSchedule;
 import domain.time.Time;
+import domain.user.UserRepository;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CrontaskBot {
     private TelegramApi api;
     private TaskRepository taskRepository;
+    private UserRepository userRepository;
     private TaskFactory taskFactory;
-    private MessageFactory messageFactory;
+    private MessageFactoryProvider messageFactoryProvider;
 
     private Map<Long, BotContext> contexts = new HashMap<>();
 
-    private long lastUpdate;
-
-    public CrontaskBot(TelegramApi api, TaskRepository taskRepository, TaskFactory taskFactory, MessageFactory messageFactory) {
+    public CrontaskBot(TelegramApi api, TaskRepository taskRepository, UserRepository userRepository, TaskFactory taskFactory, MessageFactoryProvider messageFactoryProvider) {
         this.api = api;
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
         this.taskFactory = taskFactory;
-        this.messageFactory = messageFactory;
+        this.messageFactoryProvider = messageFactoryProvider;
     }
 
     public void handleMessage(ReceivedMessage message) {
         long sender = message.userId;
 
-        if(!contexts.containsKey(sender)) {
-            BotContext context = new BotContext(this, new User(sender), messageFactory);
-            contexts.put(sender, context);
-        }
+        BotContext context = getOrCreateContextForUser(sender);
 
-        contexts.get(sender).handleMessage(message);
+        context.handleMessage(message);
     }
 
     public void handleCallbackQuery(CallbackQuery query) {
@@ -69,11 +69,19 @@ public class CrontaskBot {
         taskRepository.save(task);
     }
 
+    public void setTimezoneForUser(User user, Timezone timezone) {
+        user.setTimezone(timezone);
+
+        userRepository.save(user);
+    }
+
     public void checkTasks(Time time) {
         for(Task task : taskRepository.findAll()) {
             if(task.isTriggered(time)) {
-                Message message = messageFactory.createTaskTriggeredMessage(task);
-                message.setReceiver(task.getOwner());
+                User user = task.getOwner();
+
+                Message message = getMessageFactoryForUser(user).createTaskTriggeredMessage(task);
+                message.setReceiver(user);
 
                 message.addButton("Dismiss", "dismiss " + task.getId());
                 message.addButton("Snooze", "snooze " + task.getId());
@@ -81,5 +89,21 @@ public class CrontaskBot {
                 api.sendMessage(message);
             }
         }
+    }
+
+    public MessageFactory getMessageFactoryForUser(User user) {
+        return messageFactoryProvider.provide(user.getLanguage());
+    }
+
+    private BotContext getOrCreateContextForUser(long userId) {
+        if(!contexts.containsKey(userId)) {
+            User user = userRepository.findById(userId);
+
+            BotContext context = new BotContext(this, user);
+
+            contexts.put(userId, context);
+        }
+
+        return contexts.get(userId);
     }
 }

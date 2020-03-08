@@ -5,7 +5,7 @@ import application.entities.ReceivedMessage;
 import application.message.Message;
 import application.message.MessageFactory;
 import domain.Schedule;
-import domain.User;
+import domain.user.User;
 import domain.time.Timezone;
 
 public class BotContext {
@@ -15,14 +15,18 @@ public class BotContext {
 
     private BotState state = new DefaultState();
 
-    public BotContext(CrontaskBot bot, User user, MessageFactory messageFactory) {
+    public BotContext(CrontaskBot bot, User user) {
         this.bot = bot;
         this.user = user;
-        this.messageFactory = messageFactory;
+        this.messageFactory = bot.getMessageFactoryForUser(user);
     }
 
     public void handleMessage(ReceivedMessage message) {
         state = state.handleMessage(message, this);
+    }
+
+    public void setTimezone(Timezone timezone) {
+        bot.setTimezoneForUser(user, timezone);
     }
 
     protected void send(Message message) {
@@ -104,9 +108,5 @@ public class BotContext {
 
     public void sendInvalidOperationMessage() {
         send(messageFactory.createInvalidOperationMessage());
-    }
-
-    public void setTimezoneOffset(Timezone timezone) {
-        user.setTimezone(timezone);
     }
 }

@@ -1,7 +1,7 @@
 package application.message;
 
 import application.entities.Button;
-import domain.User;
+import domain.user.User;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

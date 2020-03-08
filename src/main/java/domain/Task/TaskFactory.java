@@ -1,5 +1,7 @@
-package domain;
+package domain.Task;
 
+import domain.Schedule;
+import domain.user.User;
 import domain.util.LongGenerator;
 
 public class TaskFactory {
