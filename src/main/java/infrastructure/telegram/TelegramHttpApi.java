@@ -1,9 +1,9 @@
 package infrastructure.telegram;
 
-import application.message.Message;
 import application.TelegramApi;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import application.entities.Update;
+import application.message.Message;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 
 public class TelegramHttpApi implements TelegramApi {
