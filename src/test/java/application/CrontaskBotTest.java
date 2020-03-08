@@ -21,7 +21,7 @@ public class CrontaskBotTest {
     public static final long SENDER_ID = 123465L;
     public static final long OTHER_SENDER_ID = 456789L;
     public static final String TASK_NAME = "task name";
-    public static final String NEW_TASK_COMMAND = Command.NEWTASK.toString();
+    public static final String NEW_TASK_COMMAND = Command.NEW_TASK.toString();
 
     @Mock
     private TelegramApi api;
@@ -52,12 +52,12 @@ public class CrontaskBotTest {
     public void createTask_callsFactory() {
         bot.createTask(TASK_NAME, SENDER_ID, schedule);
 
-        verify(factory).create(TASK_NAME, SENDER_ID, schedule);
+        verify(factory).create(TASK_NAME, SENDER_ID, schedule, false);
     }
 
     @Test
     public void createTask_savesToRepo() {
-        when(factory.create(TASK_NAME, SENDER_ID, schedule)).thenReturn(task);
+        when(factory.create(TASK_NAME, SENDER_ID, schedule, false)).thenReturn(task);
 
         bot.createTask(TASK_NAME, SENDER_ID, schedule);
 

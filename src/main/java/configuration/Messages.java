@@ -29,4 +29,16 @@ public class Messages {
     public static String unknownCommand() {
         return "Unknown command. Type /commands for a list of all the commands.";
     }
+
+    public static String invalidCronMessage() {
+        return "Invalid cron format. Refer to https://crontab.guru/ for more information on cron expressions.";
+    }
+
+    public static String taskTriggeredMessage(String name) {
+        return String.format("<b>Task:</b>\n\n%s", name);
+    }
+
+    public static String noOngoingOperation() {
+        return "No operation to cancel.";
+    }
 }

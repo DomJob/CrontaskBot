@@ -1,51 +1,42 @@
 package infrastructure.telegram;
 
 import application.entities.Button;
+import application.entities.CallbackQuery;
 import application.entities.Message;
+import application.entities.Update;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import infrastructure.eventhandler.Update;
+import infrastructure.telegram.entities.AnswerCallbackQueryRequest;
+import infrastructure.telegram.entities.GetUpdatesRequest;
+import infrastructure.telegram.entities.InlineKeyboardButton;
+import infrastructure.telegram.entities.InlineKeyboardMarkup;
 import infrastructure.telegram.entities.ResultsEntity;
+import infrastructure.telegram.entities.SendMessageRequest;
 import infrastructure.telegram.entities.UpdateEntity;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class JsonWrapper {
     private ObjectMapper mapper = new ObjectMapper();
 
     public String formatMessageRequest(long chatId, String text, List<Button> buttons) {
-        Map<String, Object> parameters = new MapBuilder()
-            .add("chat_id", chatId)
-            .add("text", text)
-            .build();
+        SendMessageRequest parameters = new SendMessageRequest(chatId, text);
 
         if (buttons != null && !buttons.isEmpty()) {
-            parameters.put("reply_markup", serializeButtons(buttons));
+            parameters.reply_markup = serializeButtons(buttons);
         }
 
         return serializeParameters(parameters);
     }
 
     public String formatAnswerCallbackQueryRequest(String id, String text) {
-        Map<String, Object> parameters = new MapBuilder()
-            .add("callback_query_id", id)
-            .add("text", text)
-            .build();
-
-        return serializeParameters(parameters);
+        return serializeParameters(new AnswerCallbackQueryRequest(id, text));
     }
 
     public String formatGetUpdatesRequest(long offset) {
-        Map<String, Object> parameters = new MapBuilder()
-            .add("offset", offset)
-            .build();
-
-        return serializeParameters(parameters);
+        return serializeParameters(new GetUpdatesRequest(offset));
     }
 
     public List<Update> deSerializeUpdates(String updatesJson) {
@@ -76,42 +67,32 @@ public class JsonWrapper {
         }
 
         if (updateEntity.callback_query != null) {
+            CallbackQuery query = new CallbackQuery(updateEntity.callback_query.id,
+                updateEntity.callback_query.from.id,
+                updateEntity.callback_query.message.message_id,
+                updateEntity.callback_query.data);
 
+            return new Update(updateEntity.update_id, query);
         }
 
         return null; // Unsupported update
     }
 
     private String serializeButtons(List<Button> buttons) {
-        List<Map<String, Object>> buttonRow = buttons.stream().map(b -> new MapBuilder()
-            .add("text", b.text)
-            .add("callback_data", b.data)
-            .build()).collect(Collectors.toList());
+        List<InlineKeyboardButton> buttonRow =
+            buttons.stream()
+                .map(b -> new InlineKeyboardButton(b.text, b.data))
+                .collect(Collectors.toList());
 
-        return serializeParameters(new HashMap<String, Object>() {{
-            put("inline_keyboard", Collections.singletonList(buttonRow));
-        }});
+        return serializeParameters(new InlineKeyboardMarkup(buttonRow));
     }
 
-    private String serializeParameters(Map<String, Object> parameters) {
+    private String serializeParameters(Object parameters) {
         try {
             return mapper.writeValueAsString(parameters);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             throw new SerializerException();
-        }
-    }
-
-    private class MapBuilder {
-        private Map<String, Object> map = new HashMap<>();
-
-        public Map<String, Object> build() {
-            return map;
-        }
-
-        public MapBuilder add(String key, Object value) {
-            map.put(key, value);
-            return this;
         }
     }
 }

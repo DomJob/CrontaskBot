@@ -1,14 +1,13 @@
 import application.CrontaskBot;
-import application.entities.Button;
 import domain.TaskFactory;
 import domain.TaskRepository;
-import infrastructure.eventhandler.EventHandler;
+import application.EventHandler;
 import infrastructure.persistence.inmemory.TaskRepositoryInMemory;
+import application.TaskExecutor;
 import infrastructure.telegram.HttpWrapper;
 import infrastructure.telegram.JsonWrapper;
 import infrastructure.telegram.TelegramHttpApi;
 import infrastructure.util.RandomLongGenerator;
-import java.util.Arrays;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -24,12 +23,14 @@ public class Application {
         TaskRepository taskRepository = new TaskRepositoryInMemory();
 
         CrontaskBot bot = new CrontaskBot(api, taskRepository, new TaskFactory(new RandomLongGenerator()));
-        EventHandler handler = new EventHandler(api, bot);
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
 
         // Event Handler schedule
+        EventHandler handler = new EventHandler(api, bot);
         executor.scheduleAtFixedRate(handler, 1, 1, TimeUnit.SECONDS);
 
-        // TODO - Task executor schedule
+        // Task Executer
+        TaskExecutor taskExecutor = new TaskExecutor(api, taskRepository);
+        executor.scheduleAtFixedRate(taskExecutor, 0, 1, TimeUnit.MINUTES);
     }
 }

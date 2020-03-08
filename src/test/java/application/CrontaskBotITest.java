@@ -23,7 +23,8 @@ public class CrontaskBotITest {
     public static final long OTHER_SENDER_ID = 456789L;
     public static final String TASK_NAME = "task name";
     public static final String TASK_SCHEDULE = "0 0 * * *";
-    public static final String NEW_TASK_COMMAND = Command.NEWTASK.toString();
+    public static final String INVALID_SCHEDULE = "what the heck is a cron?";
+    public static final String NEW_TASK_COMMAND = Command.NEW_TASK.toString();
 
     @Mock
     private TelegramApi api;
@@ -56,6 +57,15 @@ public class CrontaskBotITest {
         bot.handleMessage(new Message(SENDER_ID, TASK_NAME));
         bot.handleMessage(new Message(SENDER_ID, TASK_SCHEDULE));
 
-        verify(factory).create(eq(TASK_NAME), eq(SENDER_ID), any(Schedule.class));
+        verify(factory).create(eq(TASK_NAME), eq(SENDER_ID), any(Schedule.class), eq(false));
+    }
+
+    @Test
+    public void createTask_invalidCron() {
+        bot.handleMessage(new Message(SENDER_ID, NEW_TASK_COMMAND));
+        bot.handleMessage(new Message(SENDER_ID, TASK_NAME));
+        bot.handleMessage(new Message(SENDER_ID, INVALID_SCHEDULE));
+
+        verify(api).sendMessage(SENDER_ID, Messages.invalidCronMessage());
     }
 }

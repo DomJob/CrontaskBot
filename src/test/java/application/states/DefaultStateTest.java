@@ -42,7 +42,7 @@ public class DefaultStateTest extends BotStateTest {
 
     @Test
     public void newTaskCommand_thenNameRequestedMessage() {
-        handleMessage(Command.NEWTASK);
+        handleMessage(Command.NEW_TASK);
 
         verify(bot).sendMessage(SENDER_ID, Messages.nameRequestedMessage());
     }

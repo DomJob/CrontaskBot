@@ -1,20 +1,20 @@
-package infrastructure.eventhandler;
+package application;
 
-import application.CrontaskBot;
+import application.entities.Update;
 
 public class EventHandler implements Runnable {
-    private UpdateFetcher updateFetcher;
+    private TelegramApi api;
     private CrontaskBot bot;
     private long lastUpdate = 0;
 
-    public EventHandler(UpdateFetcher updateFetcher, CrontaskBot bot) {
-        this.updateFetcher = updateFetcher;
+    public EventHandler(TelegramApi api, CrontaskBot bot) {
+        this.api = api;
         this.bot = bot;
     }
 
     @Override
     public void run() {
-        for(Update update : updateFetcher.getUpdates(lastUpdate)) {
+        for(Update update : api.getUpdates(lastUpdate)) {
             switch(update.type) {
                 case MESSAGE:
                     bot.handleMessage(update.message);

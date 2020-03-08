@@ -5,8 +5,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import infrastructure.eventhandler.EventHandler;
-import infrastructure.eventhandler.UpdateFetcher;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import application.entities.CallbackQuery;
 import application.entities.Message;
-import infrastructure.eventhandler.Update;
+import application.entities.Update;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EventHandlerTest {
@@ -33,7 +31,7 @@ public class EventHandlerTest {
     @Mock
     private CrontaskBot bot;
     @Mock
-    private UpdateFetcher fetcher;
+    private TelegramApi api;
 
     private Update messageUpdate = new Update(UPDATE_ID, new Message(SENDER_ID, MESSAGE_TEXT));
     private Update callbackUpdate = new Update(NEXT_UPDATE_ID, new CallbackQuery(CALLBACK_ID, SENDER_ID, MESSAGE_ID, CALLBACK_DATA));
@@ -45,16 +43,16 @@ public class EventHandlerTest {
 
     @Test
     public void whenRun_thenAllNewUpdatesAreFetched() {
-        when(fetcher.getUpdates(any(Long.class))).thenReturn(new ArrayList<Update>());
+        when(api.getUpdates(any(Long.class))).thenReturn(new ArrayList<Update>());
 
         handler.run();
 
-        verify(fetcher).getUpdates(0);
+        verify(api).getUpdates(0);
     }
 
     @Test
     public void whenRun_thenAllNewUpdatesAreHandled() {
-        when(fetcher.getUpdates(any(Long.class))).thenReturn(Arrays.asList(messageUpdate, callbackUpdate));
+        when(api.getUpdates(any(Long.class))).thenReturn(Arrays.asList(messageUpdate, callbackUpdate));
 
         handler.run();
 
@@ -64,29 +62,29 @@ public class EventHandlerTest {
 
     @Test
     public void whenRunTwice_thenUpdatesAreHandledBothTimes() {
-        when(fetcher.getUpdates(any(Long.class))).thenReturn(Collections.singletonList(messageUpdate));
+        when(api.getUpdates(any(Long.class))).thenReturn(Collections.singletonList(messageUpdate));
         handler.run();
         verify(bot, times(1)).handleMessage(messageUpdate.message);
 
-        when(fetcher.getUpdates(any(Long.class))).thenReturn(Collections.singletonList(callbackUpdate));
+        when(api.getUpdates(any(Long.class))).thenReturn(Collections.singletonList(callbackUpdate));
         handler.run();
         verify(bot, times(1)).handleCallbackQuery(callbackUpdate.callbackQuery);
     }
 
     @Test
     public void whenRunTwice_thenOffsetIsUsed() {
-        when(fetcher.getUpdates(any(Long.class))).thenReturn(Collections.singletonList(messageUpdate));
+        when(api.getUpdates(any(Long.class))).thenReturn(Collections.singletonList(messageUpdate));
 
         handler.run();
         handler.run();
 
-        verify(fetcher).getUpdates(UPDATE_ID+1);
+        verify(api).getUpdates(UPDATE_ID+1);
     }
 
 
     @Test
     public void whenRun_messageUpdateIsHandled() {
-        when(fetcher.getUpdates(any(Long.class))).thenReturn(Collections.singletonList(messageUpdate));
+        when(api.getUpdates(any(Long.class))).thenReturn(Collections.singletonList(messageUpdate));
 
         handler.run();
 
@@ -95,7 +93,7 @@ public class EventHandlerTest {
 
     @Test
     public void whenRun_callBackQueryIsHandled() {
-        when(fetcher.getUpdates(any(Long.class))).thenReturn(Collections.singletonList(callbackUpdate));
+        when(api.getUpdates(any(Long.class))).thenReturn(Collections.singletonList(callbackUpdate));
 
         handler.run();
 

@@ -6,6 +6,7 @@ import application.entities.Message;
 import configuration.Messages;
 import domain.Schedule;
 import domain.cronschedule.CronSchedule;
+import domain.cronschedule.InvalidCronFormatException;
 
 public class ScheduleRequestedState implements BotState {
     private String taskName;
@@ -16,12 +17,16 @@ public class ScheduleRequestedState implements BotState {
 
     @Override
     public BotState handleMessage(Message message, CrontaskBot bot) {
-        bot.sendMessage(message.sender, Messages.taskCreatedMessage());
+        try {
+            Schedule schedule = CronSchedule.parse(message.text);
 
-        Schedule schedule = CronSchedule.parse(message.text);
+            bot.createTask(taskName, message.sender, schedule);
+            bot.sendMessage(message.sender, Messages.taskCreatedMessage());
 
-        bot.createTask(taskName, message.sender, schedule);
-
-        return new DefaultState();
+            return new DefaultState();
+        } catch (InvalidCronFormatException e) {
+            bot.sendMessage(message.sender, Messages.invalidCronMessage());
+            return this;
+        }
     }
 }

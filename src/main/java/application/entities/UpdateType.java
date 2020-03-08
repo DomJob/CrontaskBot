@@ -1,4 +1,4 @@
-package infrastructure.eventhandler;
+package application.entities;
 
 public enum UpdateType {
     CALLBACK, MESSAGE

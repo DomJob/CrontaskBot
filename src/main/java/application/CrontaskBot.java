@@ -38,7 +38,13 @@ public class CrontaskBot {
     }
 
     public void createTask(String name, long ownerId, Schedule schedule) {
-        Task task = taskFactory.create(name, ownerId, schedule);
+        Task task = taskFactory.create(name, ownerId, schedule, false);
+
+        taskRepository.save(task);
+    }
+
+    public void createReminder(String name, long ownerId, Schedule schedule) {
+        Task task = taskFactory.create(name, ownerId, schedule, true);
 
         taskRepository.save(task);
     }

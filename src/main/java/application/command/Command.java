@@ -8,14 +8,21 @@ import java.util.Map;
 
 public enum Command {
     START("start"),
-    NEWTASK("newtask"),
-    HELP("help");
+    NEW_TASK("newtask"),
+    NEW_REMINDER("newreminder"),
+    CANCEL("cancel"),
+    HELP("help"),
+    NOT_A_COMMAND,
+    UNKNOWN;
 
     private String text;
     private List<String> parameters;
 
     Command(String text) {
         this.text = text;
+    }
+
+    Command() {
     }
 
     private static final Map<String, Command> lookup = new HashMap<>();
@@ -36,16 +43,16 @@ public enum Command {
     }
 
     public static Command parse(String message) {
-        if(!message.startsWith("/")) {
-            throw new NotACommandException(message);
+        if (!message.startsWith("/")) {
+            return NOT_A_COMMAND;
         }
 
         List<String> parameters = Arrays.asList(message.split(" "));
         String textCommand = parameters.get(0).substring(1);
 
         Command command = lookup.get(textCommand);
-        if(command == null) {
-            throw new UnknownCommandException(textCommand);
+        if (command == null) {
+            return UNKNOWN;
         }
 
         command.parameters = parameters;

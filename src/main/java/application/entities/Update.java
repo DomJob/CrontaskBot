@@ -1,7 +1,4 @@
-package infrastructure.eventhandler;
-
-import application.entities.CallbackQuery;
-import application.entities.Message;
+package application.entities;
 
 public class Update {
     public long id;

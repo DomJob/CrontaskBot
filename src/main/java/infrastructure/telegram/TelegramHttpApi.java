@@ -3,11 +3,10 @@ package infrastructure.telegram;
 import application.TelegramApi;
 import application.entities.Button;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import infrastructure.eventhandler.Update;
-import infrastructure.eventhandler.UpdateFetcher;
+import application.entities.Update;
 import java.util.List;
 
-public class TelegramHttpApi implements TelegramApi, UpdateFetcher {
+public class TelegramHttpApi implements TelegramApi {
     private String token;
     private ObjectMapper objectMapper = new ObjectMapper();
     private HttpWrapper httpWrapper;
