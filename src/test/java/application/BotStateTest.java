@@ -1,24 +1,23 @@
 package application;
 
 import application.command.Command;
-import application.entities.Message;
-import org.junit.runner.RunWith;
+import application.entities.ReceivedMessage;
+import application.states.BotContext;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 public class BotStateTest {
     protected static final long SENDER_ID = 12345L;
 
     @Mock
-    protected CrontaskBot bot;
+    protected BotContext context;
 
     protected BotState state;
 
     protected BotState handleMessage(String text) {
-        return state.handleMessage(new Message(SENDER_ID, text), bot);
+        return state.handleMessage(new ReceivedMessage(SENDER_ID, text), context);
     }
 
     protected BotState handleMessage(Command command) {
-        return state.handleMessage(new Message(SENDER_ID, command.toString()), bot);
+        return state.handleMessage(new ReceivedMessage(SENDER_ID, command.toString()), context);
     }
 }

@@ -19,18 +19,8 @@ public class Task {
         this.lastChecked = Time.now();
     }
 
-    public boolean isTriggered(Time untilTime) {
-        Time checkTime = lastChecked;
-        lastChecked = untilTime;
-
-        while(!checkTime.equals(untilTime)) {
-            if(schedule.isTriggered(checkTime)) {
-                return true;
-            }
-            checkTime = checkTime.nextMinute();
-        }
-
-        return false;
+    public boolean isTriggered(Time time) {
+        return schedule.isTriggered(time);
     }
 
     public long getId() {

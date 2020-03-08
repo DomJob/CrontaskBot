@@ -4,7 +4,6 @@ import static org.mockito.Mockito.verify;
 
 import application.BotStateTest;
 import application.command.Command;
-import configuration.Messages;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,34 +22,34 @@ public class DefaultStateTest extends BotStateTest {
     public void notACommand_thenDefaultMessage() {
         handleMessage("hello");
 
-        verify(bot).sendMessage(SENDER_ID, Messages.defaultMessage());
+        verify(context).sendDefaultMessage();
     }
 
     @Test
     public void startCommand_thenStartMessage() {
         handleMessage(Command.START);
 
-        verify(bot).sendMessage(SENDER_ID, Messages.startMessage());
+        verify(context).sendStartMessage();
     }
 
     @Test
     public void helpCommand_thenHelpMessage() {
         handleMessage(Command.HELP);
 
-        verify(bot).sendMessage(SENDER_ID, Messages.helpMessage());
+        verify(context).sendHelpMessage();
     }
 
     @Test
     public void newTaskCommand_thenNameRequestedMessage() {
         handleMessage(Command.NEW_TASK);
 
-        verify(bot).sendMessage(SENDER_ID, Messages.taskNameRequestedMessage());
+        verify(context).sendTaskNameRequestMessage();
     }
 
     @Test
     public void unknownCommand_thenDefaultMessage() {
         handleMessage("/whatever");
 
-        verify(bot).sendMessage(SENDER_ID, Messages.unknownCommand());
+        verify(context).sendUnknownCommandMessage();
     }
 }

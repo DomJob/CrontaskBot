@@ -2,12 +2,12 @@ package application.entities;
 
 import application.command.Command;
 
-public class Message {
-    public long sender;
+public class ReceivedMessage {
+    public long user;
     public String text;
 
-    public Message(long sender, String text) {
-        this.sender = sender;
+    public ReceivedMessage(long user, String text) {
+        this.user = user;
         this.text = text;
     }
 

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class TaskRepositoryInMemory implements TaskRepository {
+    // TODO - Actual persistence and move InMemory for IT Test
+
     private Map<Long, Task> tasks = new HashMap<>();
 
     @Override

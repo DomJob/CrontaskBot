@@ -2,13 +2,13 @@ package application.states;
 
 import application.BotState;
 import application.CrontaskBot;
-import application.entities.Message;
-import configuration.Messages;
+import application.command.Command;
+import application.entities.ReceivedMessage;
 import domain.Schedule;
 import domain.cronschedule.CronSchedule;
 import domain.cronschedule.InvalidCronFormatException;
 
-public class CronScheduleRequestedState implements BotState {
+class CronScheduleRequestedState implements BotState {
     private String taskName;
 
     public CronScheduleRequestedState(String taskName) {
@@ -16,16 +16,21 @@ public class CronScheduleRequestedState implements BotState {
     }
 
     @Override
-    public BotState handleMessage(Message message, CrontaskBot bot) {
+    public BotState handleMessage(ReceivedMessage message, BotContext context) {
+        if(message.getCommand() == Command.CANCEL) {
+            context.sendOperationCancelledMessage();
+            return new DefaultState();
+        }
+
         try {
             Schedule schedule = CronSchedule.parse(message.text);
 
-            bot.createTask(taskName, message.sender, schedule);
-            bot.sendMessage(message.sender, Messages.taskCreatedMessage());
+            context.createTask(taskName, schedule);
+            context.sendTaskCreatedMessage();
 
             return new DefaultState();
         } catch (InvalidCronFormatException e) {
-            bot.sendMessage(message.sender, Messages.invalidCronMessage());
+            context.sendInvalidCronFormatMessage();
             return this;
         }
     }

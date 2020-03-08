@@ -1,14 +1,19 @@
 package application.states;
 
 import application.BotState;
-import application.CrontaskBot;
-import application.entities.Message;
-import configuration.Messages;
+import application.command.Command;
+import application.entities.ReceivedMessage;
 
-public class TaskNameRequestedState implements BotState {
+class TaskNameRequestedState implements BotState {
     @Override
-    public BotState handleMessage(Message message, CrontaskBot bot) {
-        bot.sendMessage(message.sender, Messages.cronRequestedMessage());
+    public BotState handleMessage(ReceivedMessage message, BotContext context) {
+        if(message.getCommand() == Command.CANCEL) {
+            context.sendOperationCancelledMessage();
+            return new DefaultState();
+        }
+
+        context.sendCronScheduleRequestedMessage();
+
         return new CronScheduleRequestedState(message.text);
     }
 }

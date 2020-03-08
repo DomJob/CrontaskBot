@@ -2,7 +2,7 @@ package infrastructure.telegram;
 
 import application.entities.Button;
 import application.entities.CallbackQuery;
-import application.entities.Message;
+import application.entities.ReceivedMessage;
 import application.entities.Update;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,7 +61,7 @@ public class JsonWrapper {
 
     private Update mapUpdate(UpdateEntity updateEntity) {
         if (updateEntity.message != null) {
-            Message message = new Message(updateEntity.message.from.id, updateEntity.message.text);
+            ReceivedMessage message = new ReceivedMessage(updateEntity.message.from.id, updateEntity.message.text);
 
             return new Update(updateEntity.update_id, message);
         }

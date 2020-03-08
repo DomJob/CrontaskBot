@@ -1,14 +1,20 @@
 package application.states;
 
 import application.BotState;
-import application.CrontaskBot;
-import application.entities.Message;
-import configuration.Messages;
+import application.command.Command;
+import application.entities.ReceivedMessage;
 
-public class ReminderNamedRequestedState implements BotState {
+class ReminderNamedRequestedState implements BotState {
     @Override
-    public BotState handleMessage(Message message, CrontaskBot bot) {
-        bot.sendMessage(message.sender, Messages.reminderTimeRequestedMessage());
+    public BotState handleMessage(ReceivedMessage message, BotContext context) {
+        if(message.getCommand() == Command.CANCEL) {
+            context.sendOperationCancelledMessage();
+
+            return new DefaultState();
+        }
+
+        context.sendReminderTimeRequestedMessage();
+
         return new ReminderTimeRequestedState(message.text);
     }
 }

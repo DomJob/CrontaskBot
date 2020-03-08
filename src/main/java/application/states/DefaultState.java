@@ -1,34 +1,43 @@
 package application.states;
 
 import application.BotState;
-import application.CrontaskBot;
-import application.entities.Message;
-import configuration.Messages;
+import application.entities.ReceivedMessage;
 
-public class DefaultState implements BotState {
+class DefaultState implements BotState {
     @Override
-    public BotState handleMessage(Message message, CrontaskBot bot) {
+    public BotState handleMessage(ReceivedMessage message, BotContext context) {
         switch (message.getCommand()) {
             case START:
-                bot.sendMessage(message.sender, Messages.startMessage());
+                context.sendStartMessage();
+
                 return this;
             case NEW_TASK:
-                bot.sendMessage(message.sender, Messages.taskNameRequestedMessage());
+                context.sendTaskNameRequestMessage();
+
                 return new TaskNameRequestedState();
             case NEW_REMINDER:
-                bot.sendMessage(message.sender, Messages.reminderNameRequestedMessage());
+                context.sendReminderNameRequestedMessage();
+
                 return new ReminderNamedRequestedState();
             case HELP:
-                bot.sendMessage(message.sender, Messages.helpMessage());
+                context.sendHelpMessage();
+
                 return this;
             case CANCEL:
-                bot.sendMessage(message.sender, Messages.noOngoingOperation());
+                context.sendNoOngoingOperationMessage();
+
+                return this;
+            case COMMANDS:
+                context.sendListOfCommandsMessage();
+
                 return this;
             case UNKNOWN:
-                bot.sendMessage(message.sender, Messages.unknownCommand());
+                context.sendUnknownCommandMessage();
+
                 return this;
             default:
-                bot.sendMessage(message.sender, Messages.defaultMessage());
+                context.sendDefaultMessage();
+
                 return this;
         }
     }

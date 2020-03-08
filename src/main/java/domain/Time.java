@@ -18,13 +18,17 @@ public class Time {
     }
 
     public Time nextMinute() {
-        return new Time(minutesSinceEpoch+1);
+        return plusMinutes(1);
+    }
+
+    public Time previousMinute() {
+        return plusMinutes(-1);
     }
 
     public static Time now() {
         long secondsSinceEpoch = Instant.now().getEpochSecond();
 
-        long minutes = secondsSinceEpoch / 60;
+        long minutes = Math.round((double) secondsSinceEpoch / 60);
 
         return new Time(minutes);
     }

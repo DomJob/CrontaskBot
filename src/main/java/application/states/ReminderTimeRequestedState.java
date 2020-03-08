@@ -1,12 +1,12 @@
 package application.states;
 
 import application.BotState;
-import application.CrontaskBot;
-import application.entities.Message;
-import configuration.Messages;
+import application.command.Command;
+import application.entities.ReceivedMessage;
+import domain.reminderschedule.InvalidReminderFormatException;
 import domain.reminderschedule.ReminderSchedule;
 
-public class ReminderTimeRequestedState implements BotState {
+class ReminderTimeRequestedState implements BotState {
     private String reminderName;
 
     public ReminderTimeRequestedState(String reminderName) {
@@ -14,14 +14,24 @@ public class ReminderTimeRequestedState implements BotState {
     }
 
     @Override
-    public BotState handleMessage(Message message, CrontaskBot bot) {
-        // TODO - Parse reminder time
+    public BotState handleMessage(ReceivedMessage message, BotContext context) {
+        if(message.getCommand() == Command.CANCEL) {
+            context.sendOperationCancelledMessage();
 
-        ReminderSchedule schedule = new ReminderSchedule(null);
+            return new DefaultState();
+        }
 
-        bot.createReminder(reminderName, message.sender, schedule);
-        bot.sendMessage(message.sender, Messages.taskCreatedMessage());
+        try {
+            ReminderSchedule schedule = ReminderSchedule.parse(message.text);
+            context.createReminder(reminderName, schedule);
+            context.sendReminderCreatedMessage();
 
-        return new DefaultState();
+            return new DefaultState();
+        } catch (InvalidReminderFormatException e) {
+            context.sendInvalidReminderScheduleMessage();
+
+            return this;
+        }
+
     }
 }

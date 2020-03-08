@@ -15,7 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import application.entities.CallbackQuery;
-import application.entities.Message;
+import application.entities.ReceivedMessage;
 import application.entities.Update;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,7 +33,7 @@ public class EventHandlerTest {
     @Mock
     private TelegramApi api;
 
-    private Update messageUpdate = new Update(UPDATE_ID, new Message(SENDER_ID, MESSAGE_TEXT));
+    private Update messageUpdate = new Update(UPDATE_ID, new ReceivedMessage(SENDER_ID, MESSAGE_TEXT));
     private Update callbackUpdate = new Update(NEXT_UPDATE_ID, new CallbackQuery(CALLBACK_ID, SENDER_ID, MESSAGE_ID, CALLBACK_DATA));
 
     private List<Update> updates;

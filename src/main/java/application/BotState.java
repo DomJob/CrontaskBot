@@ -1,7 +1,8 @@
 package application;
 
-import application.entities.Message;
+import application.entities.ReceivedMessage;
+import application.states.BotContext;
 
 public interface BotState {
-    BotState handleMessage(Message message, CrontaskBot bot);
+    BotState handleMessage(ReceivedMessage message, BotContext context);
 }

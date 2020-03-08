@@ -2,11 +2,11 @@ package application.entities;
 
 public class Update {
     public long id;
-    public Message message;
+    public ReceivedMessage message;
     public CallbackQuery callbackQuery;
     public UpdateType type;
 
-    public Update(long id, Message message) {
+    public Update(long id, ReceivedMessage message) {
         this.id = id;
         this.message = message;
         this.type = UpdateType.MESSAGE;

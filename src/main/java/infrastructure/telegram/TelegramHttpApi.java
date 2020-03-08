@@ -1,5 +1,6 @@
 package infrastructure.telegram;
 
+import application.Message;
 import application.TelegramApi;
 import application.entities.Button;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,14 +28,9 @@ public class TelegramHttpApi implements TelegramApi {
     }
 
     @Override
-    public void sendMessage(long chatId, String text) {
-        sendMessageWithKeyboard(chatId, text, null);
-    }
-
-    @Override
-    public void sendMessageWithKeyboard(long chatId, String text, List<Button> buttons) {
+    public void sendMessage(Message message) {
         String url = formatUrl("sendMessage");
-        String request = jsonWrapper.formatMessageRequest(chatId, text, buttons);
+        String request = jsonWrapper.formatMessageRequest(message.getReceiver(), message.getText(), message.getButtons());
         httpWrapper.post(url, request);
     }
 
