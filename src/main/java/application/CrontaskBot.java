@@ -61,8 +61,11 @@ public class CrontaskBot {
         taskRepository.save(task);
     }
 
-    public void checkTasks(Time time) {
-        System.out.println("I am checking tasks for minute " + time.minute());
+    public void checkTasks() {
+        checkTasksAtTime(Time.now());
+    }
+
+    public void checkTasksAtTime(Time time) {
         for(Task task : taskRepository.findAll()) {
             if(task.isTriggered(time)) {
                 Message message = messageFactory.createTaskTriggeredMessage(task);

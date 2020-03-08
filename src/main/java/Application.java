@@ -30,20 +30,10 @@ public class Application {
     }
 
     private static void startSchedules(CrontaskBot bot) {
+        long timeUntilStartOfMinute = 60 - Instant.now().getEpochSecond() % 60;
+
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
         executor.scheduleAtFixedRate(bot::handleEvents, 0, 1, TimeUnit.SECONDS);
-
-        waitUntilStartOfMinute();
-        executor.scheduleAtFixedRate(() -> bot.checkTasks(Time.now()), 0, 1, TimeUnit.MINUTES);
-    }
-
-    private static void waitUntilStartOfMinute() {
-        while(Instant.now().getEpochSecond() % 60 != 0) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        executor.scheduleAtFixedRate(bot::checkTasks, timeUntilStartOfMinute, 60, TimeUnit.SECONDS);
     }
 }

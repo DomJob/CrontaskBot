@@ -8,7 +8,7 @@ public class CommandTest {
 
     @Test
     public void parseCommand() {
-        Command command = Command.parse("/newtask");
+        Command command = Command.parse("/task");
 
         assertEquals(Command.NEW_TASK, command);
     }
@@ -17,7 +17,7 @@ public class CommandTest {
     public void parseCommand_withParameters() {
         String parameter = "anything";
 
-        Command command = Command.parse("/newtask " + parameter);
+        Command command = Command.parse("/task " + parameter);
 
         assertEquals(Command.NEW_TASK, command);
 
@@ -26,7 +26,7 @@ public class CommandTest {
 
     @Test
     public void getMessageCommand() {
-        String commandText = "/newtask";
+        String commandText = "/task";
         Command command = Command.parse(commandText);
 
         assertEquals(commandText, command.toString());
