@@ -8,7 +8,7 @@ public class RangeMatcher extends CronMatcher {
     private int end;
 
     public RangeMatcher(int start, int end) {
-        if(start >= end) {
+        if (start >= end) {
             throw new InvalidCronFormatException();
         }
 

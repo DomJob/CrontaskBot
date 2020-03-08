@@ -14,11 +14,7 @@ public class Time {
 
     public Time(long minutesSinceEpoch) {
         this.minutesSinceEpoch = minutesSinceEpoch;
-        this.time = Instant.ofEpochSecond(minutesSinceEpoch*60).atZone(ZoneId.of("UTC")).toLocalDateTime();
-    }
-
-    public Time nextMinute() {
-        return plusMinutes(1);
+        this.time = Instant.ofEpochSecond(minutesSinceEpoch * 60).atZone(ZoneId.of("UTC")).toLocalDateTime();
     }
 
     public static Time now() {
@@ -32,13 +28,17 @@ public class Time {
     public static Time fromDate(int year, int month, int day, int hour, int minute) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        calendar.set(year, month-1, day, hour, minute, 0);
+        calendar.set(year, month - 1, day, hour, minute, 0);
 
-        return new Time(calendar.getTimeInMillis() / (60*1000));
+        return new Time(calendar.getTimeInMillis() / (60 * 1000));
     }
 
     public static Time fromLocalDateTime(LocalDateTime time) {
         return new Time(time.toEpochSecond(ZoneOffset.UTC) / 60);
+    }
+
+    public Time nextMinute() {
+        return plusMinutes(1);
     }
 
     public int year() {

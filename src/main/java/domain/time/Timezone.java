@@ -7,21 +7,15 @@ import java.util.Objects;
 
 public class Timezone {
     public static final Timezone UTC = new Timezone(0);
-
+    private static final String TIMEZONE_OFFSET_PATTERN = "^\\-?([0-9]+)(\\:([0-9]+))?$";
     private int offset;
 
     public Timezone(int offset) {
         this.offset = offset;
     }
 
-    public int getOffset() {
-        return offset;
-    }
-
-    private static final String TIMEZONE_OFFSET_PATTERN = "^\\-?([0-9]+)(\\:([0-9]+))?$";
-
     public static Timezone parse(String string) {
-        if(!string.matches(TIMEZONE_OFFSET_PATTERN)) {
+        if (!string.matches(TIMEZONE_OFFSET_PATTERN)) {
             throw new InvalidTimezoneOffsetException();
         }
 
@@ -30,17 +24,21 @@ public class Timezone {
         int hours = numbers.get(0);
         int minutes = numbers.size() == 2 ? numbers.get(1) : 0;
 
-        if(hours > 14 || minutes >= 60) {
+        if (hours > 14 || minutes >= 60) {
             throw new InvalidTimezoneOffsetException();
         }
 
         int offset = hours * 60 + minutes;
 
-        if(string.startsWith("-")) {
+        if (string.startsWith("-")) {
             offset *= -1;
         }
 
         return new Timezone(offset);
+    }
+
+    public int getOffset() {
+        return offset;
     }
 
     @Override

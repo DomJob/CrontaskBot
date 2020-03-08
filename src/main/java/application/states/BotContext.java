@@ -5,8 +5,8 @@ import application.entities.ReceivedMessage;
 import application.message.Message;
 import application.message.MessageFactory;
 import domain.Schedule;
-import domain.user.User;
 import domain.time.Timezone;
+import domain.user.User;
 
 public class BotContext {
     private CrontaskBot bot;

@@ -11,10 +11,10 @@ import domain.Schedule;
 import domain.Task.Task;
 import domain.Task.TaskFactory;
 import domain.Task.TaskRepository;
-import domain.time.Timezone;
-import domain.user.User;
 import domain.reminderschedule.ReminderSchedule;
 import domain.time.Time;
+import domain.time.Timezone;
+import domain.user.User;
 import domain.user.UserRepository;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,8 +76,8 @@ public class CrontaskBot {
     }
 
     public void checkTasks(Time time) {
-        for(Task task : taskRepository.findAll()) {
-            if(task.isTriggered(time)) {
+        for (Task task : taskRepository.findAll()) {
+            if (task.isTriggered(time)) {
                 User user = task.getOwner();
 
                 Message message = getMessageFactoryForUser(user).createTaskTriggeredMessage(task);
@@ -96,7 +96,7 @@ public class CrontaskBot {
     }
 
     private BotContext getOrCreateContextForUser(long userId) {
-        if(!contexts.containsKey(userId)) {
+        if (!contexts.containsKey(userId)) {
             User user = userRepository.findById(userId);
 
             BotContext context = new BotContext(this, user);

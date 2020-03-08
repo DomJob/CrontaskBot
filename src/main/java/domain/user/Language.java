@@ -1,5 +1,5 @@
 package domain.user;
 
 public enum Language {
-    ENGLISH;
+    ENGLISH
 }

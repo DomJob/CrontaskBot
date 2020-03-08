@@ -31,8 +31,8 @@ public class Scheduler {
     }
 
     public void handleEvents() {
-        for(Update update : api.getUpdates(lastUpdate)) {
-            switch(update.type) {
+        for (Update update : api.getUpdates(lastUpdate)) {
+            switch (update.type) {
                 case MESSAGE:
                     bot.handleMessage(update.message);
                     break;

@@ -11,6 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReminderSchedule implements Schedule {
+    private static String ABSOLUTE_TIME_PATTERN = "(([0-9]{4}[\\-\\s\\/])?[0-9]{1,2}[\\-\\s\\/][0-9]{1,2}\\s)?[0-9]{1,2}[\\:h][0-9]{1,2}";
+    private static String RELATIVE_TIME_PATTERN = "(in\\s)?(([0-9]+)\\s(days?|months?|years?|hours?|minutes?)(,|\\sand\\s)?\\s?)+(from\\snow)?";
     private Time time;
     private boolean absolute;
 
@@ -19,20 +21,9 @@ public class ReminderSchedule implements Schedule {
         this.absolute = absolute;
     }
 
-    @Override
-    public boolean isTriggered(Time time, Timezone timezone) {
-        if (absolute) {
-            time = time.withTimezone(timezone);
-        }
-        return this.time.equals(time);
-    }
-
     public static ReminderSchedule minutesFromNow(int minutes) {
         return new ReminderSchedule(Time.now().plusMinutes(minutes), false);
     }
-
-    private static String ABSOLUTE_TIME_PATTERN = "(([0-9]{4}[\\-\\s\\/])?[0-9]{1,2}[\\-\\s\\/][0-9]{1,2}\\s)?[0-9]{1,2}[\\:h][0-9]{1,2}";
-    private static String RELATIVE_TIME_PATTERN = "(in\\s)?(([0-9]+)\\s(days?|months?|years?|hours?|minutes?)(,|\\sand\\s)?\\s?)+(from\\snow)?";
 
     public static ReminderSchedule parse(String string) {
         string = string.toLowerCase();
@@ -117,5 +108,13 @@ public class ReminderSchedule implements Schedule {
 
         scheduledTime = Time.fromDate(year, month, day, hour, minute);
         return scheduledTime;
+    }
+
+    @Override
+    public boolean isTriggered(Time time, Timezone timezone) {
+        if (absolute) {
+            time = time.withTimezone(timezone);
+        }
+        return this.time.equals(time);
     }
 }

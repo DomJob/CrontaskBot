@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class CronMatcher {
-    public abstract boolean match(int value);
-
     private static final String ANY_MATCHER_FORMAT = "^\\*$";
     private static final String SPECIFIC_MATCHER_FORMAT = "^[0-9]+$";
     private static final String LIST_MATCHER_FORMAT = "^([0-9]+,)+[0-9]+$";
@@ -51,4 +49,6 @@ public abstract class CronMatcher {
             throw new InvalidCronFormatException();
         }
     }
+
+    public abstract boolean match(int value);
 }

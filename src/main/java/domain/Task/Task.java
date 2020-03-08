@@ -1,8 +1,8 @@
 package domain.Task;
 
 import domain.Schedule;
-import domain.user.User;
 import domain.time.Time;
+import domain.user.User;
 
 public class Task {
     private long id;

@@ -10,7 +10,7 @@ public class UserRepositoryInMemory implements UserRepository {
 
     @Override
     public User findById(long id) {
-        if(!users.containsKey(id)) {
+        if (!users.containsKey(id)) {
             save(new User(id));
         }
 

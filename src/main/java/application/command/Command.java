@@ -18,16 +18,6 @@ public enum Command {
     NOT_A_COMMAND,
     UNKNOWN;
 
-    private String text;
-    private List<String> parameters;
-
-    Command(String text) {
-        this.text = text;
-    }
-
-    Command() {
-    }
-
     private static final Map<String, Command> lookup = new HashMap<>();
 
     static {
@@ -36,13 +26,14 @@ public enum Command {
         }
     }
 
-    @Override
-    public String toString() {
-        return "/" + text;
+    private String text;
+    private List<String> parameters;
+
+    Command(String text) {
+        this.text = text;
     }
 
-    public List<String> getParameters() {
-        return Collections.unmodifiableList(parameters);
+    Command() {
     }
 
     public static Command parse(String message) {
@@ -61,5 +52,14 @@ public enum Command {
         command.parameters = parameters;
 
         return command;
+    }
+
+    @Override
+    public String toString() {
+        return "/" + text;
+    }
+
+    public List<String> getParameters() {
+        return Collections.unmodifiableList(parameters);
     }
 }

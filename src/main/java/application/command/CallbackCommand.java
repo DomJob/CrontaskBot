@@ -10,13 +10,6 @@ public enum CallbackCommand {
     DISMISS("dismiss"),
     SNOOZE("snooze");
 
-    private String text;
-    private List<String> parameters;
-
-    CallbackCommand(String text) {
-        this.text = text;
-    }
-
     private static final Map<String, CallbackCommand> lookup = new HashMap<>();
 
     static {
@@ -25,8 +18,11 @@ public enum CallbackCommand {
         }
     }
 
-    public List<String> getParameters() {
-        return Collections.unmodifiableList(parameters);
+    private String text;
+    private List<String> parameters;
+
+    CallbackCommand(String text) {
+        this.text = text;
     }
 
     public static CallbackCommand parse(String message) {
@@ -38,5 +34,9 @@ public enum CallbackCommand {
         command.parameters = parameters;
 
         return command;
+    }
+
+    public List<String> getParameters() {
+        return Collections.unmodifiableList(parameters);
     }
 }

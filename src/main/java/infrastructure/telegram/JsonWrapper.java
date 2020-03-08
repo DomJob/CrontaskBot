@@ -85,7 +85,7 @@ public class JsonWrapper {
     private String serializeButtons(List<Button> buttons) {
         List<Map<String, String>> buttonRow =
             buttons.stream()
-                .map(b -> new HashMap<String,String>() {{
+                .map(b -> new HashMap<String, String>() {{
                     put("text", b.text);
                     put("callback_data", b.data);
                 }})

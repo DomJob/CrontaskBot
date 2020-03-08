@@ -16,7 +16,7 @@ import ui.MessageFactoryProviderImpl;
 
 public class Application {
     public static void main(String[] args) {
-        if(args.length != 1) {
+        if (args.length != 1) {
             throw new IllegalArgumentException("Argument must be bot's token.");
         }
         String token = args[0];
