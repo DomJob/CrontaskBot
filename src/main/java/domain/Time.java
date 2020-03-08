@@ -3,6 +3,7 @@ package domain;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -34,6 +35,10 @@ public class Time {
         calendar.set(year, month-1, day, hour, minute, 0);
 
         return new Time(calendar.getTimeInMillis() / (60*1000));
+    }
+
+    public static Time fromLocalDateTime(LocalDateTime time) {
+        return new Time(time.toEpochSecond(ZoneOffset.UTC) / 60);
     }
 
     public int year() {
@@ -70,6 +75,26 @@ public class Time {
         }
         Time time = (Time) o;
         return minutesSinceEpoch == time.minutesSinceEpoch;
+    }
+
+    public Time plusMinutes(int minutes) {
+        return new Time(minutesSinceEpoch + minutes);
+    }
+
+    public Time plusHours(int hours) {
+        return plusMinutes(hours * 60);
+    }
+
+    public Time plusDays(int days) {
+        return fromLocalDateTime(time.plusDays(days));
+    }
+
+    public Time plusMonths(int months) {
+        return fromLocalDateTime(time.plusMonths(months));
+    }
+
+    public Time plusYears(int years) {
+        return fromLocalDateTime(time.plusYears(years));
     }
 
     @Override

@@ -13,8 +13,11 @@ public class DefaultState implements BotState {
                 bot.sendMessage(message.sender, Messages.startMessage());
                 return this;
             case NEW_TASK:
-                bot.sendMessage(message.sender, Messages.nameRequestedMessage());
-                return new NameRequestedState();
+                bot.sendMessage(message.sender, Messages.taskNameRequestedMessage());
+                return new TaskNameRequestedState();
+            case NEW_REMINDER:
+                bot.sendMessage(message.sender, Messages.reminderNameRequestedMessage());
+                return new ReminderNamedRequestedState();
             case HELP:
                 bot.sendMessage(message.sender, Messages.helpMessage());
                 return this;

@@ -44,7 +44,7 @@ public class DefaultStateTest extends BotStateTest {
     public void newTaskCommand_thenNameRequestedMessage() {
         handleMessage(Command.NEW_TASK);
 
-        verify(bot).sendMessage(SENDER_ID, Messages.nameRequestedMessage());
+        verify(bot).sendMessage(SENDER_ID, Messages.taskNameRequestedMessage());
     }
 
     @Test

@@ -48,7 +48,7 @@ public class CrontaskBotITest {
         bot.handleMessage(new Message(OTHER_SENDER_ID, NEW_TASK_COMMAND));
 
         verify(api).sendMessage(SENDER_ID, Messages.cronRequestedMessage());
-        verify(api).sendMessage(OTHER_SENDER_ID, Messages.nameRequestedMessage());
+        verify(api).sendMessage(OTHER_SENDER_ID, Messages.taskNameRequestedMessage());
     }
 
     @Test

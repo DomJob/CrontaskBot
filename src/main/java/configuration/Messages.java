@@ -6,7 +6,7 @@ public class Messages {
         return "This is the help message";
     }
 
-    public static String nameRequestedMessage() {
+    public static String taskNameRequestedMessage() {
         return "Name your task";
     }
 
@@ -40,5 +40,13 @@ public class Messages {
 
     public static String noOngoingOperation() {
         return "No operation to cancel.";
+    }
+
+    public static String reminderNameRequestedMessage() {
+        return "Name your reminder";
+    }
+
+    public static String reminderTimeRequestedMessage() {
+        return "Schedule a time for this reminder";
     }
 }

@@ -1,4 +1,6 @@
-package domain.cronschedule;
+package domain.cronschedule.matchers;
+
+import domain.cronschedule.CronMatcher;
 
 public class AnyMatcher extends CronMatcher {
     @Override

@@ -1,5 +1,6 @@
-package domain.cronschedule;
+package domain.cronschedule.matchers;
 
+import domain.cronschedule.CronMatcher;
 import java.util.Set;
 
 public class ListMatcher extends CronMatcher {

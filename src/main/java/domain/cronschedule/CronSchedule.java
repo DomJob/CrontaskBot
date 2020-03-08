@@ -4,6 +4,8 @@ import domain.Schedule;
 import domain.Time;
 
 public class CronSchedule implements Schedule {
+    private String code;
+
     private CronMatcher minute;
     private CronMatcher hour;
     private CronMatcher day;
@@ -34,12 +36,21 @@ public class CronSchedule implements Schedule {
             throw new InvalidCronFormatException();
         }
 
-        return new CronSchedule(
+        CronSchedule schedule = new CronSchedule(
             CronMatcher.parse(matchers[0]),
             CronMatcher.parse(matchers[1]),
             CronMatcher.parse(matchers[2]),
             CronMatcher.parse(matchers[3]),
             CronMatcher.parse(matchers[4])
         );
+
+        schedule.code = string;
+
+        return schedule;
+    }
+
+    @Override
+    public String toString() {
+        return code;
     }
 }

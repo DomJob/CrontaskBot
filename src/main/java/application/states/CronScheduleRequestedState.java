@@ -8,10 +8,10 @@ import domain.Schedule;
 import domain.cronschedule.CronSchedule;
 import domain.cronschedule.InvalidCronFormatException;
 
-public class ScheduleRequestedState implements BotState {
+public class CronScheduleRequestedState implements BotState {
     private String taskName;
 
-    public ScheduleRequestedState(String taskName) {
+    public CronScheduleRequestedState(String taskName) {
         this.taskName = taskName;
     }
 
