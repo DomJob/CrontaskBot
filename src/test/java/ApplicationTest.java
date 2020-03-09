@@ -107,6 +107,47 @@ public class ApplicationTest {
     }
 
     @Test
+    public void createTask_triggers_dayOfWeek() {
+        createTask("0 0 * * 3"); // Every wednesday at midnight
+
+        bot.checkTasks(Time.fromDate(2020,3,11,0,0)); // Wednesday
+        bot.checkTasks(Time.fromDate(2020,3,18,0,0)); // Wednesday
+        bot.checkTasks(Time.fromDate(2020,3,25,0,0)); // Wednesday
+        bot.checkTasks(Time.fromDate(2020,3,25,0,1)); // Wednesday wrong minute
+        bot.checkTasks(Time.fromDate(2020,3,5,0,0)); // Tuesday
+
+        verify(messageFactory, times(3)).createTaskTriggeredMessage(any(Task.class));
+    }
+
+    @Test
+    public void createTask_triggers_dayOfMonth() {
+        createTask("30 5 7 * *"); // Every 7th of the month at 5:30 am
+
+        bot.checkTasks(Time.fromDate(2020,3,7,5,30)); // OK
+        bot.checkTasks(Time.fromDate(2020,4,7,5,30)); // OK
+        bot.checkTasks(Time.fromDate(2020,7,7,5,30)); // OK
+        bot.checkTasks(Time.fromDate(2020,7,7,5,29)); // NO
+        bot.checkTasks(Time.fromDate(2020,7,7,5,31)); // NO
+        bot.checkTasks(Time.fromDate(2020,7,9,5,30)); // NO
+
+        verify(messageFactory, times(3)).createTaskTriggeredMessage(any(Task.class));
+    }
+
+    @Test
+    public void createTask_triggers_complex() {
+        createTask("0 */2 * 9 2"); // Every even hour on Tuesdays in September
+
+        bot.checkTasks(Time.fromDate(2020,9,8,5,0)); // NO
+        bot.checkTasks(Time.fromDate(2020,9,8,8,0)); // OK
+        bot.checkTasks(Time.fromDate(2020,9,9,8,0)); // NO
+        bot.checkTasks(Time.fromDate(2020,9,15,16,0)); // OK
+        bot.checkTasks(Time.fromDate(2020,9,22,6,0)); // OK
+        bot.checkTasks(Time.fromDate(2020,9,22,6,1)); // NO
+
+        verify(messageFactory, times(3)).createTaskTriggeredMessage(any(Task.class));
+    }
+
+    @Test
     public void createTask_cronEvery5minutes_isTriggeredManyTimes() {
         createTask(SCHEDULE_EVERY_5_MINUTES);
 
@@ -122,7 +163,7 @@ public class ApplicationTest {
     }
 
     @Test
-    public void createReminder_relativeTime_canBeTriggered() {
+    public void createTask_relativeTime_canBeTriggered() {
         createTask(IN_5_MINUTES);
 
         bot.checkTasks(CURRENT_TIME.plusMinutes(4));
@@ -133,7 +174,7 @@ public class ApplicationTest {
     }
 
     @Test
-    public void createReminder_exactTime_canBeTriggered() {
+    public void createTask_exactTime_canBeTriggered() {
         createTask("2020-03-15 15:20");
 
         bot.checkTasks(Time.fromDate(2020, 3, 15, 15, 19));
@@ -144,7 +185,7 @@ public class ApplicationTest {
     }
 
     @Test
-    public void createReminder_exactTimeWithoutYear_currentYearIsUsed() {
+    public void createTask_exactTimeWithoutYear_currentYearIsUsed() {
         int year = CURRENT_TIME.year();
 
         createTask("03-15 15:20");
@@ -157,7 +198,7 @@ public class ApplicationTest {
     }
 
     @Test
-    public void createReminder_exactTimeWithoutYearMonthDay_currentValuesAreUsed() {
+    public void createTask_exactTimeWithoutYearMonthDay_currentValuesAreUsed() {
         int year = CURRENT_TIME.year();
         int month = CURRENT_TIME.month();
         int day = CURRENT_TIME.day();
@@ -246,7 +287,7 @@ public class ApplicationTest {
 
     @Test
     public void setTimezone_canTriggerReminderAtCorrectTimeInTimezone() {
-        setTimezone("-4:00");
+        setTimezone("-5:00");
 
         createTask("2020-03-15 15:20");
 
@@ -256,8 +297,8 @@ public class ApplicationTest {
         bot.checkTasks(timeUTC);
         verify(messageFactory, never()).createTaskTriggeredMessage(any(Task.class));
 
-        // But it does trigger 4 hours later
-        bot.checkTasks(timeUTC.plusHours(4));
+        // But it does trigger 5 hours later
+        bot.checkTasks(timeUTC.plusHours(5));
         verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
     }
 

@@ -8,8 +8,8 @@ public abstract class CronMatcher {
     private static final String ANY_MATCHER_FORMAT = "^\\*$";
     private static final String SPECIFIC_MATCHER_FORMAT = "^[0-9]+$";
     private static final String LIST_MATCHER_FORMAT = "^([0-9]+,)+[0-9]+$";
-    private static final String RANGE_MATCHER_FORMAT = "^[0-9]+\\-[0-9]+$";
-    private static final String STEP_MATCHER_FORMAT = "^\\*\\/[0-9]+$";
+    private static final String RANGE_MATCHER_FORMAT = "^[0-9]+-[0-9]+$";
+    private static final String STEP_MATCHER_FORMAT = "^\\*/[0-9]+$";
 
     public static CronMatcher parse(String string) {
         if (string.matches(ANY_MATCHER_FORMAT)) {

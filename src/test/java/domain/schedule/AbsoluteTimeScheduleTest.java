@@ -2,17 +2,13 @@ package domain.schedule;
 
 import static org.junit.Assert.assertTrue;
 
-import domain.schedule.AbsoluteTimeSchedule;
-import domain.schedule.InvalidScheduleException;
-import domain.schedule.RelativeTimeSchedule;
-import domain.schedule.Schedule;
 import domain.time.Time;
 import domain.time.Timezone;
 import org.junit.Test;
 
 public class AbsoluteTimeScheduleTest {
 
-    public static final Time NOW = Time.fromDate(2020,03,01,15,20);
+    public static final Time NOW = Time.fromDate(2020,3,1,15,20);
 
     @Test
     public void parseFullTime() {
@@ -78,6 +74,6 @@ public class AbsoluteTimeScheduleTest {
     public void parseSchedule_invalidFormat() {
         String string = "literally anything that breaks this";
 
-        Schedule schedule = AbsoluteTimeSchedule.parse(string, NOW);
+        AbsoluteTimeSchedule.parse(string, NOW);
     }
 }

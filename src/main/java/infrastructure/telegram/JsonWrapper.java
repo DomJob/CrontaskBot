@@ -115,6 +115,6 @@ public class JsonWrapper {
     }
 
     private String serializeParameters(List<Parameter> parameters) {
-        return serializeParameters(parameters.toArray(new Parameter[parameters.size()]));
+        return serializeParameters(parameters.toArray(new Parameter[0]));
     }
 }

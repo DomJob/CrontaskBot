@@ -5,7 +5,7 @@ import domain.time.Time;
 import domain.time.Timezone;
 
 public class CronSchedule implements Schedule {
-    protected static String PATTERN = "^((?:[\\s]|^)(\\*(\\/[0-9]+)?|([0-9]+\\-[0-9]+)|([0-9]+,)*[0-9]+)(?=[\\s]|$)){5}$";
+    protected static String PATTERN = "^((?:[\\s]|^)(\\*(/[0-9]+)?|([0-9]+-[0-9]+)|([0-9]+,)*[0-9]+)(?=[\\s]|$)){5}$";
 
     private String code;
 

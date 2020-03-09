@@ -22,7 +22,7 @@ public class TaskTest {
     @Mock
     private Schedule schedule;
 
-    private static Time TIME = Time.fromDate(2020,03,15,20,18);
+    private static Time TIME = Time.fromDate(2020,3,15,20,18);
 
     private Task task;
 

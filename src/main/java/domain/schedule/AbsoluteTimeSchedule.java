@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class AbsoluteTimeSchedule implements Schedule {
-    protected static final String PATTERN = "^(([0-9]{4}[\\-\\s\\/])?[0-9]{1,2}[\\-\\s\\/][0-9]{1,2}\\s)?[0-9]{1,2}[\\:h][0-9]{1,2}$";
+    protected static final String PATTERN = "^(([0-9]{4}[\\-\\s/])?[0-9]{1,2}[\\-\\s/][0-9]{1,2}\\s)?[0-9]{1,2}[:h][0-9]{1,2}$";
 
     private Time time;
 

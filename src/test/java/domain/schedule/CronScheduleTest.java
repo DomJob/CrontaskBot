@@ -1,11 +1,8 @@
 package domain.schedule;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import domain.schedule.CronSchedule;
-import domain.schedule.InvalidScheduleException;
-import domain.schedule.Schedule;
 import domain.time.Time;
 import domain.time.Timezone;
 import org.junit.Test;

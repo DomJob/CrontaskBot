@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class RelativeTimeScheduleTest {
 
-    private static Time NOW = Time.fromDate(2020, 03, 15, 15, 20);
+    private static Time NOW = Time.fromDate(2020, 3, 15, 15, 20);
 
     @Test
     public void parseRelativeTime_minutesFromNow() {
