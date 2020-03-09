@@ -2,7 +2,7 @@ package display;
 
 import application.message.Message;
 import application.message.MessageFactory;
-import domain.Task.Task;
+import domain.task.Task;
 
 public class EnglishMessageFactory implements MessageFactory {
     // Todo - Make these messages more pretty

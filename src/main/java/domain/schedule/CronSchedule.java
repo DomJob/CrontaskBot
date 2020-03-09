@@ -1,7 +1,6 @@
 package domain.schedule;
 
-import domain.schedule.cron.CronMatcher;
-import domain.schedule.cron.InvalidCronFormatException;
+import domain.schedule.cronmatchers.CronMatcher;
 import domain.time.Time;
 import domain.time.Timezone;
 
@@ -32,7 +31,7 @@ public class CronSchedule implements Schedule {
         String[] matchers = string.split(" ");
 
         if (matchers.length != 5) {
-            throw new InvalidCronFormatException();
+            throw new InvalidScheduleException();
         }
 
         CronSchedule schedule = new CronSchedule(

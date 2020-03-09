@@ -1,4 +1,4 @@
-package domain.schedule.cron;
+package domain.schedule;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;

@@ -1,4 +1,4 @@
-package domain.Task;
+package domain.task;
 
 import domain.schedule.Schedule;
 import domain.time.Time;

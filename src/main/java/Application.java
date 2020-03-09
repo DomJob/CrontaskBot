@@ -1,8 +1,8 @@
 import application.CrontaskBot;
 import application.TelegramApi;
 import display.ConcreteMessageFactoryProvider;
-import domain.Task.TaskFactory;
-import domain.Task.TaskRepository;
+import domain.task.TaskFactory;
+import domain.task.TaskRepository;
 import domain.user.UserRepository;
 import infrastructure.Scheduler;
 import infrastructure.persistence.inmemory.TaskRepositoryInMemory;

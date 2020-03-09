@@ -1,4 +1,4 @@
-package domain;
+package domain.time;
 
 import static org.junit.Assert.*;
 

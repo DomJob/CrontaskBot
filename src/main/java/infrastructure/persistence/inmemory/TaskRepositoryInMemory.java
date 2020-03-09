@@ -1,7 +1,7 @@
 package infrastructure.persistence.inmemory;
 
-import domain.Task.Task;
-import domain.Task.TaskRepository;
+import domain.task.Task;
+import domain.task.TaskRepository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

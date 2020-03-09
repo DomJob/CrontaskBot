@@ -6,7 +6,7 @@ import domain.time.Timezone;
 public class TimezoneOffsetRequestedState implements BotState {
     @Override
     public BotState handleMessage(ReceivedMessage message, BotContext context) {
-        Timezone timezone = Timezone.parse(message.text);
+        Timezone timezone = Timezone.fromString(message.text);
 
         context.setTimezone(timezone);
 

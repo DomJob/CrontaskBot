@@ -1,4 +1,4 @@
-package domain.reminderschedule;
+package domain.schedule;
 
 import static org.junit.Assert.assertTrue;
 

@@ -1,10 +1,6 @@
-package domain.schedule.cron;
+package domain.schedule.cronmatchers;
 
-import domain.schedule.cron.matchers.AnyMatcher;
-import domain.schedule.cron.matchers.ListMatcher;
-import domain.schedule.cron.matchers.RangeMatcher;
-import domain.schedule.cron.matchers.SpecificMatcher;
-import domain.schedule.cron.matchers.StepMatcher;
+import domain.schedule.InvalidScheduleException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,7 +42,7 @@ public abstract class CronMatcher {
 
             return new StepMatcher(step);
         } else {
-            throw new InvalidCronFormatException();
+            throw new InvalidScheduleException();
         }
     }
 

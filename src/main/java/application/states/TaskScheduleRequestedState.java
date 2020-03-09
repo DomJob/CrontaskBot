@@ -4,7 +4,6 @@ import application.command.Command;
 import application.entities.ReceivedMessage;
 import domain.schedule.InvalidScheduleException;
 import domain.schedule.Schedule;
-import domain.schedule.ScheduleParser;
 
 class TaskScheduleRequestedState implements BotState {
     private String taskName;
@@ -21,7 +20,7 @@ class TaskScheduleRequestedState implements BotState {
         }
 
         try {
-            Schedule schedule = new ScheduleParser().parse(message.text, message.time);
+            Schedule schedule = Schedule.parse(message.text, message.time);
             context.createTask(taskName, schedule);
         } catch (InvalidScheduleException e) {
             context.sendInvalidScheduleFormat();

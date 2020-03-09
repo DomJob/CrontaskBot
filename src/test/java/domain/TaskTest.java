@@ -5,7 +5,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import domain.Task.Task;
+import domain.task.Task;
 import domain.schedule.Schedule;
 import domain.time.Time;
 import domain.time.Timezone;

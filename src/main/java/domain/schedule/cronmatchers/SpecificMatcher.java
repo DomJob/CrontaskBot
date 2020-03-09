@@ -1,6 +1,4 @@
-package domain.schedule.cron.matchers;
-
-import domain.schedule.cron.CronMatcher;
+package domain.schedule.cronmatchers;
 
 public class SpecificMatcher extends CronMatcher {
     private int value;

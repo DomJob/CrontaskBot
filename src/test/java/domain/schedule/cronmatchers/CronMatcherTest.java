@@ -1,7 +1,8 @@
-package domain.schedule.cron;
+package domain.schedule.cronmatchers;
 
 import static org.junit.Assert.*;
 
+import domain.schedule.InvalidScheduleException;
 import org.junit.Test;
 
 public class CronMatcherTest {
@@ -86,17 +87,17 @@ public class CronMatcherTest {
         assertFalse(matcher.match(9));
     }
 
-    @Test(expected = InvalidCronFormatException.class)
+    @Test(expected = InvalidScheduleException.class)
     public void invalidFormat_throwsException_1() {
         CronMatcher.parse("asdas");
     }
 
-    @Test(expected = InvalidCronFormatException.class)
+    @Test(expected = InvalidScheduleException.class)
     public void invalidFormat_throwsException_2() {
         CronMatcher.parse("*-");
     }
 
-    @Test(expected = InvalidCronFormatException.class)
+    @Test(expected = InvalidScheduleException.class)
     public void invalidFormat_throwsException_3() {
         CronMatcher.parse("/8");
     }

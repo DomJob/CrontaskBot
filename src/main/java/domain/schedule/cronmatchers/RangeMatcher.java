@@ -1,7 +1,6 @@
-package domain.schedule.cron.matchers;
+package domain.schedule.cronmatchers;
 
-import domain.schedule.cron.CronMatcher;
-import domain.schedule.cron.InvalidCronFormatException;
+import domain.schedule.InvalidScheduleException;
 
 public class RangeMatcher extends CronMatcher {
     private int start;
@@ -9,7 +8,7 @@ public class RangeMatcher extends CronMatcher {
 
     public RangeMatcher(int start, int end) {
         if (start >= end) {
-            throw new InvalidCronFormatException();
+            throw new InvalidScheduleException();
         }
 
         this.start = start;

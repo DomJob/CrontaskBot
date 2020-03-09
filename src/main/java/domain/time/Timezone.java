@@ -14,9 +14,9 @@ public class Timezone {
         this.offset = offset;
     }
 
-    public static Timezone parse(String string) {
+    public static Timezone fromString(String string) {
         if (!string.matches(TIMEZONE_OFFSET_PATTERN)) {
-            throw new InvalidTimezoneOffsetException();
+            throw new IllegalArgumentException();
         }
 
         List<Integer> numbers = extractNumbers(string);
@@ -25,7 +25,7 @@ public class Timezone {
         int minutes = numbers.size() == 2 ? numbers.get(1) : 0;
 
         if (hours > 14 || minutes >= 60) {
-            throw new InvalidTimezoneOffsetException();
+            throw new IllegalArgumentException();
         }
 
         int offset = hours * 60 + minutes;

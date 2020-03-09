@@ -1,6 +1,6 @@
 package application.message;
 
-import domain.Task.Task;
+import domain.task.Task;
 
 public interface MessageFactory {
     Message createTaskTriggeredMessage(Task task);
