@@ -1,4 +1,4 @@
-package domain.cronschedule;
+package domain.schedule.cron;
 
 import static org.junit.Assert.*;
 

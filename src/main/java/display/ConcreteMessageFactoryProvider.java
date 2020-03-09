@@ -1,11 +1,11 @@
-package ui;
+package display;
 
 import application.message.MessageFactory;
 import domain.user.Language;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MessageFactoryProviderImpl implements application.message.MessageFactoryProvider {
+public class ConcreteMessageFactoryProvider implements application.message.MessageFactoryProvider {
     private static Map<Language, MessageFactory> factories = new HashMap<>();
 
     static {

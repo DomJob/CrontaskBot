@@ -5,7 +5,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import domain.Schedule;
+import domain.schedule.Schedule;
 import domain.Task.Task;
 import domain.Task.TaskFactory;
 import domain.Task.TaskRepository;
@@ -16,7 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import ui.EnglishMessageFactory;
+import display.EnglishMessageFactory;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CrontaskBotTest {

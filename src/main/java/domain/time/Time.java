@@ -17,14 +17,6 @@ public class Time {
         this.time = Instant.ofEpochSecond(minutesSinceEpoch * 60).atZone(ZoneId.of("UTC")).toLocalDateTime();
     }
 
-    public static Time now() {
-        long secondsSinceEpoch = Instant.now().getEpochSecond();
-
-        long minutes = Math.round((double) secondsSinceEpoch / 60);
-
-        return new Time(minutes);
-    }
-
     public static Time fromDate(int year, int month, int day, int hour, int minute) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -65,18 +57,6 @@ public class Time {
         return time.getDayOfWeek().getValue() % 7;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Time time = (Time) o;
-        return minutesSinceEpoch == time.minutesSinceEpoch;
-    }
-
     public Time plusMinutes(int minutes) {
         return new Time(minutesSinceEpoch + minutes);
     }
@@ -115,5 +95,17 @@ public class Time {
         return "Time{" +
             "minutesSinceEpoch=" + minutesSinceEpoch +
             '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Time time = (Time) o;
+        return minutesSinceEpoch == time.minutesSinceEpoch;
     }
 }

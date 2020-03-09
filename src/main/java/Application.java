@@ -1,6 +1,6 @@
 import application.CrontaskBot;
 import application.TelegramApi;
-import application.message.MessageFactory;
+import display.ConcreteMessageFactoryProvider;
 import domain.Task.TaskFactory;
 import domain.Task.TaskRepository;
 import domain.user.UserRepository;
@@ -11,8 +11,6 @@ import infrastructure.telegram.HttpWrapper;
 import infrastructure.telegram.JsonWrapper;
 import infrastructure.telegram.TelegramHttpApi;
 import infrastructure.util.RandomLongGenerator;
-import ui.EnglishMessageFactory;
-import ui.MessageFactoryProviderImpl;
 
 public class Application {
     public static void main(String[] args) {
@@ -23,10 +21,9 @@ public class Application {
 
         TaskRepository taskRepository = new TaskRepositoryInMemory();
         UserRepository userRepository = new UserRepositoryInMemory();
-        MessageFactory messageFactory = new EnglishMessageFactory();
 
         TelegramApi api = new TelegramHttpApi(token, new HttpWrapper(), new JsonWrapper());
-        CrontaskBot bot = new CrontaskBot(api, taskRepository, userRepository, new TaskFactory(new RandomLongGenerator()), new MessageFactoryProviderImpl());
+        CrontaskBot bot = new CrontaskBot(api, taskRepository, userRepository, new TaskFactory(new RandomLongGenerator()), new ConcreteMessageFactoryProvider());
 
         new Scheduler(bot, api).start();
     }

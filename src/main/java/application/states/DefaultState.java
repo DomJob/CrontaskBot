@@ -14,10 +14,6 @@ class DefaultState implements BotState {
                 context.sendTaskNameRequestMessage();
 
                 return new TaskNameRequestedState();
-            case NEW_REMINDER:
-                context.sendReminderNameRequestedMessage();
-
-                return new ReminderNamedRequestedState();
             case HELP:
                 context.sendHelpMessage();
 

@@ -2,14 +2,14 @@ package application.states;
 
 import application.command.Command;
 import application.entities.ReceivedMessage;
-import domain.Schedule;
-import domain.cronschedule.CronSchedule;
-import domain.cronschedule.InvalidCronFormatException;
+import domain.schedule.InvalidScheduleException;
+import domain.schedule.Schedule;
+import domain.schedule.ScheduleParser;
 
-class CronScheduleRequestedState implements BotState {
+class TaskScheduleRequestedState implements BotState {
     private String taskName;
 
-    public CronScheduleRequestedState(String taskName) {
+    public TaskScheduleRequestedState(String taskName) {
         this.taskName = taskName;
     }
 
@@ -21,15 +21,14 @@ class CronScheduleRequestedState implements BotState {
         }
 
         try {
-            Schedule schedule = CronSchedule.parse(message.text);
-
+            Schedule schedule = new ScheduleParser().parse(message.text, message.time);
             context.createTask(taskName, schedule);
-            context.sendTaskCreatedMessage();
-
-            return new DefaultState();
-        } catch (InvalidCronFormatException e) {
-            context.sendInvalidCronFormatMessage();
+        } catch (InvalidScheduleException e) {
+            context.sendInvalidScheduleFormat();
             return this;
         }
+
+        context.sendTaskCreatedMessage();
+        return new DefaultState();
     }
 }

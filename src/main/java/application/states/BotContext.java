@@ -4,7 +4,7 @@ import application.CrontaskBot;
 import application.entities.ReceivedMessage;
 import application.message.Message;
 import application.message.MessageFactory;
-import domain.Schedule;
+import domain.schedule.Schedule;
 import domain.time.Timezone;
 import domain.user.User;
 
@@ -54,10 +54,6 @@ public class BotContext {
         send(messageFactory.createHelpMessage());
     }
 
-    protected void sendReminderNameRequestedMessage() {
-        send(messageFactory.createReminderNameRequestedMessage());
-    }
-
     protected void sendTaskNameRequestMessage() {
         send(messageFactory.createTaskNameRequestMessage());
     }
@@ -70,28 +66,16 @@ public class BotContext {
         send(messageFactory.createOperationCancelledMessage());
     }
 
-    protected void sendInvalidCronFormatMessage() {
-        send(messageFactory.createInvalidCronFormatMessage());
+    protected void sendInvalidScheduleFormat() {
+        send(messageFactory.createInvalidScheduleFormat());
     }
 
     protected void sendTaskCreatedMessage() {
         send(messageFactory.createTaskCreatedMessage());
     }
 
-    protected void sendReminderTimeRequestedMessage() {
-        send(messageFactory.createReminderTimeRequestedMessage());
-    }
-
-    protected void sendInvalidReminderScheduleMessage() {
-        send(messageFactory.createInvalidReminderScheduleMessage());
-    }
-
-    protected void sendReminderCreatedMessage() {
-        send(messageFactory.createReminderCreatedMessage());
-    }
-
     protected void sendCronScheduleRequestedMessage() {
-        send(messageFactory.createCronScheduleRequestedMessage());
+        send(messageFactory.createScheduleRequestedMessage());
     }
 
     protected void sendListOfCommandsMessage() {
@@ -104,9 +88,5 @@ public class BotContext {
 
     public void sendTimezoneOffsetRequestedMessage() {
         send(messageFactory.createTimezoneOffsetRequestedMessage());
-    }
-
-    public void sendInvalidOperationMessage() {
-        send(messageFactory.createInvalidOperationMessage());
     }
 }

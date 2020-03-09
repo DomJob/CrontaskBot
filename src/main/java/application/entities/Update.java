@@ -1,5 +1,7 @@
 package application.entities;
 
+import domain.time.Time;
+
 public class Update {
     public long id;
     public ReceivedMessage message;
@@ -16,5 +18,14 @@ public class Update {
         this.id = id;
         this.callbackQuery = callbackQuery;
         this.type = UpdateType.CALLBACK;
+    }
+
+    public void setTime(Time time) {
+        switch (type) {
+            case CALLBACK:
+                callbackQuery.time = time;
+            case MESSAGE:
+                message.time = time;
+        }
     }
 }

@@ -1,4 +1,4 @@
-package ui;
+package display;
 
 import application.message.Message;
 import application.message.MessageFactory;
@@ -37,11 +37,6 @@ public class EnglishMessageFactory implements MessageFactory {
     }
 
     @Override
-    public Message createReminderNameRequestedMessage() {
-        return message("Choose a name for the new reminder");
-    }
-
-    @Override
     public Message createTaskNameRequestMessage() {
         return message("Choose a name for the new task.");
     }
@@ -57,8 +52,8 @@ public class EnglishMessageFactory implements MessageFactory {
     }
 
     @Override
-    public Message createInvalidCronFormatMessage() {
-        return message("Invalid cron format. Please try again.");
+    public Message createInvalidScheduleFormat() {
+        return message("Invalid schedule format. Please try again.");
     }
 
     @Override
@@ -67,22 +62,7 @@ public class EnglishMessageFactory implements MessageFactory {
     }
 
     @Override
-    public Message createReminderTimeRequestedMessage() {
-        return message("Choose a time for the new reminder.");
-    }
-
-    @Override
-    public Message createInvalidReminderScheduleMessage() {
-        return message("Invalid time. Please try again.");
-    }
-
-    @Override
-    public Message createReminderCreatedMessage() {
-        return message("Reminder created!");
-    }
-
-    @Override
-    public Message createCronScheduleRequestedMessage() {
+    public Message createScheduleRequestedMessage() {
         return message("Choose a schedule for the new task.");
     }
 
@@ -99,10 +79,5 @@ public class EnglishMessageFactory implements MessageFactory {
     @Override
     public Message createTimezoneOffsetRequestedMessage() {
         return message("Enter the timezone offset");
-    }
-
-    @Override
-    public Message createInvalidOperationMessage() {
-        return message("Invalid operation");
     }
 }

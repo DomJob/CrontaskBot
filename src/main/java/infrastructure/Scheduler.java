@@ -27,11 +27,13 @@ public class Scheduler {
     }
 
     public void checkTasks() {
-        bot.checkTasks(Time.now());
+        bot.checkTasks(now());
     }
 
     public void handleEvents() {
         for (Update update : api.getUpdates(lastUpdate)) {
+            update.setTime(now());
+
             switch (update.type) {
                 case MESSAGE:
                     bot.handleMessage(update.message);
@@ -42,5 +44,13 @@ public class Scheduler {
             }
             lastUpdate = update.id + 1;
         }
+    }
+
+    public Time now() {
+        long secondsSinceEpoch = Instant.now().getEpochSecond();
+
+        long minutes = Math.round((double) secondsSinceEpoch / 60);
+
+        return new Time(minutes);
     }
 }

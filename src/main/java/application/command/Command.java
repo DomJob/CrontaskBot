@@ -9,7 +9,6 @@ import java.util.Map;
 public enum Command {
     START("start"),
     NEW_TASK("task"),
-    NEW_REMINDER("reminder"),
     CANCEL("cancel"),
     HELP("help"),
     COMMANDS("commands"),

@@ -1,6 +1,6 @@
 package domain.Task;
 
-import domain.Schedule;
+import domain.schedule.Schedule;
 import domain.user.User;
 import domain.util.LongGenerator;
 

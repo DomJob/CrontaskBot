@@ -1,10 +1,10 @@
-package domain.cronschedule;
+package domain.schedule.cron;
 
-import domain.cronschedule.matchers.AnyMatcher;
-import domain.cronschedule.matchers.ListMatcher;
-import domain.cronschedule.matchers.RangeMatcher;
-import domain.cronschedule.matchers.SpecificMatcher;
-import domain.cronschedule.matchers.StepMatcher;
+import domain.schedule.cron.matchers.AnyMatcher;
+import domain.schedule.cron.matchers.ListMatcher;
+import domain.schedule.cron.matchers.RangeMatcher;
+import domain.schedule.cron.matchers.SpecificMatcher;
+import domain.schedule.cron.matchers.StepMatcher;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import domain.Task.Task;
+import domain.schedule.Schedule;
 import domain.time.Time;
 import domain.time.Timezone;
 import domain.user.User;
@@ -21,6 +22,8 @@ public class TaskTest {
     @Mock
     private Schedule schedule;
 
+    private static Time TIME = Time.fromDate(2020,03,15,20,18);
+
     private Task task;
 
     @Before
@@ -31,7 +34,7 @@ public class TaskTest {
 
     @Test
     public void isTriggered_checkGivenTime() {
-        Time checkTime = Time.now().nextMinute();
+        Time checkTime = TIME.nextMinute();
 
         task.isTriggered(checkTime);
 

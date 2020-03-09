@@ -1,4 +1,4 @@
-package domain;
+package domain.schedule;
 
 import domain.time.Time;
 import domain.time.Timezone;

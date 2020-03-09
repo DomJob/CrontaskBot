@@ -1,10 +1,13 @@
-package domain.cronschedule;
+package domain.schedule;
 
-import domain.Schedule;
+import domain.schedule.cron.CronMatcher;
+import domain.schedule.cron.InvalidCronFormatException;
 import domain.time.Time;
 import domain.time.Timezone;
 
 public class CronSchedule implements Schedule {
+    protected static String PATTERN = "^((?:[\\s]|^)(\\*(\\/[0-9]+)?|([0-9]+\\-[0-9]+)|([0-9]+,)*[0-9]+)(?=[\\s]|$)){5}$";
+
     private String code;
 
     private CronMatcher minute;
@@ -22,6 +25,10 @@ public class CronSchedule implements Schedule {
     }
 
     public static CronSchedule parse(String string) {
+        if (!string.matches(PATTERN)) {
+            throw new InvalidScheduleException();
+        }
+
         String[] matchers = string.split(" ");
 
         if (matchers.length != 5) {

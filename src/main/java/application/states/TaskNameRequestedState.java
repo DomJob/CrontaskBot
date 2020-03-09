@@ -13,6 +13,6 @@ class TaskNameRequestedState implements BotState {
 
         context.sendCronScheduleRequestedMessage();
 
-        return new CronScheduleRequestedState(message.text);
+        return new TaskScheduleRequestedState(message.text);
     }
 }

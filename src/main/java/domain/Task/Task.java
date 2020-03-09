@@ -1,6 +1,6 @@
 package domain.Task;
 
-import domain.Schedule;
+import domain.schedule.Schedule;
 import domain.time.Time;
 import domain.user.User;
 

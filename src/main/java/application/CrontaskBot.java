@@ -7,11 +7,11 @@ import application.message.Message;
 import application.message.MessageFactory;
 import application.message.MessageFactoryProvider;
 import application.states.BotContext;
-import domain.Schedule;
 import domain.Task.Task;
 import domain.Task.TaskFactory;
 import domain.Task.TaskRepository;
-import domain.reminderschedule.ReminderSchedule;
+import domain.schedule.RelativeTimeSchedule;
+import domain.schedule.Schedule;
 import domain.time.Time;
 import domain.time.Timezone;
 import domain.user.User;
@@ -52,7 +52,10 @@ public class CrontaskBot {
         switch (command) {
             case SNOOZE:
                 api.answerCallbackQuery(query.id, "Snoozed for 15 minutes");
-                createTask(task.getName(), task.getOwner(), ReminderSchedule.minutesFromNow(15));
+
+                Time snoozeUntil = query.time.plusMinutes(15);
+
+                createTask(task.getName(), task.getOwner(), new RelativeTimeSchedule(snoozeUntil));
             case DISMISS:
                 api.deleteMessage(query.userId, query.messageId);
                 break;
@@ -75,6 +78,10 @@ public class CrontaskBot {
         userRepository.save(user);
     }
 
+    public MessageFactory getMessageFactoryForUser(User user) {
+        return messageFactoryProvider.provide(user.getLanguage());
+    }
+
     public void checkTasks(Time time) {
         for (Task task : taskRepository.findAll()) {
             if (task.isTriggered(time)) {
@@ -89,10 +96,6 @@ public class CrontaskBot {
                 api.sendMessage(message);
             }
         }
-    }
-
-    public MessageFactory getMessageFactoryForUser(User user) {
-        return messageFactoryProvider.provide(user.getLanguage());
     }
 
     private BotContext getOrCreateContextForUser(long userId) {

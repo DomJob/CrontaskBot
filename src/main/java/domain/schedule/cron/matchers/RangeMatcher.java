@@ -1,7 +1,7 @@
-package domain.cronschedule.matchers;
+package domain.schedule.cron.matchers;
 
-import domain.cronschedule.CronMatcher;
-import domain.cronschedule.InvalidCronFormatException;
+import domain.schedule.cron.CronMatcher;
+import domain.schedule.cron.InvalidCronFormatException;
 
 public class RangeMatcher extends CronMatcher {
     private int start;

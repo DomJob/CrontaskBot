@@ -1,21 +1,22 @@
-package domain.cronschedule;
+package domain.schedule.cron;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import domain.Schedule;
+import domain.schedule.CronSchedule;
+import domain.schedule.InvalidScheduleException;
+import domain.schedule.Schedule;
 import domain.time.Time;
 import domain.time.Timezone;
 import org.junit.Test;
 
 public class CronScheduleTest {
-    @Test(expected = InvalidCronFormatException.class)
+    @Test(expected = InvalidScheduleException.class)
     public void parseCron_tooManyParams_ThrowsException() {
         CronSchedule.parse("* * * * * *");
     }
 
-    @Test(expected = InvalidCronFormatException.class)
+    @Test(expected = InvalidScheduleException.class)
     public void parseCron_notEnoughParams_ThrowsException() {
         CronSchedule.parse("* * * *");
     }
