@@ -1,4 +1,4 @@
-package application.command;
+package bot.command;
 
 import java.util.Arrays;
 import java.util.Collections;

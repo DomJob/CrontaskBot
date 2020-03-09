@@ -1,12 +1,12 @@
-package application;
+package bot;
 
-import application.command.CallbackCommand;
-import application.entities.CallbackQuery;
-import application.entities.ReceivedMessage;
-import application.message.Message;
-import application.message.MessageFactory;
-import application.message.MessageFactoryProvider;
-import application.states.BotContext;
+import bot.command.CallbackCommand;
+import bot.entities.CallbackQuery;
+import bot.entities.ReceivedMessage;
+import bot.message.Message;
+import bot.message.MessageFactory;
+import bot.message.MessageFactoryProvider;
+import bot.states.BotContext;
 import domain.schedule.RelativeTimeSchedule;
 import domain.schedule.Schedule;
 import domain.task.Task;

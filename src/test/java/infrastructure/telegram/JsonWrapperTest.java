@@ -2,8 +2,8 @@ package infrastructure.telegram;
 
 import static org.junit.Assert.*;
 
-import application.entities.Button;
-import application.entities.Update;
+import bot.entities.Button;
+import bot.entities.Update;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;

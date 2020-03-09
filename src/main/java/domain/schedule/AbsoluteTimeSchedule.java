@@ -1,6 +1,6 @@
 package domain.schedule;
 
-import static util.Helper.extractNumbers;
+import static infrastructure.util.Helper.extractNumbers;
 
 import domain.time.Time;
 import domain.time.Timezone;

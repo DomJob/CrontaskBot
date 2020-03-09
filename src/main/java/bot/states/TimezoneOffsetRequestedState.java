@@ -1,6 +1,6 @@
-package application.states;
+package bot.states;
 
-import application.entities.ReceivedMessage;
+import bot.entities.ReceivedMessage;
 import domain.time.Timezone;
 
 public class TimezoneOffsetRequestedState implements BotState {

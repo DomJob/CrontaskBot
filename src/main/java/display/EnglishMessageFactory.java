@@ -1,7 +1,7 @@
 package display;
 
-import application.message.Message;
-import application.message.MessageFactory;
+import bot.message.Message;
+import bot.message.MessageFactory;
 import domain.task.Task;
 
 public class EnglishMessageFactory implements MessageFactory {

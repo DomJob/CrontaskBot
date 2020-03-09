@@ -1,4 +1,4 @@
-package application.entities;
+package bot.entities;
 
 public enum UpdateType {
     CALLBACK, MESSAGE

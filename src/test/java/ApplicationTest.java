@@ -5,12 +5,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import application.CrontaskBot;
-import application.TelegramApi;
-import application.entities.CallbackQuery;
-import application.entities.ReceivedMessage;
-import application.message.Message;
-import application.message.MessageFactoryProvider;
+import bot.CrontaskBot;
+import bot.TelegramApi;
+import bot.entities.CallbackQuery;
+import bot.entities.ReceivedMessage;
+import bot.message.Message;
+import bot.message.MessageFactoryProvider;
 import display.EnglishMessageFactory;
 import domain.task.Task;
 import domain.task.TaskFactory;

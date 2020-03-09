@@ -1,4 +1,4 @@
-package application.command;
+package bot.command;
 
 import static org.junit.Assert.assertEquals;
 

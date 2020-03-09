@@ -1,8 +1,8 @@
 package infrastructure;
 
-import application.CrontaskBot;
-import application.TelegramApi;
-import application.entities.Update;
+import bot.CrontaskBot;
+import bot.TelegramApi;
+import bot.entities.Update;
 import domain.time.Time;
 import java.time.Instant;
 import java.util.concurrent.ScheduledThreadPoolExecutor;

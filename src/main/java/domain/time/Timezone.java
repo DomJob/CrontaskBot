@@ -1,6 +1,6 @@
 package domain.time;
 
-import static util.Helper.extractNumbers;
+import static infrastructure.util.Helper.extractNumbers;
 
 import java.util.List;
 import java.util.Objects;

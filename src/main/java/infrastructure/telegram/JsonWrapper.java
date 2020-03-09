@@ -1,9 +1,9 @@
 package infrastructure.telegram;
 
-import application.entities.Button;
-import application.entities.CallbackQuery;
-import application.entities.ReceivedMessage;
-import application.entities.Update;
+import bot.entities.Button;
+import bot.entities.CallbackQuery;
+import bot.entities.ReceivedMessage;
+import bot.entities.Update;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infrastructure.telegram.entities.ResultsEntity;

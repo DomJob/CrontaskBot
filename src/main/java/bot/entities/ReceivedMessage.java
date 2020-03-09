@@ -1,6 +1,6 @@
-package application.entities;
+package bot.entities;
 
-import application.command.Command;
+import bot.command.Command;
 import domain.time.Time;
 
 public class ReceivedMessage {

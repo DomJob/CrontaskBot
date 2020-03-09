@@ -1,5 +1,5 @@
-import application.CrontaskBot;
-import application.TelegramApi;
+import bot.CrontaskBot;
+import bot.TelegramApi;
 import display.ConcreteMessageFactoryProvider;
 import domain.task.TaskFactory;
 import domain.task.TaskRepository;

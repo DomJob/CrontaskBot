@@ -1,7 +1,7 @@
-package application.states;
+package bot.states;
 
-import application.command.Command;
-import application.entities.ReceivedMessage;
+import bot.command.Command;
+import bot.entities.ReceivedMessage;
 import domain.schedule.InvalidScheduleException;
 import domain.schedule.Schedule;
 

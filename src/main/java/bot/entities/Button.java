@@ -1,4 +1,4 @@
-package application.entities;
+package bot.entities;
 
 public class Button {
     public String text;

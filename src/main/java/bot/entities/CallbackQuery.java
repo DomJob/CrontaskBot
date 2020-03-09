@@ -1,4 +1,4 @@
-package application.entities;
+package bot.entities;
 
 import domain.time.Time;
 

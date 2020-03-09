@@ -1,4 +1,4 @@
-package application.message;
+package bot.message;
 
 import domain.user.Language;
 

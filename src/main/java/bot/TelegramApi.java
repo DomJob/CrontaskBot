@@ -1,7 +1,7 @@
-package application;
+package bot;
 
-import application.entities.Update;
-import application.message.Message;
+import bot.entities.Update;
+import bot.message.Message;
 import java.util.List;
 
 public interface TelegramApi {
