@@ -4,19 +4,12 @@ Try it on Telegram! [@CrontaskBot](https://t.me/CrontaskBot)
 
 ## What can this bot do?
 
-* Schedule one-time or periodical tasks
+* Schedule tasks/reminders
 
-* Periodical tasks follow the unix cron format
+* Schedules can follow the unix cron format
 
-* Snooze reminders
+* Snooze/dismiss reminders
 
-## Roadmap
+***
 
-- [x] Timezone support (-ish)
-- [ ] Actual persistence
-- [ ] View/delete tasks
-- [ ] Better message formatting
-- [ ] Customizable snooze time
-- [ ] ...
-
-Feel free to request features or raise issues. You can even PR!
+That's pretty much it. Nothing revolutionary but I wanted to practice my clean coding skills so I overengineered this project, enterprise-style.
