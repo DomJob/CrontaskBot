@@ -23,6 +23,20 @@ public class CronSchedule implements Schedule {
         this.weekday = weekday;
     }
 
+    @Override
+    public boolean isTriggered(Time time) {
+        return minute.match(time.minute())
+            && hour.match(time.hour())
+            && day.match(time.day())
+            && month.match(time.month())
+            && weekday.match(time.weekday());
+    }
+
+    @Override
+    public Time nextTrigger(Time now) {
+        return null;
+    }
+
     public static CronSchedule parse(String string) {
         if (!string.matches(PATTERN)) {
             throw new InvalidScheduleException();
@@ -45,16 +59,6 @@ public class CronSchedule implements Schedule {
         schedule.code = string;
 
         return schedule;
-    }
-
-    @Override
-    public boolean isTriggered(Time time, Timezone timezone) {
-        time = time.withTimezone(timezone);
-        return minute.match(time.minute())
-            && hour.match(time.hour())
-            && day.match(time.day())
-            && month.match(time.month())
-            && weekday.match(time.weekday());
     }
 
     @Override

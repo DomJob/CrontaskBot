@@ -18,7 +18,7 @@ public class Task {
     }
 
     public boolean isTriggered(Time time) {
-        return schedule.isTriggered(time, owner.getTimezone());
+        return schedule.isTriggered(time.withTimezone(owner.getTimezone()));
     }
 
     public long getId() {

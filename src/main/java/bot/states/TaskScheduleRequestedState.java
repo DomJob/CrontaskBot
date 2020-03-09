@@ -20,7 +20,7 @@ class TaskScheduleRequestedState implements BotState {
         }
 
         try {
-            Schedule schedule = Schedule.parse(message.text, message.time);
+            Schedule schedule = Schedule.parse(message.text, message.time, context.getTimezone());
             context.createTask(taskName, schedule);
         } catch (InvalidScheduleException e) {
             context.sendInvalidScheduleFormat();

@@ -1,14 +1,12 @@
 package domain;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import domain.task.Task;
 import domain.schedule.Schedule;
+import domain.task.Task;
 import domain.time.Time;
-import domain.time.Timezone;
 import domain.user.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +27,7 @@ public class TaskTest {
     @Before
     public void setUp() {
         task = new Task(0, "Name", new User(0), schedule);
-        when(schedule.isTriggered(any(Time.class), eq(Timezone.UTC))).thenReturn(false);
+        when(schedule.isTriggered(any(Time.class))).thenReturn(false);
     }
 
     @Test
@@ -38,6 +36,6 @@ public class TaskTest {
 
         task.isTriggered(checkTime);
 
-        verify(schedule).isTriggered(checkTime, Timezone.UTC);
+        verify(schedule).isTriggered(checkTime);
     }
 }

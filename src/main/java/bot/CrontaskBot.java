@@ -7,8 +7,8 @@ import bot.message.Message;
 import bot.message.MessageFactory;
 import bot.message.MessageFactoryProvider;
 import bot.states.BotContext;
-import domain.schedule.RelativeTimeSchedule;
 import domain.schedule.Schedule;
+import domain.schedule.TimeSchedule;
 import domain.task.Task;
 import domain.task.TaskFactory;
 import domain.task.TaskRepository;
@@ -55,7 +55,7 @@ public class CrontaskBot {
 
                 Time snoozeUntil = query.time.plusMinutes(15);
 
-                createTask(task.getName(), task.getOwner(), new RelativeTimeSchedule(snoozeUntil));
+                createTask(task.getName(), task.getOwner(), new TimeSchedule(snoozeUntil));
             case DISMISS:
                 api.deleteMessage(query.userId, query.messageId);
                 break;

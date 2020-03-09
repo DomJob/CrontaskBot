@@ -89,4 +89,8 @@ public class BotContext {
     public void sendTimezoneOffsetRequestedMessage() {
         send(messageFactory.createTimezoneOffsetRequestedMessage());
     }
+
+    public Timezone getTimezone() {
+        return user.getTimezone();
+    }
 }
