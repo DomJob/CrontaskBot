@@ -92,9 +92,7 @@ public class Time {
 
     @Override
     public String toString() {
-        return "Time{" +
-            "minutesSinceEpoch=" + minutesSinceEpoch +
-            '}';
+        return Long.toString(minutesSinceEpoch);
     }
 
     @Override

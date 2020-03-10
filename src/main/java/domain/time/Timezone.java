@@ -10,7 +10,7 @@ public class Timezone {
     private static final String TIMEZONE_OFFSET_PATTERN = "^-?([0-9]+)(:([0-9]+))?$";
     private int offset;
 
-    public Timezone(int offset) {
+    private Timezone(int offset) {
         this.offset = offset;
     }
 
@@ -34,6 +34,10 @@ public class Timezone {
             offset *= -1;
         }
 
+        return new Timezone(offset);
+    }
+
+    public static Timezone fromOffset(int offset) {
         return new Timezone(offset);
     }
 

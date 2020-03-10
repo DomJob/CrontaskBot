@@ -28,6 +28,11 @@ public class TimeSchedule implements Schedule {
         return null;
     }
 
+    @Override
+    public String serialize() {
+        return time.toString();
+    }
+
     public static TimeSchedule parseAbsoluteTime(String string, Time now) {
         string = string.toLowerCase();
         if (!string.matches(ABSOLUTE_PATTERN)) {

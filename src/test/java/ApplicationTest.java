@@ -11,15 +11,18 @@ import bot.entities.CallbackQuery;
 import bot.entities.ReceivedMessage;
 import bot.message.Message;
 import bot.message.MessageFactoryProvider;
-import display.EnglishMessageFactory;
+import display.FakeMessageFactory;
 import domain.task.Task;
 import domain.task.TaskFactory;
 import domain.time.Time;
 import domain.user.Language;
 import domain.user.User;
-import domain.util.LongGenerator;
-import infrastructure.persistence.inmemory.TaskRepositoryInMemory;
-import infrastructure.persistence.inmemory.UserRepositoryInMemory;
+import infrastructure.persistence.Sqlite;
+import infrastructure.persistence.TaskRepositorySQL;
+import infrastructure.persistence.UserRepositorySQL;
+import infrastructure.util.RandomLongGeneratorSpy;
+import java.sql.SQLException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,20 +35,19 @@ public class ApplicationTest {
     private static final String TASK_NAME = "task name";
     private static final String SCHEDULE_EVERY_MINUTE = "* * * * *";
     private static final String SCHEDULE_EVERY_5_MINUTES = "*/5 * * * *";
-    private static final String SCHEDULE_NEVER = "65 * * * *";
     private static final String INVALID_SCHEDULE = "this aint a schedule";
     private static final String AT_3_PM_EVERYDAY = "0 15 * * *";
     private static final String IN_5_MINUTES = "in 5 minutes";
 
     private static final Time CURRENT_TIME = Time.fromDate(2020, 3, 8, 1, 44);
-    private static final Time ANY_TIME = Time.fromDate(2020, 3, 8, 1, 44);
 
-    private static final long TASK_ID = 1234;
     private static final String CALLBACK_QUERY_ID = "8888845646";
     private static final int MESSAGE_ID = 456;
 
     private static final long USER_ID = 12345678L;
     private static final long OTHER_USER_ID = 789456L;
+
+    private static final Message TASK_CREATED_MESSAGE = new Message("task created yay");
 
     private static User USER = new User(USER_ID);
 
@@ -54,27 +56,32 @@ public class ApplicationTest {
     @Mock
     private MessageFactoryProvider messageFactoryProvider;
     @Spy
-    private EnglishMessageFactory messageFactory = new EnglishMessageFactory();
+    private FakeMessageFactory messageFactory = new FakeMessageFactory();
     @Spy
-    private TaskRepositoryInMemory taskRepository = new TaskRepositoryInMemory();
+    private TaskRepositorySQL taskRepository = new TaskRepositorySQL();
     @Spy
-    private UserRepositoryInMemory userRepository = new UserRepositoryInMemory();
-    @Mock
-    private LongGenerator longGenerator;
+    private UserRepositorySQL userRepository = new UserRepositorySQL();
 
-    private Message message;
+    private RandomLongGeneratorSpy longGenerator = new RandomLongGeneratorSpy();
 
     private CrontaskBot bot;
 
     @Before
     public void setUp() {
+        Sqlite.setPath("crontaskbot_IT.db");
+
         bot = new CrontaskBot(api, taskRepository, userRepository, new TaskFactory(longGenerator), messageFactoryProvider);
 
         when(messageFactoryProvider.provide(any(Language.class))).thenReturn(messageFactory);
-        when(longGenerator.generate()).thenReturn(TASK_ID);
 
-        message = new Message("any text");
-        message.setReceiver(USER);
+        TASK_CREATED_MESSAGE.setReceiver(USER);
+        when(messageFactory.createTaskTriggeredMessage(any(Task.class))).thenReturn(TASK_CREATED_MESSAGE);
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        Sqlite.getConnection().createStatement().executeUpdate("DELETE FROM task");
+        Sqlite.getConnection().createStatement().executeUpdate("DELETE FROM user");
     }
 
     @Test
@@ -97,69 +104,61 @@ public class ApplicationTest {
     public void createTask_taskCanBeTriggered() {
         createTask(SCHEDULE_EVERY_MINUTE);
 
-        Task task = taskRepository.findById(TASK_ID);
-        when(messageFactory.createTaskTriggeredMessage(task)).thenReturn(message);
+        bot.checkTasks(CURRENT_TIME);
 
-        bot.checkTasks(ANY_TIME);
-
-        verify(messageFactory).createTaskTriggeredMessage(task);
-        verify(api).sendMessage(message);
+        assertThatATaskWasTriggered();
     }
 
     @Test
     public void createTask_triggers_dayOfWeek() {
         createTask("0 0 * * 3"); // Every wednesday at midnight
 
-        bot.checkTasks(Time.fromDate(2020,3,11,0,0)); // Wednesday
-        bot.checkTasks(Time.fromDate(2020,3,18,0,0)); // Wednesday
-        bot.checkTasks(Time.fromDate(2020,3,25,0,0)); // Wednesday
-        bot.checkTasks(Time.fromDate(2020,3,25,0,1)); // Wednesday wrong minute
-        bot.checkTasks(Time.fromDate(2020,3,5,0,0)); // Tuesday
+        bot.checkTasks(Time.fromDate(2020, 3, 11, 0, 0)); // Wednesday
+        bot.checkTasks(Time.fromDate(2020, 3, 18, 0, 0)); // Wednesday
+        bot.checkTasks(Time.fromDate(2020, 3, 25, 0, 0)); // Wednesday
+        bot.checkTasks(Time.fromDate(2020, 3, 25, 0, 1)); // Wednesday wrong minute
+        bot.checkTasks(Time.fromDate(2020, 3, 5, 0, 0)); // Tuesday
 
-        verify(messageFactory, times(3)).createTaskTriggeredMessage(any(Task.class));
+        assertThatATaskWasTriggered(3);
     }
 
     @Test
     public void createTask_triggers_dayOfMonth() {
         createTask("30 5 7 * *"); // Every 7th of the month at 5:30 am
 
-        bot.checkTasks(Time.fromDate(2020,3,7,5,30)); // OK
-        bot.checkTasks(Time.fromDate(2020,4,7,5,30)); // OK
-        bot.checkTasks(Time.fromDate(2020,7,7,5,30)); // OK
-        bot.checkTasks(Time.fromDate(2020,7,7,5,29)); // NO
-        bot.checkTasks(Time.fromDate(2020,7,7,5,31)); // NO
-        bot.checkTasks(Time.fromDate(2020,7,9,5,30)); // NO
+        bot.checkTasks(Time.fromDate(2020, 3, 7, 5, 30)); // OK
+        bot.checkTasks(Time.fromDate(2020, 4, 7, 5, 30)); // OK
+        bot.checkTasks(Time.fromDate(2020, 7, 7, 5, 30)); // OK
+        bot.checkTasks(Time.fromDate(2020, 7, 7, 5, 29)); // NO
+        bot.checkTasks(Time.fromDate(2020, 7, 7, 5, 31)); // NO
+        bot.checkTasks(Time.fromDate(2020, 7, 9, 5, 30)); // NO
 
-        verify(messageFactory, times(3)).createTaskTriggeredMessage(any(Task.class));
+        assertThatATaskWasTriggered(3);
     }
 
     @Test
     public void createTask_triggers_complex() {
         createTask("0 */2 * 9 2"); // Every even hour on Tuesdays in September
 
-        bot.checkTasks(Time.fromDate(2020,9,8,5,0)); // NO
-        bot.checkTasks(Time.fromDate(2020,9,8,8,0)); // OK
-        bot.checkTasks(Time.fromDate(2020,9,9,8,0)); // NO
-        bot.checkTasks(Time.fromDate(2020,9,15,16,0)); // OK
-        bot.checkTasks(Time.fromDate(2020,9,22,6,0)); // OK
-        bot.checkTasks(Time.fromDate(2020,9,22,6,1)); // NO
+        bot.checkTasks(Time.fromDate(2020, 9, 8, 5, 0)); // NO
+        bot.checkTasks(Time.fromDate(2020, 9, 8, 8, 0)); // OK
+        bot.checkTasks(Time.fromDate(2020, 9, 9, 8, 0)); // NO
+        bot.checkTasks(Time.fromDate(2020, 9, 15, 16, 0)); // OK
+        bot.checkTasks(Time.fromDate(2020, 9, 22, 6, 0)); // OK
+        bot.checkTasks(Time.fromDate(2020, 9, 22, 6, 1)); // NO
 
-        verify(messageFactory, times(3)).createTaskTriggeredMessage(any(Task.class));
+        assertThatATaskWasTriggered(3);
     }
 
     @Test
     public void createTask_cronEvery5minutes_isTriggeredManyTimes() {
         createTask(SCHEDULE_EVERY_5_MINUTES);
 
-        Task task = taskRepository.findById(TASK_ID);
-        when(messageFactory.createTaskTriggeredMessage(task)).thenReturn(message);
-
         for (int i = 0; i < 60; i++) {
-            bot.checkTasks(ANY_TIME.plusMinutes(i));
+            bot.checkTasks(CURRENT_TIME.plusMinutes(i));
         }
 
-        verify(messageFactory, times(12)).createTaskTriggeredMessage(task);
-        verify(api, times(12)).sendMessage(message);
+        assertThatATaskWasTriggered(12);
     }
 
     @Test
@@ -256,16 +255,9 @@ public class ApplicationTest {
         verify(api).answerCallbackQuery(eq(CALLBACK_QUERY_ID), any(String.class));
         verify(api).deleteMessage(USER_ID, MESSAGE_ID);
 
-        Task task = taskRepository.findById(TASK_ID);
         bot.checkTasks(CURRENT_TIME.plusMinutes(15));
 
-        verify(messageFactory).createTaskTriggeredMessage(task);
-    }
-
-    private void snoozeTask() {
-        CallbackQuery query = new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "snooze " + TASK_ID);
-        query.time = CURRENT_TIME;
-        bot.handleCallbackQuery(query);
+        assertThatATaskWasTriggered();
     }
 
     @Test
@@ -311,7 +303,7 @@ public class ApplicationTest {
         // Trigger 5 mins from now regardless of timezone
         bot.checkTasks(CURRENT_TIME.plusMinutes(5));
 
-        verify(messageFactory).createTaskTriggeredMessage(any(Task.class));
+        assertThatATaskWasTriggered();
     }
 
     private void createTask(String schedule) {
@@ -332,9 +324,30 @@ public class ApplicationTest {
             .send();
     }
 
-    private void dismissTask() {
-        bot.handleCallbackQuery(new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "dismiss " + TASK_ID));
+    private void snoozeTask() {
+        long taskId = longGenerator.getLastIdGenerated();
+
+        CallbackQuery query = new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "snooze " + Long.toString(taskId));
+        query.time = CURRENT_TIME;
+        bot.handleCallbackQuery(query);
     }
+
+    private void dismissTask() {
+        long taskId = longGenerator.getLastIdGenerated();
+        bot.handleCallbackQuery(new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "dismiss " + Long.toString(taskId)));
+    }
+
+    private void assertThatATaskWasTriggered() {
+        verify(messageFactory).createTaskTriggeredMessage(any(Task.class));
+        verify(api).sendMessage(TASK_CREATED_MESSAGE);
+    }
+
+
+    private void assertThatATaskWasTriggered(int howMany) {
+        verify(messageFactory, times(howMany)).createTaskTriggeredMessage(any(Task.class));
+        verify(api, times(howMany)).sendMessage(TASK_CREATED_MESSAGE);
+    }
+
 
     private MessageBuilder newMessage(String text) {
         return new MessageBuilder(bot, text);

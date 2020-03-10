@@ -32,4 +32,8 @@ public class Task {
     public User getOwner() {
         return owner;
     }
+
+    public String serializeSchedule() {
+        return schedule.serialize();
+    }
 }

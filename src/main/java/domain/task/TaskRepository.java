@@ -8,6 +8,4 @@ public interface TaskRepository {
     Task findById(long id);
 
     void save(Task task);
-
-    void delete(Task task);
 }

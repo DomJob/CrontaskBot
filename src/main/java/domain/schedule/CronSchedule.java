@@ -34,7 +34,12 @@ public class CronSchedule implements Schedule {
 
     @Override
     public Time nextTrigger(Time now) {
-        return null;
+        return null; // TODO
+    }
+
+    @Override
+    public String serialize() {
+        return code;
     }
 
     public static CronSchedule parse(String string) {
@@ -44,9 +49,7 @@ public class CronSchedule implements Schedule {
 
         String[] matchers = string.split(" ");
 
-        if (matchers.length != 5) {
-            throw new InvalidScheduleException();
-        }
+        validateMatchers(matchers);
 
         CronSchedule schedule = new CronSchedule(
             CronMatcher.parse(matchers[0]),
@@ -64,5 +67,13 @@ public class CronSchedule implements Schedule {
     @Override
     public String toString() {
         return code;
+    }
+
+    private static void validateMatchers(String[] matchers) {
+        if (matchers.length != 5) {
+            throw new InvalidScheduleException();
+        }
+
+        // TODO - Check which numbers are involved
     }
 }
