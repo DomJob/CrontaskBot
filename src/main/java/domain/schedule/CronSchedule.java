@@ -2,7 +2,6 @@ package domain.schedule;
 
 import domain.schedule.cronmatchers.CronMatcher;
 import domain.time.Time;
-import domain.time.Timezone;
 
 public class CronSchedule implements Schedule {
     protected static String PATTERN = "^((?:[\\s]|^)(\\*(/[0-9]+)?|([0-9]+-[0-9]+)|([0-9]+,)*[0-9]+)(?=[\\s]|$)){5}$";
@@ -21,25 +20,6 @@ public class CronSchedule implements Schedule {
         this.day = day;
         this.month = month;
         this.weekday = weekday;
-    }
-
-    @Override
-    public boolean isTriggered(Time time) {
-        return minute.match(time.minute())
-            && hour.match(time.hour())
-            && day.match(time.day())
-            && month.match(time.month())
-            && weekday.match(time.weekday());
-    }
-
-    @Override
-    public Time nextTrigger(Time now) {
-        return null; // TODO
-    }
-
-    @Override
-    public String serialize() {
-        return code;
     }
 
     public static CronSchedule parse(String string) {
@@ -64,16 +44,35 @@ public class CronSchedule implements Schedule {
         return schedule;
     }
 
-    @Override
-    public String toString() {
-        return code;
-    }
-
     private static void validateMatchers(String[] matchers) {
         if (matchers.length != 5) {
             throw new InvalidScheduleException();
         }
 
         // TODO - Check which numbers are involved
+    }
+
+    @Override
+    public boolean isTriggered(Time time) {
+        return minute.match(time.minute())
+            && hour.match(time.hour())
+            && day.match(time.day())
+            && month.match(time.month())
+            && weekday.match(time.weekday());
+    }
+
+    @Override
+    public Time nextTrigger(Time now) {
+        return null; // TODO
+    }
+
+    @Override
+    public String serialize() {
+        return code;
+    }
+
+    @Override
+    public String toString() {
+        return code;
     }
 }

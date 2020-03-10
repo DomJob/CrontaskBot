@@ -101,7 +101,7 @@ public class CrontaskBot {
     private BotContext getOrCreateContextForUser(long userId) {
         if (!contexts.containsKey(userId)) {
             User user = userRepository.findById(userId);
-            if(user == null) {
+            if (user == null) {
                 user = new User(userId);
                 userRepository.save(user);
             }

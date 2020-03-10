@@ -1,6 +1,6 @@
 package infrastructure.telegram;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import bot.entities.Button;
 import bot.entities.Update;

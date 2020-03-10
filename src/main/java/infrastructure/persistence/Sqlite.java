@@ -10,7 +10,7 @@ public class Sqlite {
     private static String path = "crontaskbot.db";
 
     public static Connection getConnection() {
-        if(connection == null) {
+        if (connection == null) {
             try {
                 Class.forName("org.sqlite.JDBC");
                 connection = DriverManager.getConnection("jdbc:sqlite:" + path);

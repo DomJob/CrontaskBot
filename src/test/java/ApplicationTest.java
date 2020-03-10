@@ -327,14 +327,14 @@ public class ApplicationTest {
     private void snoozeTask() {
         long taskId = longGenerator.getLastIdGenerated();
 
-        CallbackQuery query = new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "snooze " + Long.toString(taskId));
+        CallbackQuery query = new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "snooze " + taskId);
         query.time = CURRENT_TIME;
         bot.handleCallbackQuery(query);
     }
 
     private void dismissTask() {
         long taskId = longGenerator.getLastIdGenerated();
-        bot.handleCallbackQuery(new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "dismiss " + Long.toString(taskId)));
+        bot.handleCallbackQuery(new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "dismiss " + taskId));
     }
 
     private void assertThatATaskWasTriggered() {

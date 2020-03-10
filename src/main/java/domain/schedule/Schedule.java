@@ -4,12 +4,6 @@ import domain.time.Time;
 import domain.time.Timezone;
 
 public interface Schedule {
-    boolean isTriggered(Time time);
-
-    Time nextTrigger(Time now);
-
-    String serialize();
-
     static Schedule parse(String string, Time now, Timezone timezone) {
         string = string.toLowerCase();
 
@@ -25,7 +19,7 @@ public interface Schedule {
     }
 
     static Schedule deserialize(String string) {
-        if(string.matches(CronSchedule.PATTERN)) {
+        if (string.matches(CronSchedule.PATTERN)) {
             return CronSchedule.parse(string);
         } else if (string.matches("^\\d+$")) {
             return new TimeSchedule(new Time(Integer.parseInt(string)));
@@ -33,4 +27,10 @@ public interface Schedule {
 
         throw new InvalidScheduleException();
     }
+
+    boolean isTriggered(Time time);
+
+    Time nextTrigger(Time now);
+
+    String serialize();
 }

@@ -25,10 +25,6 @@ public class BotContext {
         state = state.handleMessage(message, this);
     }
 
-    public void setTimezone(Timezone timezone) {
-        bot.setTimezoneForUser(user, timezone);
-    }
-
     protected void send(Message message) {
         message.setReceiver(user);
         bot.sendMessage(message);
@@ -92,5 +88,9 @@ public class BotContext {
 
     public Timezone getTimezone() {
         return user.getTimezone();
+    }
+
+    public void setTimezone(Timezone timezone) {
+        bot.setTimezoneForUser(user, timezone);
     }
 }

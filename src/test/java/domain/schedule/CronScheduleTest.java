@@ -4,7 +4,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import domain.time.Time;
-import domain.time.Timezone;
 import org.junit.Test;
 
 public class CronScheduleTest {
@@ -22,20 +21,20 @@ public class CronScheduleTest {
     public void allAnyMatchers_matchAnyDate() {
         Schedule schedule = CronSchedule.parse("* * * * *");
 
-        assertTrue(schedule.isTriggered(Time.fromDate(2020,3,15,15,20)));
+        assertTrue(schedule.isTriggered(Time.fromDate(2020, 3, 15, 15, 20)));
     }
 
     @Test
     public void specificHourMatcher_matchThatHour() {
         Schedule schedule = CronSchedule.parse("* 16 * * *");
 
-        assertTrue(schedule.isTriggered(Time.fromDate(2020,3,15,16,20)));
+        assertTrue(schedule.isTriggered(Time.fromDate(2020, 3, 15, 16, 20)));
     }
 
     @Test
     public void specificHourMatcher_doesntMatchOtherHours() {
         Schedule schedule = CronSchedule.parse("* 15 * * *");
 
-        assertFalse(schedule.isTriggered(Time.fromDate(2020,3,15,16,20)));
+        assertFalse(schedule.isTriggered(Time.fromDate(2020, 3, 15, 16, 20)));
     }
 }

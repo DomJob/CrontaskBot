@@ -29,7 +29,7 @@ public class TaskRepositorySQL implements TaskRepository {
             Statement statement = getConnection().createStatement();
             ResultSet rs = statement.executeQuery(FIND_ALL_TASKS);
 
-            if(rs.next()) {
+            if (rs.next()) {
                 Long id = rs.getLong("id");
                 String name = rs.getString("name");
                 long owner = rs.getLong("owner");
@@ -55,7 +55,7 @@ public class TaskRepositorySQL implements TaskRepository {
 
             ResultSet rs = statement.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 String name = rs.getString("name");
                 long owner = rs.getLong("owner");
                 String schedule = rs.getString("schedule");
@@ -72,7 +72,7 @@ public class TaskRepositorySQL implements TaskRepository {
     @Override
     public void save(Task task) {
         Task existingTask = findById(task.getId());
-        if(existingTask == null) {
+        if (existingTask == null) {
             insertTask(task);
         }
     }

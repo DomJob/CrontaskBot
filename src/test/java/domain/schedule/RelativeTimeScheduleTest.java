@@ -1,9 +1,6 @@
 package domain.schedule;
 
-import static org.junit.Assert.assertTrue;
-
 import domain.time.Time;
-import org.junit.Test;
 
 public class RelativeTimeScheduleTest {
 

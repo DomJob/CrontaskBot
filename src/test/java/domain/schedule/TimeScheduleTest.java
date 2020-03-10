@@ -6,7 +6,7 @@ import domain.time.Time;
 import org.junit.Test;
 
 public class TimeScheduleTest {
-    public static final Time NOW = Time.fromDate(2020,3,1,15,20);
+    public static final Time NOW = Time.fromDate(2020, 3, 1, 15, 20);
 
     @Test
     public void parseFullTime() {

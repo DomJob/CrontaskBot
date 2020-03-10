@@ -18,21 +18,6 @@ public class TimeSchedule implements Schedule {
         this.time = time;
     }
 
-    @Override
-    public boolean isTriggered(Time time) {
-        return this.time.equals(time);
-    }
-
-    @Override
-    public Time nextTrigger(Time now) {
-        return null;
-    }
-
-    @Override
-    public String serialize() {
-        return time.toString();
-    }
-
     public static TimeSchedule parseAbsoluteTime(String string, Time now) {
         string = string.toLowerCase();
         if (!string.matches(ABSOLUTE_PATTERN)) {
@@ -118,5 +103,20 @@ public class TimeSchedule implements Schedule {
         }
 
         return new TimeSchedule(scheduledTime);
+    }
+
+    @Override
+    public boolean isTriggered(Time time) {
+        return this.time.equals(time);
+    }
+
+    @Override
+    public Time nextTrigger(Time now) {
+        return null;
+    }
+
+    @Override
+    public String serialize() {
+        return time.toString();
     }
 }

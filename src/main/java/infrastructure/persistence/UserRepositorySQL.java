@@ -23,7 +23,7 @@ public class UserRepositorySQL implements UserRepository {
 
             ResultSet rs = statement.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 int tzOffset = rs.getInt("tzOffset");
 
                 return new User(id, Timezone.fromOffset(tzOffset));
@@ -37,7 +37,7 @@ public class UserRepositorySQL implements UserRepository {
 
     @Override
     public void save(User user) {
-        if(findById(user.getId()) == null) {
+        if (findById(user.getId()) == null) {
             insertUser(user);
             return;
         }

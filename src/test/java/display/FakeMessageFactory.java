@@ -6,7 +6,7 @@ import domain.task.Task;
 
 public class FakeMessageFactory implements MessageFactory {
     private Message defaultMessage = new Message("Fake");
-    
+
     @Override
     public Message createTaskTriggeredMessage(Task task) {
         return defaultMessage;

@@ -5,7 +5,6 @@ import domain.task.TaskFactory;
 import domain.task.TaskRepository;
 import domain.user.UserRepository;
 import infrastructure.Scheduler;
-import infrastructure.persistence.Sqlite;
 import infrastructure.persistence.TaskRepositorySQL;
 import infrastructure.persistence.UserRepositorySQL;
 import infrastructure.telegram.HttpWrapper;

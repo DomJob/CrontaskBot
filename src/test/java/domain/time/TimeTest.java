@@ -1,8 +1,7 @@
 package domain.time;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import domain.time.Time;
 import org.junit.Test;
 
 public class TimeTest {
@@ -37,7 +36,7 @@ public class TimeTest {
         assertEquals(now.month(), later.month());
         assertEquals(now.day(), later.day());
         assertEquals(now.hour(), later.hour());
-        assertEquals(now.minute()+5, later.minute());
+        assertEquals(now.minute() + 5, later.minute());
     }
 
     @Test
@@ -49,8 +48,8 @@ public class TimeTest {
         assertEquals(now.year(), later.year());
         assertEquals(now.month(), later.month());
         assertEquals(now.day(), later.day());
-        assertEquals(now.hour()+1, later.hour());
-        assertEquals(now.minute()+3, later.minute());
+        assertEquals(now.hour() + 1, later.hour());
+        assertEquals(now.minute() + 3, later.minute());
     }
 
     @Test
@@ -62,7 +61,7 @@ public class TimeTest {
         assertEquals(now.year(), later.year());
         assertEquals(now.month(), later.month());
         assertEquals(now.day(), later.day());
-        assertEquals(now.hour()+5, later.hour());
+        assertEquals(now.hour() + 5, later.hour());
         assertEquals(now.minute(), later.minute());
     }
 
@@ -74,8 +73,8 @@ public class TimeTest {
 
         assertEquals(now.year(), later.year());
         assertEquals(now.month(), later.month());
-        assertEquals(now.day()+1, later.day());
-        assertEquals(now.hour()+2, later.hour());
+        assertEquals(now.day() + 1, later.day());
+        assertEquals(now.hour() + 2, later.hour());
         assertEquals(now.minute(), later.minute());
     }
 
@@ -87,7 +86,7 @@ public class TimeTest {
 
         assertEquals(now.year(), later.year());
         assertEquals(now.month(), later.month());
-        assertEquals(now.day()+5, later.day());
+        assertEquals(now.day() + 5, later.day());
         assertEquals(now.hour(), later.hour());
         assertEquals(now.minute(), later.minute());
     }
@@ -99,7 +98,7 @@ public class TimeTest {
         Time later = now.plusDays(5);
 
         assertEquals(now.year(), later.year());
-        assertEquals(now.month()+1, later.month());
+        assertEquals(now.month() + 1, later.month());
         assertEquals(4, later.day());
         assertEquals(now.hour(), later.hour());
         assertEquals(now.minute(), later.minute());
@@ -112,7 +111,7 @@ public class TimeTest {
         Time later = now.plusMonths(5);
 
         assertEquals(now.year(), later.year());
-        assertEquals(now.month()+5, later.month());
+        assertEquals(now.month() + 5, later.month());
         assertEquals(now.day(), later.day());
         assertEquals(now.hour(), later.hour());
         assertEquals(now.minute(), later.minute());
@@ -124,8 +123,8 @@ public class TimeTest {
 
         Time later = now.plusMonths(11);
 
-        assertEquals(now.year()+1, later.year());
-        assertEquals(now.month()-1, later.month());
+        assertEquals(now.year() + 1, later.year());
+        assertEquals(now.month() - 1, later.month());
         assertEquals(now.day(), later.day());
         assertEquals(now.hour(), later.hour());
         assertEquals(now.minute(), later.minute());
@@ -137,7 +136,7 @@ public class TimeTest {
 
         Time later = now.plusYears(6);
 
-        assertEquals(now.year()+6, later.year());
+        assertEquals(now.year() + 6, later.year());
         assertEquals(now.month(), later.month());
         assertEquals(now.day(), later.day());
         assertEquals(now.hour(), later.hour());
