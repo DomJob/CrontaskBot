@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 public class Time {
+    public static final Time NEVER = new Time(0);
+
     private long minutesSinceEpoch;
     private LocalDateTime time;
 
@@ -27,10 +29,6 @@ public class Time {
 
     public static Time fromLocalDateTime(LocalDateTime time) {
         return new Time(time.toEpochSecond(ZoneOffset.UTC) / 60);
-    }
-
-    public Time nextMinute() {
-        return plusMinutes(1);
     }
 
     public int year() {
@@ -90,9 +88,13 @@ public class Time {
         return Objects.hash(minutesSinceEpoch);
     }
 
+    public long getMinutesSinceEpoch() {
+        return minutesSinceEpoch;
+    }
+
     @Override
     public String toString() {
-        return Long.toString(minutesSinceEpoch);
+        return String.format("%d-%d-%d %d:%d", year(), month(), day(), hour(), minute());
     }
 
     @Override

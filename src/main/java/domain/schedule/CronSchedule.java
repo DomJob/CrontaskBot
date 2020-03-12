@@ -63,7 +63,33 @@ public class CronSchedule implements Schedule {
 
     @Override
     public Time nextTrigger(Time now) {
-        return null; // TODO
+        Time st = now;
+
+        while (true) {
+            if(!month.match(st.month())) {
+                st = st.plusMonths(1);
+                st = Time.fromDate(st.year(), st.month(), 1, 0, 0);
+                continue;
+            }
+            if(!day.match(st.day()) || !weekday.match(st.weekday())) {
+                st = st.plusDays(1);
+                st = Time.fromDate(st.year(), st.month(), st.day(), 0, 0);
+                continue;
+            }
+            if(!hour.match(st.hour())) {
+                st = st.plusHours(1);
+                st = Time.fromDate(st.year(), st.month(), st.day(), st.hour(), 0);
+                continue;
+            }
+            if(!minute.match(st.minute())) {
+                st = st.plusMinutes(1);
+                continue;
+            }
+
+            break;
+        }
+
+        return st;
     }
 
     @Override

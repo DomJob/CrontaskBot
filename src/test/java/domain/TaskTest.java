@@ -30,10 +30,8 @@ public class TaskTest {
 
     @Test
     public void isTriggered_checkGivenTime() {
-        Time checkTime = TIME.nextMinute();
+        task.isTriggered(TIME);
 
-        task.isTriggered(checkTime);
-
-        verify(schedule).isTriggered(checkTime);
+        verify(schedule).isTriggered(TIME);
     }
 }

@@ -112,11 +112,15 @@ public class TimeSchedule implements Schedule {
 
     @Override
     public Time nextTrigger(Time now) {
-        return null;
+        if(time.isAfter(now)) {
+            return time;
+        } else {
+            return Time.NEVER;
+        }
     }
 
     @Override
     public String serialize() {
-        return time.toString();
+        return Long.toString(time.getMinutesSinceEpoch());
     }
 }
