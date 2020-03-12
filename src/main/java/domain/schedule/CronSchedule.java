@@ -50,34 +50,34 @@ public class CronSchedule extends Schedule {
         }
         int[] maxDaysInMonth = new int[] {-1, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-        for(int minuteNumber : extractNumbers(matchers[0])) {
-            if(minuteNumber >= 60) {
+        for (int minuteNumber : extractNumbers(matchers[0])) {
+            if (minuteNumber >= 60) {
                 throw new InvalidScheduleException();
             }
         }
-        for(int hourNumber : extractNumbers(matchers[1])) {
-            if(hourNumber >= 24) {
+        for (int hourNumber : extractNumbers(matchers[1])) {
+            if (hourNumber >= 24) {
                 throw new InvalidScheduleException();
             }
         }
-        for(int dayNumber : extractNumbers(matchers[2])) {
-            if(dayNumber == 0 || dayNumber >= 32) {
+        for (int dayNumber : extractNumbers(matchers[2])) {
+            if (dayNumber == 0 || dayNumber >= 32) {
                 throw new InvalidScheduleException();
             }
         }
-        for(int monthNumber : extractNumbers(matchers[3])) {
-            if(monthNumber == 0 || monthNumber > 12) {
+        for (int monthNumber : extractNumbers(matchers[3])) {
+            if (monthNumber == 0 || monthNumber > 12) {
                 throw new InvalidScheduleException();
             }
 
-            for(int dayNumber : extractNumbers(matchers[2])) {
-                if(dayNumber > maxDaysInMonth[monthNumber]) {
+            for (int dayNumber : extractNumbers(matchers[2])) {
+                if (dayNumber > maxDaysInMonth[monthNumber]) {
                     throw new InvalidScheduleException();
                 }
             }
         }
-        for(int weekdayNumber : extractNumbers(matchers[4])) {
-            if(weekdayNumber > 6) {
+        for (int weekdayNumber : extractNumbers(matchers[4])) {
+            if (weekdayNumber > 6) {
                 throw new InvalidScheduleException();
             }
         }
@@ -97,22 +97,22 @@ public class CronSchedule extends Schedule {
         Time st = now;
 
         while (true) {
-            if(!month.match(st.month())) {
+            if (!month.match(st.month())) {
                 st = st.plusMonths(1);
                 st = Time.fromDate(st.year(), st.month(), 1, 0, 0);
                 continue;
             }
-            if(!day.match(st.day()) || !weekday.match(st.weekday())) {
+            if (!day.match(st.day()) || !weekday.match(st.weekday())) {
                 st = st.plusDays(1);
                 st = Time.fromDate(st.year(), st.month(), st.day(), 0, 0);
                 continue;
             }
-            if(!hour.match(st.hour())) {
+            if (!hour.match(st.hour())) {
                 st = st.plusHours(1);
                 st = Time.fromDate(st.year(), st.month(), st.day(), st.hour(), 0);
                 continue;
             }
-            if(!minute.match(st.minute())) {
+            if (!minute.match(st.minute())) {
                 st = st.plusMinutes(1);
                 continue;
             }

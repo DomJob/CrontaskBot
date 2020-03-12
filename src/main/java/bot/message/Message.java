@@ -15,16 +15,17 @@ public class Message {
         this.text = text;
     }
 
+    public Message(String text, User receiver) {
+        this.text = text;
+        this.receiver = receiver;
+    }
+
     public void addButton(String text, String data) {
         buttons.add(new Button(text, data));
     }
 
     public List<Button> getButtons() {
         return Collections.unmodifiableList(buttons);
-    }
-
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
     }
 
     public long getReceiverId() {

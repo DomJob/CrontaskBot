@@ -17,10 +17,6 @@ public class TaskDao {
         this.schedule = schedule;
     }
 
-    public Task toModel() {
-        return new Task(id, name, owner.toModel(), Schedule.deserialize(schedule));
-    }
-
     public static TaskDao fromModel(Task task) {
         Class<? extends Task> taskClass = task.getClass();
         String scheduleStr = "0";
@@ -38,5 +34,9 @@ public class TaskDao {
             task.getName(),
             UserDao.fromModel(task.getOwner()),
             scheduleStr);
+    }
+
+    public Task toModel() {
+        return new Task(id, name, owner.toModel(), Schedule.deserialize(schedule));
     }
 }

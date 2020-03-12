@@ -3,8 +3,8 @@ package bot.states;
 import bot.CrontaskBot;
 import bot.entities.ReceivedMessage;
 import bot.message.Message;
-import bot.message.MessageFactory;
-import bot.message.MessageFactoryProvider;
+import bot.message.MessageFormatter;
+import bot.message.MessageFormatterProvider;
 import domain.schedule.Schedule;
 import domain.time.Timezone;
 import domain.user.User;
@@ -16,16 +16,16 @@ public class BotContext {
     private User user;
     private TaskService taskService;
     private UserService userService;
-    private MessageFactory messageFactory;
+    private MessageFormatter messageFormatter;
 
     private BotState state = new DefaultState();
 
-    public BotContext(CrontaskBot bot, User user, TaskService taskService, UserService userService, MessageFactoryProvider messageFactoryProvider) {
+    public BotContext(CrontaskBot bot, User user, TaskService taskService, UserService userService, MessageFormatterProvider messageFormatterProvider) {
         this.bot = bot;
         this.taskService = taskService;
         this.userService = userService;
         this.user = user;
-        this.messageFactory = messageFactoryProvider.provide(user.getLanguage());
+        this.messageFormatter = messageFormatterProvider.provide(user.getLanguage());
     }
 
     public void handleMessage(ReceivedMessage message) {
@@ -44,60 +44,60 @@ public class BotContext {
         taskService.createTask(name, user, schedule);
     }
 
-    protected void send(Message message) {
-        message.setReceiver(user);
+    protected void send(String text) {
+        Message message = new Message(text, user);
         bot.sendMessage(message);
     }
 
     protected void sendDefaultMessage() {
-        send(messageFactory.createDefaultMessage());
+        send(messageFormatter.formatDefaultMessage());
     }
 
     protected void sendUnknownCommandMessage() {
-        send(messageFactory.createUnknownCommandMessage());
+        send(messageFormatter.formatUnknownCommandMessage());
     }
 
     protected void sendNoOngoingOperationMessage() {
-        send(messageFactory.createNoOngoingOperationMessage());
+        send(messageFormatter.formatNoOngoingOperationMessage());
     }
 
     protected void sendHelpMessage() {
-        send(messageFactory.createHelpMessage());
+        send(messageFormatter.formatHelpMessage());
     }
 
     protected void sendTaskNameRequestMessage() {
-        send(messageFactory.createTaskNameRequestMessage());
+        send(messageFormatter.formatTaskNameRequestMessage());
     }
 
     protected void sendStartMessage() {
-        send(messageFactory.createStartMessage());
+        send(messageFormatter.formatStartMessage());
     }
 
     protected void sendOperationCancelledMessage() {
-        send(messageFactory.createOperationCancelledMessage());
+        send(messageFormatter.formatOperationCancelledMessage());
     }
 
     protected void sendInvalidScheduleFormat() {
-        send(messageFactory.createInvalidScheduleFormat());
+        send(messageFormatter.formatInvalidScheduleFormat());
     }
 
     protected void sendTaskCreatedMessage() {
-        send(messageFactory.createTaskCreatedMessage());
+        send(messageFormatter.formatTaskCreatedMessage());
     }
 
     protected void sendCronScheduleRequestedMessage() {
-        send(messageFactory.createScheduleRequestedMessage());
+        send(messageFormatter.formatScheduleRequestedMessage());
     }
 
     protected void sendListOfCommandsMessage() {
-        send(messageFactory.createListOfCommandsMessage());
+        send(messageFormatter.formatListOfCommandsMessage());
     }
 
     public void sendSettingsMenuMessage() {
-        send(messageFactory.createSettingsMenuMessage());
+        send(messageFormatter.formatSettingsMenuMessage());
     }
 
     public void sendTimezoneOffsetRequestedMessage() {
-        send(messageFactory.createTimezoneOffsetRequestedMessage());
+        send(messageFormatter.formatTimezoneOffsetRequestedMessage());
     }
 }

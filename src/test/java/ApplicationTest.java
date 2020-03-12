@@ -10,9 +10,8 @@ import bot.CrontaskBot;
 import bot.TelegramApi;
 import bot.entities.CallbackQuery;
 import bot.entities.ReceivedMessage;
-import bot.message.Message;
-import bot.message.MessageFactoryProvider;
-import display.FakeMessageFactory;
+import bot.message.MessageFormatterProvider;
+import display.FakeMessageFormatter;
 import domain.task.Task;
 import domain.task.TaskFactory;
 import domain.task.TaskRepository;
@@ -56,16 +55,14 @@ public class ApplicationTest {
     private static final long USER_ID = 12345678L;
     private static final long OTHER_USER_ID = 789456L;
 
-    private static final Message TASK_CREATED_MESSAGE = new Message("task created yay");
-
     private static User USER = new User(USER_ID);
 
     @Mock
     private TelegramApi api;
     @Mock
-    private MessageFactoryProvider messageFactoryProvider;
+    private MessageFormatterProvider messageFormatterProvider;
     @Spy
-    private FakeMessageFactory messageFactory = new FakeMessageFactory();
+    private FakeMessageFormatter messageFormatter = new FakeMessageFormatter();
     private TaskRepository taskRepository = spy(new TaskRepositoryInMemory());
     private UserRepository userRepository = spy(new UserRepositoryInMemory());
     @Spy
@@ -75,17 +72,14 @@ public class ApplicationTest {
     private TaskFactory taskFactory = new TaskFactory(longGenerator);
     @Spy
     private TaskService taskService = new TaskService(taskFactory, taskRepository);
-        
+
     private CrontaskBot bot;
 
     @Before
     public void setUp() {
-        bot = new CrontaskBot(api, taskService, userService, messageFactoryProvider);
+        bot = new CrontaskBot(api, taskService, userService, messageFormatterProvider);
 
-        when(messageFactoryProvider.provide(any(Language.class))).thenReturn(messageFactory);
-
-        TASK_CREATED_MESSAGE.setReceiver(USER);
-        when(messageFactory.createTaskTriggeredMessage(any(Task.class))).thenReturn(TASK_CREATED_MESSAGE);
+        when(messageFormatterProvider.provide(any(Language.class))).thenReturn(messageFormatter);
     }
 
     @After
@@ -108,7 +102,7 @@ public class ApplicationTest {
     public void createTask_happyPath() {
         createTask(SCHEDULE_EVERY_MINUTE);
 
-        verify(messageFactory).createTaskCreatedMessage();
+        verify(messageFormatter).formatTaskCreatedMessage();
         verify(taskRepository).save(any(Task.class));
     }
 
@@ -116,7 +110,7 @@ public class ApplicationTest {
     public void createTask_invalidSchedule() {
         createTask(INVALID_SCHEDULE);
 
-        verify(messageFactory).createInvalidScheduleFormat();
+        verify(messageFormatter).formatInvalidScheduleFormat();
         verify(taskRepository, never()).save(any(Task.class));
     }
 
@@ -189,7 +183,7 @@ public class ApplicationTest {
         checkTasksAt(CURRENT_TIME.plusMinutes(5));
         checkTasksAt(CURRENT_TIME.plusMinutes(6));
 
-        verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
+        verify(messageFormatter, times(1)).formatTaskTriggeredMessage(any(Task.class));
     }
 
     @Test
@@ -200,7 +194,7 @@ public class ApplicationTest {
         checkTasksAt(Time.fromDate(2020, 3, 15, 15, 20));
         checkTasksAt(Time.fromDate(2020, 3, 15, 15, 21));
 
-        verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
+        verify(messageFormatter, times(1)).formatTaskTriggeredMessage(any(Task.class));
     }
 
     @Test
@@ -213,7 +207,7 @@ public class ApplicationTest {
         checkTasksAt(Time.fromDate(year, 3, 15, 15, 20));
         checkTasksAt(Time.fromDate(year, 3, 15, 15, 21));
 
-        verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
+        verify(messageFormatter, times(1)).formatTaskTriggeredMessage(any(Task.class));
     }
 
     @Test
@@ -228,7 +222,7 @@ public class ApplicationTest {
         checkTasksAt(Time.fromDate(year, month, day, 15, 20));
         checkTasksAt(Time.fromDate(year, month, day, 15, 21));
 
-        verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
+        verify(messageFormatter, times(1)).formatTaskTriggeredMessage(any(Task.class));
     }
 
     @Test
@@ -254,7 +248,7 @@ public class ApplicationTest {
         newMessage(SCHEDULE_EVERY_MINUTE)
             .send();
 
-        verify(messageFactory, times(2)).createTaskCreatedMessage();
+        verify(messageFormatter, times(2)).formatTaskCreatedMessage();
     }
 
     @Test
@@ -290,11 +284,11 @@ public class ApplicationTest {
 
         // Doesnt trigger at 3 PM UTC
         checkTasksAt(threePmUTC);
-        verify(messageFactory, never()).createTaskTriggeredMessage(any(Task.class));
+        verify(messageFormatter, never()).formatTaskTriggeredMessage(any(Task.class));
 
         // But it does trigger 4 hours later
         checkTasksAt(threePmUTC.plusHours(4));
-        verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
+        verify(messageFormatter, times(1)).formatTaskTriggeredMessage(any(Task.class));
     }
 
     @Test
@@ -307,11 +301,11 @@ public class ApplicationTest {
 
         // Doesnt trigger at UTC time
         checkTasksAt(timeUTC);
-        verify(messageFactory, never()).createTaskTriggeredMessage(any(Task.class));
+        verify(messageFormatter, never()).formatTaskTriggeredMessage(any(Task.class));
 
         // But it does trigger 5 hours later
         checkTasksAt(timeUTC.plusHours(5));
-        verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
+        verify(messageFormatter, times(1)).formatTaskTriggeredMessage(any(Task.class));
     }
 
     @Test
@@ -325,7 +319,7 @@ public class ApplicationTest {
 
         assertThatATaskWasTriggered();
     }
-    
+
     private void checkTasksAt(Time time) {
         taskService.checkTasks(time, bot::notifyTaskTriggered);
     }
@@ -362,14 +356,12 @@ public class ApplicationTest {
     }
 
     private void assertThatATaskWasTriggered() {
-        verify(messageFactory).createTaskTriggeredMessage(any(Task.class));
-        verify(api).sendMessage(TASK_CREATED_MESSAGE);
+        verify(messageFormatter).formatTaskTriggeredMessage(any(Task.class));
     }
 
 
     private void assertThatATaskWasTriggered(int howMany) {
-        verify(messageFactory, times(howMany)).createTaskTriggeredMessage(any(Task.class));
-        verify(api, times(howMany)).sendMessage(TASK_CREATED_MESSAGE);
+        verify(messageFormatter, times(howMany)).formatTaskTriggeredMessage(any(Task.class));
     }
 
 

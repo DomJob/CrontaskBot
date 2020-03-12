@@ -12,11 +12,11 @@ public class UserDao {
         this.tzOffset = tzOffset;
     }
 
-    public User toModel() {
-        return new User(id, Timezone.fromOffset(tzOffset));
-    }
-
     public static UserDao fromModel(User user) {
         return new UserDao(user.getId(), user.getTimezone().getOffset());
+    }
+
+    public User toModel() {
+        return new User(id, Timezone.fromOffset(tzOffset));
     }
 }

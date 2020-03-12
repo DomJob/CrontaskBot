@@ -3,7 +3,6 @@ package domain.task;
 import domain.schedule.Schedule;
 import domain.time.Time;
 import domain.user.User;
-import java.io.Serializable;
 
 public class Task {
     private long id;

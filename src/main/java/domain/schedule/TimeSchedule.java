@@ -113,7 +113,7 @@ public class TimeSchedule extends Schedule {
 
     @Override
     public Time nextTrigger(Time now) {
-        if(time.isAfter(now)) {
+        if (time.isAfter(now)) {
             return time;
         } else {
             return Time.NEVER;

@@ -2,7 +2,6 @@ package infrastructure.persistence;
 
 import static infrastructure.persistence.Sqlite.getConnection;
 
-import domain.time.Timezone;
 import domain.user.User;
 import domain.user.UserRepository;
 import infrastructure.persistence.entities.UserDao;
