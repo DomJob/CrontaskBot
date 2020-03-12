@@ -1,6 +1,7 @@
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,11 +15,15 @@ import bot.message.MessageFactoryProvider;
 import display.FakeMessageFactory;
 import domain.task.Task;
 import domain.task.TaskFactory;
+import domain.task.TaskRepository;
 import domain.time.Time;
 import domain.user.Language;
 import domain.user.User;
+import domain.user.UserRepository;
 import infrastructure.persistence.Sqlite;
+import infrastructure.persistence.TaskRepositoryInMemory;
 import infrastructure.persistence.TaskRepositorySQL;
+import infrastructure.persistence.UserRepositoryInMemory;
 import infrastructure.persistence.UserRepositorySQL;
 import infrastructure.util.RandomLongGeneratorSpy;
 import java.sql.SQLException;
@@ -29,9 +34,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import service.TaskService;
+import service.UserService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationTest {
+    private static boolean SQL = false;
+
     private static final String TASK_NAME = "task name";
     private static final String SCHEDULE_EVERY_MINUTE = "* * * * *";
     private static final String SCHEDULE_EVERY_5_MINUTES = "*/5 * * * *";
@@ -57,20 +66,21 @@ public class ApplicationTest {
     private MessageFactoryProvider messageFactoryProvider;
     @Spy
     private FakeMessageFactory messageFactory = new FakeMessageFactory();
+    private TaskRepository taskRepository = spy(new TaskRepositoryInMemory());
+    private UserRepository userRepository = spy(new UserRepositoryInMemory());
     @Spy
-    private TaskRepositorySQL taskRepository = new TaskRepositorySQL();
-    @Spy
-    private UserRepositorySQL userRepository = new UserRepositorySQL();
-
+    private UserService userService = new UserService(userRepository);
     private RandomLongGeneratorSpy longGenerator = new RandomLongGeneratorSpy();
-
+    @Spy
+    private TaskFactory taskFactory = new TaskFactory(longGenerator);
+    @Spy
+    private TaskService taskService = new TaskService(taskFactory, taskRepository);
+        
     private CrontaskBot bot;
 
     @Before
     public void setUp() {
-        Sqlite.setPath("crontaskbot_IT.db");
-
-        bot = new CrontaskBot(api, taskRepository, userRepository, new TaskFactory(longGenerator), messageFactoryProvider);
+        bot = new CrontaskBot(api, taskService, userService, messageFactoryProvider);
 
         when(messageFactoryProvider.provide(any(Language.class))).thenReturn(messageFactory);
 
@@ -80,8 +90,18 @@ public class ApplicationTest {
 
     @After
     public void tearDown() throws SQLException {
+        if (!SQL) {
+            return;
+        }
         Sqlite.getConnection().createStatement().executeUpdate("DELETE FROM task");
         Sqlite.getConnection().createStatement().executeUpdate("DELETE FROM user");
+    }
+
+    private void setUpSQL() {
+        SQL = true;
+        Sqlite.setPath("crontaskbot_IT.db");
+        taskRepository = spy(new TaskRepositorySQL());
+        userRepository = spy(new UserRepositorySQL());
     }
 
     @Test
@@ -104,7 +124,7 @@ public class ApplicationTest {
     public void createTask_taskCanBeTriggered() {
         createTask(SCHEDULE_EVERY_MINUTE);
 
-        bot.checkTasks(CURRENT_TIME);
+        checkTasksAt(CURRENT_TIME);
 
         assertThatATaskWasTriggered();
     }
@@ -113,11 +133,11 @@ public class ApplicationTest {
     public void createTask_triggers_dayOfWeek() {
         createTask("0 0 * * 3"); // Every wednesday at midnight
 
-        bot.checkTasks(Time.fromDate(2020, 3, 11, 0, 0)); // Wednesday
-        bot.checkTasks(Time.fromDate(2020, 3, 18, 0, 0)); // Wednesday
-        bot.checkTasks(Time.fromDate(2020, 3, 25, 0, 0)); // Wednesday
-        bot.checkTasks(Time.fromDate(2020, 3, 25, 0, 1)); // Wednesday wrong minute
-        bot.checkTasks(Time.fromDate(2020, 3, 5, 0, 0)); // Tuesday
+        checkTasksAt(Time.fromDate(2020, 3, 11, 0, 0)); // Wednesday
+        checkTasksAt(Time.fromDate(2020, 3, 18, 0, 0)); // Wednesday
+        checkTasksAt(Time.fromDate(2020, 3, 25, 0, 0)); // Wednesday
+        checkTasksAt(Time.fromDate(2020, 3, 25, 0, 1)); // Wednesday wrong minute
+        checkTasksAt(Time.fromDate(2020, 3, 5, 0, 0)); // Tuesday
 
         assertThatATaskWasTriggered(3);
     }
@@ -126,12 +146,12 @@ public class ApplicationTest {
     public void createTask_triggers_dayOfMonth() {
         createTask("30 5 7 * *"); // Every 7th of the month at 5:30 am
 
-        bot.checkTasks(Time.fromDate(2020, 3, 7, 5, 30)); // OK
-        bot.checkTasks(Time.fromDate(2020, 4, 7, 5, 30)); // OK
-        bot.checkTasks(Time.fromDate(2020, 7, 7, 5, 30)); // OK
-        bot.checkTasks(Time.fromDate(2020, 7, 7, 5, 29)); // NO
-        bot.checkTasks(Time.fromDate(2020, 7, 7, 5, 31)); // NO
-        bot.checkTasks(Time.fromDate(2020, 7, 9, 5, 30)); // NO
+        checkTasksAt(Time.fromDate(2020, 3, 7, 5, 30)); // OK
+        checkTasksAt(Time.fromDate(2020, 4, 7, 5, 30)); // OK
+        checkTasksAt(Time.fromDate(2020, 7, 7, 5, 30)); // OK
+        checkTasksAt(Time.fromDate(2020, 7, 7, 5, 29)); // NO
+        checkTasksAt(Time.fromDate(2020, 7, 7, 5, 31)); // NO
+        checkTasksAt(Time.fromDate(2020, 7, 9, 5, 30)); // NO
 
         assertThatATaskWasTriggered(3);
     }
@@ -140,12 +160,12 @@ public class ApplicationTest {
     public void createTask_triggers_complex() {
         createTask("0 */2 * 9 2"); // Every even hour on Tuesdays in September
 
-        bot.checkTasks(Time.fromDate(2020, 9, 8, 5, 0)); // NO
-        bot.checkTasks(Time.fromDate(2020, 9, 8, 8, 0)); // OK
-        bot.checkTasks(Time.fromDate(2020, 9, 9, 8, 0)); // NO
-        bot.checkTasks(Time.fromDate(2020, 9, 15, 16, 0)); // OK
-        bot.checkTasks(Time.fromDate(2020, 9, 22, 6, 0)); // OK
-        bot.checkTasks(Time.fromDate(2020, 9, 22, 6, 1)); // NO
+        checkTasksAt(Time.fromDate(2020, 9, 8, 5, 0)); // NO
+        checkTasksAt(Time.fromDate(2020, 9, 8, 8, 0)); // OK
+        checkTasksAt(Time.fromDate(2020, 9, 9, 8, 0)); // NO
+        checkTasksAt(Time.fromDate(2020, 9, 15, 16, 0)); // OK
+        checkTasksAt(Time.fromDate(2020, 9, 22, 6, 0)); // OK
+        checkTasksAt(Time.fromDate(2020, 9, 22, 6, 1)); // NO
 
         assertThatATaskWasTriggered(3);
     }
@@ -155,7 +175,7 @@ public class ApplicationTest {
         createTask(SCHEDULE_EVERY_5_MINUTES);
 
         for (int i = 0; i < 60; i++) {
-            bot.checkTasks(CURRENT_TIME.plusMinutes(i));
+            checkTasksAt(CURRENT_TIME.plusMinutes(i));
         }
 
         assertThatATaskWasTriggered(12);
@@ -165,9 +185,9 @@ public class ApplicationTest {
     public void createTask_relativeTime_canBeTriggered() {
         createTask(IN_5_MINUTES);
 
-        bot.checkTasks(CURRENT_TIME.plusMinutes(4));
-        bot.checkTasks(CURRENT_TIME.plusMinutes(5));
-        bot.checkTasks(CURRENT_TIME.plusMinutes(6));
+        checkTasksAt(CURRENT_TIME.plusMinutes(4));
+        checkTasksAt(CURRENT_TIME.plusMinutes(5));
+        checkTasksAt(CURRENT_TIME.plusMinutes(6));
 
         verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
     }
@@ -176,9 +196,9 @@ public class ApplicationTest {
     public void createTask_exactTime_canBeTriggered() {
         createTask("2020-03-15 15:20");
 
-        bot.checkTasks(Time.fromDate(2020, 3, 15, 15, 19));
-        bot.checkTasks(Time.fromDate(2020, 3, 15, 15, 20));
-        bot.checkTasks(Time.fromDate(2020, 3, 15, 15, 21));
+        checkTasksAt(Time.fromDate(2020, 3, 15, 15, 19));
+        checkTasksAt(Time.fromDate(2020, 3, 15, 15, 20));
+        checkTasksAt(Time.fromDate(2020, 3, 15, 15, 21));
 
         verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
     }
@@ -189,9 +209,9 @@ public class ApplicationTest {
 
         createTask("03-15 15:20");
 
-        bot.checkTasks(Time.fromDate(year, 3, 15, 15, 19));
-        bot.checkTasks(Time.fromDate(year, 3, 15, 15, 20));
-        bot.checkTasks(Time.fromDate(year, 3, 15, 15, 21));
+        checkTasksAt(Time.fromDate(year, 3, 15, 15, 19));
+        checkTasksAt(Time.fromDate(year, 3, 15, 15, 20));
+        checkTasksAt(Time.fromDate(year, 3, 15, 15, 21));
 
         verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
     }
@@ -204,9 +224,9 @@ public class ApplicationTest {
 
         createTask("15:20");
 
-        bot.checkTasks(Time.fromDate(year, month, day, 15, 19));
-        bot.checkTasks(Time.fromDate(year, month, day, 15, 20));
-        bot.checkTasks(Time.fromDate(year, month, day, 15, 21));
+        checkTasksAt(Time.fromDate(year, month, day, 15, 19));
+        checkTasksAt(Time.fromDate(year, month, day, 15, 20));
+        checkTasksAt(Time.fromDate(year, month, day, 15, 21));
 
         verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
     }
@@ -248,14 +268,14 @@ public class ApplicationTest {
 
     @Test
     public void snoozeTask_deletesItAndRetriggersItLater() {
-        createTask(SCHEDULE_EVERY_MINUTE);
+        createTask(IN_5_MINUTES);
 
         snoozeTask();
 
         verify(api).answerCallbackQuery(eq(CALLBACK_QUERY_ID), any(String.class));
         verify(api).deleteMessage(USER_ID, MESSAGE_ID);
 
-        bot.checkTasks(CURRENT_TIME.plusMinutes(15));
+        checkTasksAt(CURRENT_TIME.plusMinutes(15));
 
         assertThatATaskWasTriggered();
     }
@@ -269,11 +289,11 @@ public class ApplicationTest {
         Time threePmUTC = Time.fromDate(2020, 3, 15, 15, 0);
 
         // Doesnt trigger at 3 PM UTC
-        bot.checkTasks(threePmUTC);
+        checkTasksAt(threePmUTC);
         verify(messageFactory, never()).createTaskTriggeredMessage(any(Task.class));
 
         // But it does trigger 4 hours later
-        bot.checkTasks(threePmUTC.plusHours(4));
+        checkTasksAt(threePmUTC.plusHours(4));
         verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
     }
 
@@ -286,11 +306,11 @@ public class ApplicationTest {
         Time timeUTC = Time.fromDate(2020, 3, 15, 15, 20);
 
         // Doesnt trigger at UTC time
-        bot.checkTasks(timeUTC);
+        checkTasksAt(timeUTC);
         verify(messageFactory, never()).createTaskTriggeredMessage(any(Task.class));
 
         // But it does trigger 5 hours later
-        bot.checkTasks(timeUTC.plusHours(5));
+        checkTasksAt(timeUTC.plusHours(5));
         verify(messageFactory, times(1)).createTaskTriggeredMessage(any(Task.class));
     }
 
@@ -301,9 +321,13 @@ public class ApplicationTest {
         createTask(IN_5_MINUTES);
 
         // Trigger 5 mins from now regardless of timezone
-        bot.checkTasks(CURRENT_TIME.plusMinutes(5));
+        checkTasksAt(CURRENT_TIME.plusMinutes(5));
 
         assertThatATaskWasTriggered();
+    }
+    
+    private void checkTasksAt(Time time) {
+        taskService.checkTasks(time, bot::notifyTaskTriggered);
     }
 
     private void createTask(String schedule) {

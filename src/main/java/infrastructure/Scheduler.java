@@ -7,15 +7,18 @@ import domain.time.Time;
 import java.time.Instant;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import service.TaskService;
 
 public class Scheduler {
     private CrontaskBot bot;
     private TelegramApi api;
+    private TaskService taskService;
     private long lastUpdate = 0;
 
-    public Scheduler(CrontaskBot bot, TelegramApi api) {
+    public Scheduler(CrontaskBot bot, TelegramApi api, TaskService taskService) {
         this.bot = bot;
         this.api = api;
+        this.taskService = taskService;
     }
 
     public void start() {
@@ -27,7 +30,7 @@ public class Scheduler {
     }
 
     public void checkTasks() {
-        bot.checkTasks(now());
+        taskService.checkTasks(now(), bot::notifyTaskTriggered);
     }
 
     public void handleEvents() {

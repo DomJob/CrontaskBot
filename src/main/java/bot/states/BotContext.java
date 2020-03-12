@@ -4,34 +4,49 @@ import bot.CrontaskBot;
 import bot.entities.ReceivedMessage;
 import bot.message.Message;
 import bot.message.MessageFactory;
+import bot.message.MessageFactoryProvider;
 import domain.schedule.Schedule;
 import domain.time.Timezone;
 import domain.user.User;
+import service.TaskService;
+import service.UserService;
 
 public class BotContext {
     private CrontaskBot bot;
-    private MessageFactory messageFactory;
     private User user;
+    private TaskService taskService;
+    private UserService userService;
+    private MessageFactory messageFactory;
 
     private BotState state = new DefaultState();
 
-    public BotContext(CrontaskBot bot, User user) {
+    public BotContext(CrontaskBot bot, User user, TaskService taskService, UserService userService, MessageFactoryProvider messageFactoryProvider) {
         this.bot = bot;
+        this.taskService = taskService;
+        this.userService = userService;
         this.user = user;
-        this.messageFactory = bot.getMessageFactoryForUser(user);
+        this.messageFactory = messageFactoryProvider.provide(user.getLanguage());
     }
 
     public void handleMessage(ReceivedMessage message) {
         state = state.handleMessage(message, this);
     }
 
+    public Timezone getTimezone() {
+        return user.getTimezone();
+    }
+
+    public void setTimezone(Timezone timezone) {
+        userService.changeTimezone(user, timezone);
+    }
+
+    protected void createTask(String name, Schedule schedule) {
+        taskService.createTask(name, user, schedule);
+    }
+
     protected void send(Message message) {
         message.setReceiver(user);
         bot.sendMessage(message);
-    }
-
-    protected void createTask(String taskName, Schedule schedule) {
-        bot.createTask(taskName, user, schedule);
     }
 
     protected void sendDefaultMessage() {
@@ -84,13 +99,5 @@ public class BotContext {
 
     public void sendTimezoneOffsetRequestedMessage() {
         send(messageFactory.createTimezoneOffsetRequestedMessage());
-    }
-
-    public Timezone getTimezone() {
-        return user.getTimezone();
-    }
-
-    public void setTimezone(Timezone timezone) {
-        bot.setTimezoneForUser(user, timezone);
     }
 }

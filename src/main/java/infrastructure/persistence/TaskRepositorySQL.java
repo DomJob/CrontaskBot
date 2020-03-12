@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class TaskRepositorySQL implements TaskRepository {
     private static final String FIND_TASK_BY_ID = "SELECT * FROM task WHERE id=?";
@@ -47,7 +48,9 @@ public class TaskRepositorySQL implements TaskRepository {
     }
 
     @Override
-    public Task findById(long id) {
+    public Optional<Task> findById(long id) {
+        Task task = null;
+
         try {
             PreparedStatement statement = getConnection().prepareStatement(FIND_TASK_BY_ID);
 
@@ -60,19 +63,19 @@ public class TaskRepositorySQL implements TaskRepository {
                 long owner = rs.getLong("owner");
                 String schedule = rs.getString("schedule");
 
-                return new Task(id, name, findUser(owner), Schedule.deserialize(schedule));
+                task = new Task(id, name, findUser(owner), Schedule.deserialize(schedule));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return null; // TODO - Refactor this with Optional maybe?
+        return Optional.ofNullable(task);
     }
 
     @Override
     public void save(Task task) {
-        Task existingTask = findById(task.getId());
-        if (existingTask == null) {
+        Optional<Task> existingTask = findById(task.getId());
+        if (!existingTask.isPresent()) {
             insertTask(task);
         }
     }

@@ -1,11 +1,12 @@
 package domain.task;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface TaskRepository {
     Collection<Task> findAll();
 
-    Task findById(long id);
+    Optional<Task> findById(long id);
 
     void save(Task task);
 }

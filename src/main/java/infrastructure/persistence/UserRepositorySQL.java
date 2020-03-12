@@ -8,6 +8,7 @@ import domain.user.UserRepository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class UserRepositorySQL implements UserRepository {
     private static final String FIND_USER_BY_ID = "SELECT tzOffset FROM user WHERE id = ?";
@@ -15,7 +16,9 @@ public class UserRepositorySQL implements UserRepository {
     private static final String UPDATE_USER = "UPDATE user SET tzOffset = ? WHERE id = ?";
 
     @Override
-    public User findById(long id) {
+    public Optional<User> findById(long id) {
+        User user = null;
+
         try {
             PreparedStatement statement = getConnection().prepareStatement(FIND_USER_BY_ID);
 
@@ -26,13 +29,13 @@ public class UserRepositorySQL implements UserRepository {
             if (rs.next()) {
                 int tzOffset = rs.getInt("tzOffset");
 
-                return new User(id, Timezone.fromOffset(tzOffset));
+                user = new User(id, Timezone.fromOffset(tzOffset));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return null; // TODO Optional
+        return Optional.ofNullable(user);
     }
 
     @Override
