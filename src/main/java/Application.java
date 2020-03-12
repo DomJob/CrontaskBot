@@ -16,11 +16,6 @@ import service.UserService;
 
 public class Application {
     public static void main(String[] args) {
-        new UserRepositorySQL().findById(42069);
-        new UserRepositorySQL().findById(42069);
-    }
-
-    public static void realMain(String[] args) {
         if (args.length != 1) {
             throw new IllegalArgumentException("Argument must be bot's token.");
         }

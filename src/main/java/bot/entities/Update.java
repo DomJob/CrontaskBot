@@ -24,8 +24,10 @@ public class Update {
         switch (type) {
             case CALLBACK:
                 callbackQuery.time = time;
+                break;
             case MESSAGE:
                 message.time = time;
+                break;
         }
     }
 }

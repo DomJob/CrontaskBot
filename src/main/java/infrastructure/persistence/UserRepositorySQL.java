@@ -40,11 +40,15 @@ public class UserRepositorySQL implements UserRepository {
 
     @Override
     public void save(User user) {
-        if (findById(user.getId()) == null) {
+        if (findById(user.getId()).isPresent()) {
+            updateUser(user);
+        } else {
             insertUser(user);
             return;
         }
+    }
 
+    private void updateUser(User user) {
         try {
             PreparedStatement statement = getConnection().prepareStatement(UPDATE_USER);
 

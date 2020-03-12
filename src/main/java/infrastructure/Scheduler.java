@@ -45,6 +45,7 @@ public class Scheduler {
                     bot.handleCallbackQuery(update.callbackQuery);
                     break;
             }
+
             lastUpdate = update.id + 1;
         }
     }

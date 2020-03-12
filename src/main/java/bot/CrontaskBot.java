@@ -38,12 +38,14 @@ public class CrontaskBot {
         CallbackCommand command = CallbackCommand.parse(query.data);
 
         long id = Long.parseLong(command.getParameters().get(1));
-        api.answerCallbackQuery(query.id, "");
 
         switch (command) {
             case SNOOZE:
                 taskService.snoozeTask(id, query.time);
+                api.answerCallbackQuery(query.id, "Snoozed for 15 minutes");
+                break;
             case DISMISS:
+                api.answerCallbackQuery(query.id, "Task dismissed");
                 api.deleteMessage(query.userId, query.messageId);
         }
     }
