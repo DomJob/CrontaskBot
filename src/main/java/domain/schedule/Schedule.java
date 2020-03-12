@@ -3,8 +3,10 @@ package domain.schedule;
 import domain.time.Time;
 import domain.time.Timezone;
 
-public interface Schedule {
-    static Schedule parse(String string, Time now, Timezone timezone) {
+public abstract class Schedule {
+    protected String code;
+
+    public static Schedule parse(String string, Time now, Timezone timezone) {
         string = string.toLowerCase();
 
         if (string.matches(TimeSchedule.ABSOLUTE_PATTERN)) {
@@ -18,19 +20,23 @@ public interface Schedule {
         throw new InvalidScheduleException();
     }
 
-    static Schedule deserialize(String string) {
+    public static Schedule deserialize(String string) {
         if (string.matches(CronSchedule.PATTERN)) {
             return CronSchedule.parse(string);
         } else if (string.matches("^\\d+$")) {
-            return new TimeSchedule(new Time(Integer.parseInt(string)));
+            long time = Long.parseLong(string);
+            new TimeSchedule(new Time(time));
         }
 
         throw new InvalidScheduleException();
     }
 
-    boolean isTriggered(Time time);
+    public abstract boolean isTriggered(Time time);
 
-    Time nextTrigger(Time now);
+    public abstract Time nextTrigger(Time now);
 
-    String serialize();
+    @Override
+    public String toString() {
+        return code;
+    }
 }

@@ -2,11 +2,10 @@ package infrastructure.persistence;
 
 import static infrastructure.persistence.Sqlite.getConnection;
 
-import domain.schedule.Schedule;
 import domain.task.Task;
 import domain.task.TaskRepository;
-import domain.time.Timezone;
-import domain.user.User;
+import infrastructure.persistence.entities.TaskDao;
+import infrastructure.persistence.entities.UserDao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TaskRepositorySQL implements TaskRepository {
     private static final String FIND_TASK_BY_ID = "SELECT * FROM task WHERE id=?";
@@ -24,27 +24,26 @@ public class TaskRepositorySQL implements TaskRepository {
 
     @Override
     public Collection<Task> findAll() {
-        List<Task> tasks = new ArrayList<>();
+        List<TaskDao> daos = new ArrayList<>();
 
         try {
             Statement statement = getConnection().createStatement();
             ResultSet rs = statement.executeQuery(FIND_ALL_TASKS);
 
-            if (rs.next()) {
-                Long id = rs.getLong("id");
+            while (rs.next()) {
+                long id = rs.getLong("id");
                 String name = rs.getString("name");
                 long owner = rs.getLong("owner");
                 String schedule = rs.getString("schedule");
 
-                Task task = new Task(id, name, findUser(owner), Schedule.deserialize(schedule));
-
-                tasks.add(task);
+                TaskDao dao = new TaskDao(id, name, findUser(owner), schedule);
+                daos.add(dao);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return tasks;
+        return daos.stream().map(TaskDao::toModel).collect(Collectors.toList());
     }
 
     @Override
@@ -63,7 +62,9 @@ public class TaskRepositorySQL implements TaskRepository {
                 long owner = rs.getLong("owner");
                 String schedule = rs.getString("schedule");
 
-                task = new Task(id, name, findUser(owner), Schedule.deserialize(schedule));
+                TaskDao dao = new TaskDao(id, name, findUser(owner), schedule);
+
+                task = dao.toModel();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -84,10 +85,12 @@ public class TaskRepositorySQL implements TaskRepository {
         try {
             PreparedStatement statement = getConnection().prepareStatement(INSERT_TASK);
 
-            statement.setLong(1, task.getId());
-            statement.setString(2, task.getName());
-            statement.setLong(3, task.getOwner().getId());
-            statement.setString(4, task.serializeSchedule());
+            TaskDao dao = TaskDao.fromModel(task);
+
+            statement.setLong(1, dao.id);
+            statement.setString(2, dao.name);
+            statement.setLong(3, dao.owner.id);
+            statement.setString(4, dao.schedule);
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -95,8 +98,7 @@ public class TaskRepositorySQL implements TaskRepository {
         }
     }
 
-
-    private User findUser(long id) { // TODO Refactor query to use a fancy join and what not
+    private UserDao findUser(long id) {
         try {
             PreparedStatement statement = getConnection().prepareStatement(FIND_USER_BY_ID);
 
@@ -106,8 +108,7 @@ public class TaskRepositorySQL implements TaskRepository {
 
             if (rs.next()) {
                 int tzOffset = rs.getInt("tzOffset");
-
-                return new User(id, Timezone.fromOffset(tzOffset));
+                return new UserDao(id, tzOffset);
             }
         } catch (SQLException e) {
             e.printStackTrace();

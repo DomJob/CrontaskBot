@@ -3,6 +3,7 @@ package domain.task;
 import domain.schedule.Schedule;
 import domain.time.Time;
 import domain.user.User;
+import java.io.Serializable;
 
 public class Task {
     private long id;
@@ -31,9 +32,5 @@ public class Task {
 
     public User getOwner() {
         return owner;
-    }
-
-    public String serializeSchedule() {
-        return schedule.serialize();
     }
 }

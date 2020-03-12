@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TimeSchedule implements Schedule {
+public class TimeSchedule extends Schedule {
     protected static final String ABSOLUTE_PATTERN = "^(([0-9]{4}[\\-\\s/])?[0-9]{1,2}[\\-\\s/][0-9]{1,2}\\s)?[0-9]{1,2}[:h][0-9]{1,2}$";
     protected static String RELATIVE_PATTERN = "^(in\\s)?(([0-9]+)\\s(days?|months?|years?|hours?|minutes?)(,|\\sand\\s)?\\s?)+(from\\snow)?$";
 
@@ -16,6 +16,7 @@ public class TimeSchedule implements Schedule {
 
     public TimeSchedule(Time time) {
         this.time = time;
+        this.code = Long.toString(time.getMinutesSinceEpoch());
     }
 
     public static TimeSchedule parseAbsoluteTime(String string, Time now) {
@@ -117,10 +118,5 @@ public class TimeSchedule implements Schedule {
         } else {
             return Time.NEVER;
         }
-    }
-
-    @Override
-    public String serialize() {
-        return Long.toString(time.getMinutesSinceEpoch());
     }
 }

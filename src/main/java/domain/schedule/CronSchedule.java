@@ -5,10 +5,8 @@ import static infrastructure.util.Helper.extractNumbers;
 import domain.schedule.cronmatchers.CronMatcher;
 import domain.time.Time;
 
-public class CronSchedule implements Schedule {
+public class CronSchedule extends Schedule {
     protected static String PATTERN = "^((?:[\\s]|^)(\\*(/[0-9]+)?|([0-9]+-[0-9]+)|([0-9]+,)*[0-9]+)(?=[\\s]|$)){5}$";
-
-    private String code;
 
     private CronMatcher minute;
     private CronMatcher hour;
@@ -123,15 +121,5 @@ public class CronSchedule implements Schedule {
         }
 
         return st;
-    }
-
-    @Override
-    public String serialize() {
-        return code;
-    }
-
-    @Override
-    public String toString() {
-        return code;
     }
 }

@@ -5,6 +5,7 @@ import static infrastructure.persistence.Sqlite.getConnection;
 import domain.time.Timezone;
 import domain.user.User;
 import domain.user.UserRepository;
+import infrastructure.persistence.entities.UserDao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,9 @@ public class UserRepositorySQL implements UserRepository {
             if (rs.next()) {
                 int tzOffset = rs.getInt("tzOffset");
 
-                user = new User(id, Timezone.fromOffset(tzOffset));
+                UserDao dao = new UserDao(id, tzOffset);
+
+                user = dao.toModel();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -44,16 +47,16 @@ public class UserRepositorySQL implements UserRepository {
             updateUser(user);
         } else {
             insertUser(user);
-            return;
         }
     }
 
     private void updateUser(User user) {
         try {
             PreparedStatement statement = getConnection().prepareStatement(UPDATE_USER);
+            UserDao dao = UserDao.fromModel(user);
 
-            statement.setInt(1, user.getTimezone().getOffset());
-            statement.setLong(2, user.getId());
+            statement.setInt(1, dao.tzOffset);
+            statement.setLong(2, dao.id);
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -64,9 +67,10 @@ public class UserRepositorySQL implements UserRepository {
     private void insertUser(User user) {
         try {
             PreparedStatement statement = getConnection().prepareStatement(INSERT_USER);
+            UserDao dao = UserDao.fromModel(user);
 
-            statement.setLong(1, user.getId());
-            statement.setInt(2, user.getTimezone().getOffset());
+            statement.setLong(1, dao.id);
+            statement.setInt(2, dao.tzOffset);
 
             statement.executeUpdate();
         } catch (SQLException e) {
