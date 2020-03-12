@@ -47,9 +47,9 @@ public class Timezone {
 
     public String toString() {
         int hours = offset / 60;
-        int minutes = offset % 60;
+        int minutes = Math.abs(offset % 60);
 
-        return String.format("%s%02d:%02d", offset >= 0 ? "+" : "-", hours, minutes);
+        return String.format("%s%02d:%02d", offset >= 0 ? "+" : "", hours, minutes);
     }
 
     @Override

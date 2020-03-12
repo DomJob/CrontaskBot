@@ -75,11 +75,16 @@ public class EnglishMessageFormatter implements MessageFormatter {
 
     @Override
     public String formatTimezoneOffsetRequestedMessage(Timezone currentTimezone, Time now) {
-        return String.format("Your timezone is currently set to <b>%s</b>.\nEnter your timezone's offset from UTC in ±HH:MM format. For reference, it is currently <b>%d:%d</b> in UTC time.", currentTimezone.toString(), now.hour(), now.minute());
+        return String.format("Enter your timezone's offset from UTC in ±HH:MM format.\n\nFor reference, it is currently <b>%d:%d</b> in UTC time and your timezone is currently set to <b>%s</b>.", now.hour(), now.minute(), currentTimezone.toString());
     }
 
     @Override
     public String formatTimezoneSetMessage() {
         return "Timezone successfully set!";
+    }
+
+    @Override
+    public String formatInvalidTimezoneMessage() {
+        return "Invalid timezone, please try again.";
     }
 }

@@ -1,16 +1,27 @@
 package bot.states;
 
+import bot.command.Command;
 import bot.entities.ReceivedMessage;
 import domain.time.Timezone;
 
 public class TimezoneOffsetRequestedState implements BotState {
     @Override
     public BotState handleMessage(ReceivedMessage message, BotContext context) {
-        Timezone timezone = Timezone.fromString(message.text);
+        if(message.getCommand() == Command.CANCEL) {
+            context.sendOperationCancelledMessage();
+            return new DefaultState();
+        }
 
-        context.setTimezone(timezone);
-        context.sendTimezoneSetMessage();
+        try {
+            Timezone timezone = Timezone.fromString(message.text);
 
-        return new DefaultState();
+            context.setTimezone(timezone);
+            context.sendTimezoneSetMessage();
+
+            return new DefaultState();
+        } catch (IllegalArgumentException e) {
+            context.sendInvalidTimezoneMessage();
+            return this;
+        }
     }
 }

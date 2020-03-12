@@ -97,4 +97,8 @@ public class BotContext {
     public void sendTimezoneSetMessage() {
         send(messageFormatter.formatTimezoneSetMessage());
     }
+
+    public void sendInvalidTimezoneMessage() {
+        send(messageFormatter.formatInvalidTimezoneMessage());
+    }
 }

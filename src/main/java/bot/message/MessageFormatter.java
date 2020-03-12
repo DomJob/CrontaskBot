@@ -30,4 +30,6 @@ public interface MessageFormatter {
     String formatTimezoneOffsetRequestedMessage(Timezone currentTimezone, Time now);
 
     String formatTimezoneSetMessage();
+
+    String formatInvalidTimezoneMessage();
 }
