@@ -12,4 +12,4 @@ Try it on Telegram! [@CrontaskBot](https://t.me/CrontaskBot)
 
 ***
 
-That's pretty much it. Nothing revolutionary but I wanted to practice my clean coding skills so I overengineered this project, enterprise-style.
+That's pretty much it
