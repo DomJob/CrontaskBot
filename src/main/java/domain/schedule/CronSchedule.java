@@ -1,5 +1,7 @@
 package domain.schedule;
 
+import static infrastructure.util.Helper.extractNumbers;
+
 import domain.schedule.cronmatchers.CronMatcher;
 import domain.time.Time;
 
@@ -48,8 +50,39 @@ public class CronSchedule implements Schedule {
         if (matchers.length != 5) {
             throw new InvalidScheduleException();
         }
+        int[] maxDaysInMonth = new int[] {-1, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-        // TODO - Check which numbers are involved
+        for(int minuteNumber : extractNumbers(matchers[0])) {
+            if(minuteNumber >= 60) {
+                throw new InvalidScheduleException();
+            }
+        }
+        for(int hourNumber : extractNumbers(matchers[1])) {
+            if(hourNumber >= 24) {
+                throw new InvalidScheduleException();
+            }
+        }
+        for(int dayNumber : extractNumbers(matchers[2])) {
+            if(dayNumber == 0 || dayNumber >= 32) {
+                throw new InvalidScheduleException();
+            }
+        }
+        for(int monthNumber : extractNumbers(matchers[3])) {
+            if(monthNumber == 0 || monthNumber > 12) {
+                throw new InvalidScheduleException();
+            }
+
+            for(int dayNumber : extractNumbers(matchers[2])) {
+                if(dayNumber > maxDaysInMonth[monthNumber]) {
+                    throw new InvalidScheduleException();
+                }
+            }
+        }
+        for(int weekdayNumber : extractNumbers(matchers[4])) {
+            if(weekdayNumber > 6) {
+                throw new InvalidScheduleException();
+            }
+        }
     }
 
     @Override

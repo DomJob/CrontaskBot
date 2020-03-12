@@ -102,4 +102,9 @@ public class CronMatcherTest {
     public void invalidFormat_throwsException_3() {
         CronMatcher.parse("/8");
     }
+
+    @Test(expected = InvalidScheduleException.class)
+    public void invalidFormat_RangeMatcherNotInOrder() {
+        CronMatcher.parse("15-12");
+    }
 }

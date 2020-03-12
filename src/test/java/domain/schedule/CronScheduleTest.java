@@ -18,6 +18,51 @@ public class CronScheduleTest {
         CronSchedule.parse("* * * *");
     }
 
+    @Test(expected = InvalidScheduleException.class)
+    public void parseCron_invalidMinute_ThrowsException() {
+        CronSchedule.parse("60 * * * *");
+    }
+
+    @Test(expected = InvalidScheduleException.class)
+    public void parseCron_invalidHour_ThrowsException() {
+        CronSchedule.parse("* 25 * * *");
+    }
+
+    @Test(expected = InvalidScheduleException.class)
+    public void parseCron_invalidDayOfMonth_ThrowsException() {
+        CronSchedule.parse("* * 32 * *");
+    }
+
+    @Test(expected = InvalidScheduleException.class)
+    public void parseCron_invalidDayOfMonthZero_ThrowsException() {
+        CronSchedule.parse("* * 0 * *");
+    }
+
+    @Test(expected = InvalidScheduleException.class)
+    public void parseCron_invalidMonthZero_ThrowsException() {
+        CronSchedule.parse("* * * 0 *");
+    }
+
+    @Test(expected = InvalidScheduleException.class)
+    public void parseCron_invalidMonth_ThrowsException() {
+        CronSchedule.parse("* * * 13 *");
+    }
+
+    @Test(expected = InvalidScheduleException.class)
+    public void parseCron_invalidDayOfWeek_ThrowsException() {
+        CronSchedule.parse("* * * * 7");
+    }
+
+    @Test(expected = InvalidScheduleException.class)
+    public void parseCron_nonsenseMonthAndDay_ThrowsException() {
+        CronSchedule.parse("* * 30 2 *");
+    }
+
+    @Test(expected = InvalidScheduleException.class)
+    public void parseCron_nonsenseMonthAndDay_ThrowsException_2() {
+        CronSchedule.parse("* * 31 4 *");
+    }
+
     @Test
     public void allAnyMatchers_matchAnyDate() {
         Schedule schedule = CronSchedule.parse("* * * * *");
