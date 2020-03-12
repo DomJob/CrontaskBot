@@ -9,6 +9,7 @@ public class TimezoneOffsetRequestedState implements BotState {
         Timezone timezone = Timezone.fromString(message.text);
 
         context.setTimezone(timezone);
+        context.sendTimezoneSetMessage();
 
         return new DefaultState();
     }

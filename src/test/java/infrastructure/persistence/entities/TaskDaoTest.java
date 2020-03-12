@@ -1,6 +1,6 @@
 package infrastructure.persistence.entities;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import domain.schedule.Schedule;
 import domain.task.Task;

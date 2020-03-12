@@ -22,20 +22,12 @@ class DefaultState implements BotState {
                 context.sendNoOngoingOperationMessage();
 
                 return this;
-            case COMMANDS:
-                context.sendListOfCommandsMessage();
-
-                return this;
             case UNKNOWN:
                 context.sendUnknownCommandMessage();
 
                 return this;
-            case SETTINGS:
-                context.sendSettingsMenuMessage();
-
-                return this;
             case TIMEZONE:
-                context.sendTimezoneOffsetRequestedMessage();
+                context.sendTimezoneOffsetRequestedMessage(message.time);
 
                 return new TimezoneOffsetRequestedState();
             default:

@@ -22,7 +22,7 @@ public class Scheduler {
     }
 
     public void start() {
-        long timeUntilStartOfMinute = 60 - Instant.now().getEpochSecond() % 60;
+        long timeUntilStartOfMinute = 60 - Instant.now().getEpochSecond() % 60+1;
 
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
         executor.scheduleAtFixedRate(this::handleEvents, 0, 1, TimeUnit.SECONDS);
@@ -30,23 +30,31 @@ public class Scheduler {
     }
 
     public void checkTasks() {
-        taskService.checkTasks(now(), bot::notifyTaskTriggered);
+        try {
+            taskService.checkTasks(now(), bot::notifyTaskTriggered);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void handleEvents() {
-        for (Update update : api.getUpdates(lastUpdate)) {
-            update.setTime(now());
+        try {
+            for (Update update : api.getUpdates(lastUpdate)) {
+                update.setTime(now());
 
-            switch (update.type) {
-                case MESSAGE:
-                    bot.handleMessage(update.message);
-                    break;
-                case CALLBACK:
-                    bot.handleCallbackQuery(update.callbackQuery);
-                    break;
+                switch (update.type) {
+                    case MESSAGE:
+                        bot.handleMessage(update.message);
+                        break;
+                    case CALLBACK:
+                        bot.handleCallbackQuery(update.callbackQuery);
+                        break;
+                }
+
+                lastUpdate = update.id + 1;
             }
-
-            lastUpdate = update.id + 1;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

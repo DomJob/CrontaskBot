@@ -10,8 +10,8 @@ import bot.CrontaskBot;
 import bot.TelegramApi;
 import bot.entities.CallbackQuery;
 import bot.entities.ReceivedMessage;
+import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
-import display.FakeMessageFormatter;
 import domain.task.Task;
 import domain.task.TaskFactory;
 import domain.task.TaskRepository;
@@ -38,33 +38,29 @@ import service.UserService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationTest {
-    private static boolean SQL = false;
-
     private static final String TASK_NAME = "task name";
     private static final String SCHEDULE_EVERY_MINUTE = "* * * * *";
     private static final String SCHEDULE_EVERY_5_MINUTES = "*/5 * * * *";
     private static final String INVALID_SCHEDULE = "this aint a schedule";
     private static final String AT_3_PM_EVERYDAY = "0 15 * * *";
     private static final String IN_5_MINUTES = "in 5 minutes";
-
     private static final Time CURRENT_TIME = Time.fromDate(2020, 3, 8, 1, 44);
-
     private static final String CALLBACK_QUERY_ID = "8888845646";
     private static final int MESSAGE_ID = 456;
-
     private static final long USER_ID = 12345678L;
     private static final long OTHER_USER_ID = 789456L;
-
+    private static boolean SQL = false;
     private static User USER = new User(USER_ID);
+
+    private TaskRepository taskRepository = spy(new TaskRepositoryInMemory());
+    private UserRepository userRepository = spy(new UserRepositoryInMemory());
 
     @Mock
     private TelegramApi api;
     @Mock
     private MessageFormatterProvider messageFormatterProvider;
-    @Spy
-    private FakeMessageFormatter messageFormatter = new FakeMessageFormatter();
-    private TaskRepository taskRepository = spy(new TaskRepositoryInMemory());
-    private UserRepository userRepository = spy(new UserRepositoryInMemory());
+    @Mock
+    private MessageFormatter messageFormatter;
     @Spy
     private UserService userService = new UserService(userRepository);
     private RandomLongGeneratorSpy longGenerator = new RandomLongGeneratorSpy();

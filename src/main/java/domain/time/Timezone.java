@@ -45,6 +45,13 @@ public class Timezone {
         return offset;
     }
 
+    public String toString() {
+        int hours = offset / 60;
+        int minutes = offset % 60;
+
+        return String.format("%s%02d:%02d", offset >= 0 ? "+" : "-", hours, minutes);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

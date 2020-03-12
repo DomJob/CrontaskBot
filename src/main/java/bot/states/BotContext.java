@@ -6,6 +6,7 @@ import bot.message.Message;
 import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
 import domain.schedule.Schedule;
+import domain.time.Time;
 import domain.time.Timezone;
 import domain.user.User;
 import service.TaskService;
@@ -89,15 +90,11 @@ public class BotContext {
         send(messageFormatter.formatScheduleRequestedMessage());
     }
 
-    protected void sendListOfCommandsMessage() {
-        send(messageFormatter.formatListOfCommandsMessage());
+    public void sendTimezoneOffsetRequestedMessage(Time now) {
+        send(messageFormatter.formatTimezoneOffsetRequestedMessage(user.getTimezone(), now));
     }
 
-    public void sendSettingsMenuMessage() {
-        send(messageFormatter.formatSettingsMenuMessage());
-    }
-
-    public void sendTimezoneOffsetRequestedMessage() {
-        send(messageFormatter.formatTimezoneOffsetRequestedMessage());
+    public void sendTimezoneSetMessage() {
+        send(messageFormatter.formatTimezoneSetMessage());
     }
 }

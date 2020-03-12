@@ -1,6 +1,8 @@
 package bot.message;
 
 import domain.task.Task;
+import domain.time.Time;
+import domain.time.Timezone;
 
 public interface MessageFormatter {
     String formatTaskTriggeredMessage(Task task);
@@ -25,9 +27,7 @@ public interface MessageFormatter {
 
     String formatScheduleRequestedMessage();
 
-    String formatListOfCommandsMessage();
+    String formatTimezoneOffsetRequestedMessage(Timezone currentTimezone, Time now);
 
-    String formatSettingsMenuMessage();
-
-    String formatTimezoneOffsetRequestedMessage();
+    String formatTimezoneSetMessage();
 }

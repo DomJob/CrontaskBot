@@ -11,7 +11,6 @@ public enum Command {
     NEW_TASK("task"),
     CANCEL("cancel"),
     HELP("help"),
-    COMMANDS("commands"),
     SETTINGS("settings"),
     TIMEZONE("timezone"),
     NOT_A_COMMAND,

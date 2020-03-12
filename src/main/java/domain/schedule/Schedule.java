@@ -25,7 +25,7 @@ public abstract class Schedule {
             return CronSchedule.parse(string);
         } else if (string.matches("^\\d+$")) {
             long time = Long.parseLong(string);
-            new TimeSchedule(new Time(time));
+            return new TimeSchedule(new Time(time));
         }
 
         throw new InvalidScheduleException();
