@@ -52,7 +52,7 @@ public class JsonWrapperTest {
         List<Update> updates = jsonWrapper.deSerializeUpdates(updatesJson);
 
         assertEquals(1, updates.size());
-        assertEquals(123456789, updates.get(0).message.userId);
+        assertEquals(123456789, updates.get(0).message.userId.toLong());
         assertEquals("/start", updates.get(0).message.text);
 
     }

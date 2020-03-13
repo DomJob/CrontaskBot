@@ -22,7 +22,7 @@ public class Scheduler {
     }
 
     public void start() {
-        long timeUntilStartOfMinute = 60 - Instant.now().getEpochSecond() % 60+1;
+        long timeUntilStartOfMinute = 60 - Instant.now().getEpochSecond() % 60 + 1;
 
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
         executor.scheduleAtFixedRate(this::handleEvents, 0, 1, TimeUnit.SECONDS);

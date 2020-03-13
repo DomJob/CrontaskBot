@@ -6,8 +6,10 @@ import static org.mockito.Mockito.when;
 
 import domain.schedule.Schedule;
 import domain.task.Task;
+import domain.task.TaskId;
 import domain.time.Time;
 import domain.user.User;
+import domain.user.UserId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +26,7 @@ public class TaskTest {
 
     @Before
     public void setUp() {
-        task = new Task(0, "Name", new User(0), schedule);
+        task = new Task(new TaskId(0), "Name", new User(new UserId(0)), schedule);
         when(schedule.isTriggered(any(Time.class))).thenReturn(false);
     }
 

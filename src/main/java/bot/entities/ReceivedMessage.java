@@ -2,13 +2,14 @@ package bot.entities;
 
 import bot.command.Command;
 import domain.time.Time;
+import domain.user.UserId;
 
 public class ReceivedMessage {
-    public long userId;
+    public UserId userId;
     public String text;
     public Time time;
 
-    public ReceivedMessage(long userId, String text) {
+    public ReceivedMessage(UserId userId, String text) {
         this.userId = userId;
         this.text = text;
     }

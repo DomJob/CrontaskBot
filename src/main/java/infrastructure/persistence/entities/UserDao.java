@@ -2,6 +2,7 @@ package infrastructure.persistence.entities;
 
 import domain.time.Timezone;
 import domain.user.User;
+import domain.user.UserId;
 
 public class UserDao {
     public long id;
@@ -13,10 +14,11 @@ public class UserDao {
     }
 
     public static UserDao fromModel(User user) {
-        return new UserDao(user.getId(), user.getTimezone().getOffset());
+        return new UserDao(user.getId().toLong(),
+            user.getTimezone().getOffset());
     }
 
     public User toModel() {
-        return new User(id, Timezone.fromOffset(tzOffset));
+        return new User(new UserId(id), Timezone.fromOffset(tzOffset));
     }
 }

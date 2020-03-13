@@ -4,9 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import domain.schedule.Schedule;
 import domain.task.Task;
+import domain.task.TaskId;
 import domain.time.Time;
 import domain.time.Timezone;
 import domain.user.User;
+import domain.user.UserId;
 import org.junit.Test;
 
 public class TaskDaoTest {
@@ -15,9 +17,9 @@ public class TaskDaoTest {
 
     @Test
     public void fromModel_correctValues() {
-        User user = new User(2, Timezone.fromOffset(60));
+        User user = new User(new UserId(2), Timezone.fromOffset(60));
         String schedule = "1 2 3 4 5";
-        Task task = new Task(1, "Hello", user, Schedule.parse(schedule, TIME, user.getTimezone()));
+        Task task = new Task(new TaskId(1), "Hello", user, Schedule.parse(schedule, TIME, user.getTimezone()));
 
         TaskDao dao = TaskDao.fromModel(task);
 

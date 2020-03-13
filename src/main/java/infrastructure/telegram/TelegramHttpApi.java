@@ -4,6 +4,7 @@ import bot.TelegramApi;
 import bot.entities.Update;
 import bot.message.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import domain.user.UserId;
 import java.util.List;
 
 public class TelegramHttpApi implements TelegramApi {
@@ -29,7 +30,7 @@ public class TelegramHttpApi implements TelegramApi {
     @Override
     public void sendMessage(Message message) {
         String url = formatUrl("sendMessage");
-        String request = jsonWrapper.formatMessageRequest(message.getReceiverId(), message.getText(), message.getButtons());
+        String request = jsonWrapper.formatMessageRequest(message.getReceiverId().toLong(), message.getText(), message.getButtons());
         httpWrapper.post(url, request);
     }
 
@@ -41,9 +42,9 @@ public class TelegramHttpApi implements TelegramApi {
     }
 
     @Override
-    public void deleteMessage(long chatId, long messageId) {
+    public void deleteMessage(UserId chatId, long messageId) {
         String url = formatUrl("deleteMessage");
-        String request = jsonWrapper.formatDeleteMessageRequest(chatId, messageId);
+        String request = jsonWrapper.formatDeleteMessageRequest(chatId.toLong(), messageId);
         httpWrapper.post(url, request);
     }
 

@@ -2,6 +2,7 @@ package infrastructure.persistence.entities;
 
 import domain.schedule.Schedule;
 import domain.task.Task;
+import domain.task.TaskId;
 import java.lang.reflect.Field;
 
 public class TaskDao {
@@ -30,13 +31,13 @@ public class TaskDao {
             e.printStackTrace();
         }
 
-        return new TaskDao(task.getId(),
+        return new TaskDao(task.getId().toLong(),
             task.getName(),
             UserDao.fromModel(task.getOwner()),
             scheduleStr);
     }
 
     public Task toModel() {
-        return new Task(id, name, owner.toModel(), Schedule.deserialize(schedule));
+        return new Task(new TaskId(id), name, owner.toModel(), Schedule.deserialize(schedule));
     }
 }

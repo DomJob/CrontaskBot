@@ -12,6 +12,6 @@ public class TaskFactory {
     }
 
     public Task create(String name, User owner, Schedule schedule) {
-        return new Task(longGenerator.generate(), name, owner, schedule);
+        return new Task(new TaskId(longGenerator.generate()), name, owner, schedule);
     }
 }

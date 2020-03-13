@@ -7,7 +7,7 @@ import domain.time.Timezone;
 public class TimezoneOffsetRequestedState implements BotState {
     @Override
     public BotState handleMessage(ReceivedMessage message, BotContext context) {
-        if(message.getCommand() == Command.CANCEL) {
+        if (message.getCommand() == Command.CANCEL) {
             context.sendOperationCancelledMessage();
             return new DefaultState();
         }

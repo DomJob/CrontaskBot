@@ -6,6 +6,7 @@ import bot.entities.ReceivedMessage;
 import bot.entities.Update;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import domain.user.UserId;
 import infrastructure.telegram.entities.ResultsEntity;
 import infrastructure.telegram.entities.UpdateEntity;
 import java.io.IOException;
@@ -65,14 +66,14 @@ public class JsonWrapper {
 
     private Update mapUpdate(UpdateEntity updateEntity) {
         if (updateEntity.message != null) {
-            ReceivedMessage message = new ReceivedMessage(updateEntity.message.from.id, updateEntity.message.text);
+            ReceivedMessage message = new ReceivedMessage(new UserId(updateEntity.message.from.id), updateEntity.message.text);
 
             return new Update(updateEntity.update_id, message);
         }
 
         if (updateEntity.callback_query != null) {
             CallbackQuery query = new CallbackQuery(updateEntity.callback_query.id,
-                updateEntity.callback_query.from.id,
+                new UserId(updateEntity.callback_query.from.id),
                 updateEntity.callback_query.message.message_id,
                 updateEntity.callback_query.data);
 

@@ -3,15 +3,15 @@ package domain.user;
 import domain.time.Timezone;
 
 public class User {
-    private long id;
+    private UserId id;
     private Timezone timezone;
 
-    public User(long id, Timezone timezone) {
+    public User(UserId id, Timezone timezone) {
         this.id = id;
         this.timezone = timezone;
     }
 
-    public User(long id) {
+    public User(UserId id) {
         this.id = id;
         this.timezone = Timezone.UTC;
     }
@@ -20,7 +20,7 @@ public class User {
         return Language.ENGLISH;
     }
 
-    public long getId() {
+    public UserId getId() {
         return id;
     }
 

@@ -2,6 +2,7 @@ package service;
 
 import domain.time.Timezone;
 import domain.user.User;
+import domain.user.UserId;
 import domain.user.UserRepository;
 import java.util.Optional;
 
@@ -12,7 +13,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User getOrCreateUser(long id) {
+    public User getOrCreateUser(UserId id) {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isPresent()) {

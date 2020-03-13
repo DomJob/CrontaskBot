@@ -3,7 +3,11 @@ package infrastructure.persistence;
 import static infrastructure.persistence.Sqlite.getConnection;
 
 import domain.task.Task;
+import domain.task.TaskId;
 import domain.task.TaskRepository;
+import domain.user.User;
+import domain.user.UserId;
+import domain.user.UserRepository;
 import infrastructure.persistence.entities.TaskDao;
 import infrastructure.persistence.entities.UserDao;
 import java.sql.PreparedStatement;
@@ -16,11 +20,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class TaskRepositorySQL implements TaskRepository {
+public class SQLRepository implements TaskRepository, UserRepository {
     private static final String FIND_TASK_BY_ID = "SELECT * FROM task WHERE id=?";
     private static final String FIND_USER_BY_ID = "SELECT tzOffset FROM user WHERE id = ?";
     private static final String FIND_ALL_TASKS = "SELECT * FROM task";
     private static final String INSERT_TASK = "INSERT INTO task VALUES(?, ?, ?, ?)";
+    private static final String INSERT_USER = "INSERT INTO user VALUES(?, ?)";
+    private static final String UPDATE_USER = "UPDATE user SET tzOffset = ? WHERE id = ?";
 
     @Override
     public Collection<Task> findAll() {
@@ -33,10 +39,13 @@ public class TaskRepositorySQL implements TaskRepository {
             while (rs.next()) {
                 long id = rs.getLong("id");
                 String name = rs.getString("name");
-                long owner = rs.getLong("owner");
+                long ownerId = rs.getLong("owner");
                 String schedule = rs.getString("schedule");
 
-                TaskDao dao = new TaskDao(id, name, findUser(owner), schedule);
+                User owner = findById(new UserId(ownerId)).get();
+                UserDao ownerDao = UserDao.fromModel(owner);
+
+                TaskDao dao = new TaskDao(id, name, ownerDao, schedule);
                 daos.add(dao);
             }
         } catch (SQLException e) {
@@ -47,22 +56,25 @@ public class TaskRepositorySQL implements TaskRepository {
     }
 
     @Override
-    public Optional<Task> findById(long id) {
+    public Optional<Task> findById(TaskId id) {
         Task task = null;
 
         try {
             PreparedStatement statement = getConnection().prepareStatement(FIND_TASK_BY_ID);
 
-            statement.setLong(1, id);
+            statement.setLong(1, id.toLong());
 
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {
                 String name = rs.getString("name");
-                long owner = rs.getLong("owner");
+                long ownerId = rs.getLong("owner");
                 String schedule = rs.getString("schedule");
 
-                TaskDao dao = new TaskDao(id, name, findUser(owner), schedule);
+                User owner = findById(new UserId(ownerId)).get();
+                UserDao ownerDao = UserDao.fromModel(owner);
+
+                TaskDao dao = new TaskDao(id.toLong(), name, ownerDao, schedule);
 
                 task = dao.toModel();
             }
@@ -76,12 +88,10 @@ public class TaskRepositorySQL implements TaskRepository {
     @Override
     public void save(Task task) {
         Optional<Task> existingTask = findById(task.getId());
-        if (!existingTask.isPresent()) {
-            insertTask(task);
+        if (existingTask.isPresent()) {
+            return;
         }
-    }
 
-    private void insertTask(Task task) {
         try {
             PreparedStatement statement = getConnection().prepareStatement(INSERT_TASK);
 
@@ -98,22 +108,44 @@ public class TaskRepositorySQL implements TaskRepository {
         }
     }
 
-    private UserDao findUser(long id) {
+    @Override
+    public Optional<User> findById(UserId id) {
+        User user = null;
+
         try {
             PreparedStatement statement = getConnection().prepareStatement(FIND_USER_BY_ID);
 
-            statement.setLong(1, id);
+            statement.setLong(1, id.toLong());
 
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {
                 int tzOffset = rs.getInt("tzOffset");
-                return new UserDao(id, tzOffset);
+
+                UserDao dao = new UserDao(id.toLong(), tzOffset);
+
+                user = dao.toModel();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return Optional.ofNullable(user);
+    }
+
+    @Override
+    public void save(User user) {
+        try {
+            PreparedStatement statement = getConnection().prepareStatement(INSERT_USER);
+
+            UserDao dao = UserDao.fromModel(user);
+
+            statement.setLong(1, dao.id);
+            statement.setInt(2, dao.tzOffset);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

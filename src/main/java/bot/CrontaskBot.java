@@ -8,7 +8,9 @@ import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
 import bot.states.BotContext;
 import domain.task.Task;
+import domain.task.TaskId;
 import domain.user.User;
+import domain.user.UserId;
 import java.util.HashMap;
 import java.util.Map;
 import service.TaskService;
@@ -20,7 +22,7 @@ public class CrontaskBot {
     private UserService userService;
     private MessageFormatterProvider messageFormatterProvider;
 
-    private Map<Long, BotContext> contexts = new HashMap<>();
+    private Map<UserId, BotContext> contexts = new HashMap<>();
 
     public CrontaskBot(TelegramApi api, TaskService taskService, UserService userService, MessageFormatterProvider messageFormatterProvider) {
         this.api = api;
@@ -37,7 +39,7 @@ public class CrontaskBot {
     public void handleCallbackQuery(CallbackQuery query) {
         CallbackCommand command = CallbackCommand.parse(query.data);
 
-        long id = Long.parseLong(command.getParameters().get(1));
+        TaskId id = TaskId.fromString(command.getParameters().get(1));
 
         switch (command) {
             case SNOOZE:
@@ -69,13 +71,13 @@ public class CrontaskBot {
         sendMessage(message);
     }
 
-    private BotContext getContextForUser(long userId) {
-        if (!contexts.containsKey(userId)) {
-            User user = userService.getOrCreateUser(userId);
+    private BotContext getContextForUser(UserId id) {
+        if (!contexts.containsKey(id)) {
+            User user = userService.getOrCreateUser(id);
             BotContext context = new BotContext(this, user, taskService, userService, messageFormatterProvider);
-            contexts.put(userId, context);
+            contexts.put(id, context);
         }
 
-        return contexts.get(userId);
+        return contexts.get(id);
     }
 }

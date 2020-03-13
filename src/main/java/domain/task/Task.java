@@ -5,12 +5,12 @@ import domain.time.Time;
 import domain.user.User;
 
 public class Task {
-    private long id;
+    private TaskId id;
     private String name;
     private User owner;
     private Schedule schedule;
 
-    public Task(long id, String name, User owner, Schedule schedule) {
+    public Task(TaskId id, String name, User owner, Schedule schedule) {
         this.id = id;
         this.name = name;
         this.owner = owner;
@@ -21,7 +21,7 @@ public class Task {
         return schedule.isTriggered(time.withTimezone(owner.getTimezone()));
     }
 
-    public long getId() {
+    public TaskId getId() {
         return id;
     }
 

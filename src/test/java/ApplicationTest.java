@@ -18,12 +18,12 @@ import domain.task.TaskRepository;
 import domain.time.Time;
 import domain.user.Language;
 import domain.user.User;
+import domain.user.UserId;
 import domain.user.UserRepository;
+import infrastructure.persistence.SQLRepository;
 import infrastructure.persistence.Sqlite;
 import infrastructure.persistence.TaskRepositoryInMemory;
-import infrastructure.persistence.TaskRepositorySQL;
 import infrastructure.persistence.UserRepositoryInMemory;
-import infrastructure.persistence.UserRepositorySQL;
 import infrastructure.util.RandomLongGeneratorSpy;
 import java.sql.SQLException;
 import org.junit.After;
@@ -47,8 +47,8 @@ public class ApplicationTest {
     private static final Time CURRENT_TIME = Time.fromDate(2020, 3, 8, 1, 44);
     private static final String CALLBACK_QUERY_ID = "8888845646";
     private static final int MESSAGE_ID = 456;
-    private static final long USER_ID = 12345678L;
-    private static final long OTHER_USER_ID = 789456L;
+    private static final UserId USER_ID = new UserId(12345678L);
+    private static final UserId OTHER_USER_ID = new UserId(789456L);
     private static boolean SQL = false;
     private static User USER = new User(USER_ID);
 
@@ -90,8 +90,8 @@ public class ApplicationTest {
     private void setUpSQL() {
         SQL = true;
         Sqlite.setPath("crontaskbot_IT.db");
-        taskRepository = spy(new TaskRepositorySQL());
-        userRepository = spy(new UserRepositorySQL());
+        taskRepository = spy(new SQLRepository());
+        userRepository = (SQLRepository) taskRepository;
     }
 
     @Test
@@ -375,7 +375,7 @@ public class ApplicationTest {
             message.time = CURRENT_TIME;
         }
 
-        public MessageBuilder from(long userId) {
+        public MessageBuilder from(UserId userId) {
             message.userId = userId;
             return this;
         }

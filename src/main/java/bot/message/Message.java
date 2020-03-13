@@ -2,6 +2,7 @@ package bot.message;
 
 import bot.entities.Button;
 import domain.user.User;
+import domain.user.UserId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +29,7 @@ public class Message {
         return Collections.unmodifiableList(buttons);
     }
 
-    public long getReceiverId() {
+    public UserId getReceiverId() {
         return receiver.getId();
     }
 

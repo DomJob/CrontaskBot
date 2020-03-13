@@ -4,6 +4,7 @@ import domain.schedule.Schedule;
 import domain.schedule.TimeSchedule;
 import domain.task.Task;
 import domain.task.TaskFactory;
+import domain.task.TaskId;
 import domain.task.TaskRepository;
 import domain.time.Time;
 import domain.user.User;
@@ -27,16 +28,16 @@ public class TaskService {
         return null; // TODO
     }
 
-    public void deleteTask(long id) {
+    public void deleteTask(TaskId id) {
         // TODO
     }
 
-    public void snoozeTask(long id, Time now) {
+    public void snoozeTask(TaskId id, Time now) {
         Task task = taskRepository.findById(id).get();
 
         Time snoozeUntil = now.plusMinutes(15);
 
-        Task newTask = taskFactory.create(task.getName(), task.getOwner(), new TimeSchedule(snoozeUntil));
+        Task newTask = taskFactory.create(task.getName(), task.getOwner(), new TimeSchedule(snoozeUntil)); // TODO Yeah that's a problem right here
         taskRepository.save(newTask);
     }
 

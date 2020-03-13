@@ -2,11 +2,8 @@ import bot.CrontaskBot;
 import bot.TelegramApi;
 import display.ConcreteMessageFormatterProvider;
 import domain.task.TaskFactory;
-import domain.task.TaskRepository;
-import domain.user.UserRepository;
 import infrastructure.Scheduler;
-import infrastructure.persistence.TaskRepositorySQL;
-import infrastructure.persistence.UserRepositorySQL;
+import infrastructure.persistence.SQLRepository;
 import infrastructure.telegram.HttpWrapper;
 import infrastructure.telegram.JsonWrapper;
 import infrastructure.telegram.TelegramHttpApi;
@@ -21,13 +18,12 @@ public class Application {
         }
         String token = args[0];
 
-        TaskRepository taskRepository = new TaskRepositorySQL();
-        UserRepository userRepository = new UserRepositorySQL();
+        SQLRepository repo = new SQLRepository();
 
         TaskFactory taskFactory = new TaskFactory(new RandomLongGenerator());
 
-        UserService userService = new UserService(userRepository);
-        TaskService taskService = new TaskService(taskFactory, taskRepository);
+        UserService userService = new UserService(repo);
+        TaskService taskService = new TaskService(taskFactory, repo);
 
         TelegramApi api = new TelegramHttpApi(token, new HttpWrapper(), new JsonWrapper());
         CrontaskBot bot = new CrontaskBot(api, taskService, userService, new ConcreteMessageFormatterProvider());

@@ -1,16 +1,17 @@
 package infrastructure.persistence;
 
 import domain.user.User;
+import domain.user.UserId;
 import domain.user.UserRepository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class UserRepositoryInMemory implements UserRepository {
-    private Map<Long, User> users = new HashMap<>();
+    private Map<UserId, User> users = new HashMap<>();
 
     @Override
-    public Optional<User> findById(long id) {
+    public Optional<User> findById(UserId id) {
         return Optional.ofNullable(users.get(id));
     }
 
