@@ -6,6 +6,7 @@ import bot.message.MessageFormatter;
 import domain.task.Task;
 import domain.time.Time;
 import domain.time.Timezone;
+import java.util.List;
 
 public class EnglishMessageFormatter implements MessageFormatter {
     @Override
@@ -45,9 +46,10 @@ public class EnglishMessageFormatter implements MessageFormatter {
             + "/timezone — Change your timezone\n"
             + "/cancel — Cancel the ongoing operation\n"
             + "/help — Display this help message\n"
+            + "/tasks — Manage your scheduled tasks"
             + "\n"
             + "You can set up tasks to remind you periodically following the unix cron format. Use <a href=\"https://crontab.guru/\">this website</a> for more information on the cron syntax.\n\n"
-            + "You can also set up a one time reminder by giving a date or a time, e.g. 2020-03-25 16:05, 16:05 or just 2020-03-25.\n\n"
+            + "You can also set up a one time reminder by giving a date or a time, e.g. <i>2020-03-25 16:05</i>, <i>16:05</i> or just <i>2020-03-25</i>.\n\n"
             + "Additionally, you can type \"in 5 minutes\" or \"in 3 days and 5 hours\" to set up a reminder for the future without the exact time.\n"
             + "\n"
             + "This bot checks tasks every minute, and as a result, alerts can be off by up to 30 seconds.\n"
@@ -88,5 +90,35 @@ public class EnglishMessageFormatter implements MessageFormatter {
     @Override
     public String formatInvalidTimezoneMessage() {
         return "Invalid timezone, please try again.";
+    }
+
+    @Override
+    public String formatInvalidCommand() {
+        return "Invalid command. Use /cancel to exit the listing.";
+    }
+
+    @Override
+    public String formatTaskListingMessage(List<Task> tasks, int from, int to, int nbTasks) {
+        StringBuilder message = new StringBuilder(String.format("Showing tasks <b>%d—%d</b> of <b>%d</b>\n\n", from + 1, to, nbTasks));
+
+        int n = from;
+        for (Task task : tasks) {
+            message.append(String.format("<b>%d</b>. %s\n", ++n, task.getName()));
+            // TODO Trim names
+            // TODO Show next trigger
+        }
+
+        boolean previous = from > 0;
+        boolean next = to < nbTasks;
+
+        if (previous && next) {
+            message.append("\nUse /previous and /next to navigate.");
+        } else if (previous) {
+            message.append("\nUse /previous to navigate.");
+        } else if (next) {
+            message.append("\nUse /next to navigate.");
+        }
+
+        return message.toString();
     }
 }

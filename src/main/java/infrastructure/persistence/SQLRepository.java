@@ -22,11 +22,13 @@ import java.util.stream.Collectors;
 
 public class SQLRepository implements TaskRepository, UserRepository {
     private static final String FIND_TASK_BY_ID = "SELECT * FROM task WHERE id=?";
+    private static final String FIND_TASK_BY_OWNER_ID = "SELECT * FROM task WHERE owner=?";
     private static final String FIND_USER_BY_ID = "SELECT tzOffset FROM user WHERE id = ?";
     private static final String FIND_ALL_TASKS = "SELECT * FROM task";
     private static final String INSERT_TASK = "INSERT INTO task VALUES(?, ?, ?, ?, ?)";
     private static final String INSERT_USER = "INSERT INTO user VALUES(?, ?)";
     private static final String UPDATE_USER = "UPDATE user SET tzOffset = ? WHERE id = ?";
+    private static final String DELETE_TASK = "DELETE FROM tasks WHERE id = ?";
 
     @Override
     public Collection<Task> findAll() {
@@ -95,6 +97,39 @@ public class SQLRepository implements TaskRepository, UserRepository {
     }
 
     @Override
+    public void delete(TaskId id) {
+        try {
+            PreparedStatement statement = getConnection().prepareStatement(DELETE_TASK);
+
+            statement.setLong(1, id.toLong());
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Task> getTasksForUser(UserId id) {
+        List<TaskDao> daos = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = getConnection().prepareStatement(FIND_TASK_BY_OWNER_ID);
+            statement.setLong(1, id.toLong());
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                TaskDao dao = parseTaskResult(rs);
+                daos.add(dao);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return daos.stream().map(TaskDao::toModel).collect(Collectors.toList());
+    }
+
+    @Override
     public Optional<User> findById(UserId id) {
         User user = null;
 
@@ -121,17 +156,10 @@ public class SQLRepository implements TaskRepository, UserRepository {
 
     @Override
     public void save(User user) {
-        try {
-            PreparedStatement statement = getConnection().prepareStatement(INSERT_USER);
-
-            UserDao dao = UserDao.fromModel(user);
-
-            statement.setLong(1, dao.id);
-            statement.setInt(2, dao.tzOffset);
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (findById(user.getId()).isPresent()) {
+            updateUser(user);
+        } else {
+            insertUser(user);
         }
     }
 
@@ -146,5 +174,33 @@ public class SQLRepository implements TaskRepository, UserRepository {
         UserDao ownerDao = UserDao.fromModel(owner);
 
         return new TaskDao(id, name, ownerDao, schedule, snoozedUntil);
+    }
+
+    private void updateUser(User user) {
+        try {
+            PreparedStatement statement = getConnection().prepareStatement(UPDATE_USER);
+            UserDao dao = UserDao.fromModel(user);
+
+            statement.setInt(1, dao.tzOffset);
+            statement.setLong(2, dao.id);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void insertUser(User user) {
+        try {
+            PreparedStatement statement = getConnection().prepareStatement(INSERT_USER);
+            UserDao dao = UserDao.fromModel(user);
+
+            statement.setLong(1, dao.id);
+            statement.setInt(2, dao.tzOffset);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

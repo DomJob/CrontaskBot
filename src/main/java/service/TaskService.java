@@ -25,7 +25,7 @@ public class TaskService {
     }
 
     public List<Task> getTasksForUser(User user) {
-        return null; // TODO
+        return taskRepository.getTasksForUser(user.getId()); // TODO Filter those who will never trigger
     }
 
     public void deleteTask(TaskId id) {
@@ -48,7 +48,7 @@ public class TaskService {
     public Task getTask(TaskId id) {
         Optional<Task> task = taskRepository.findById(id);
 
-        if(task.isPresent()) {
+        if (task.isPresent()) {
             return task.get();
         }
 

@@ -8,11 +8,15 @@ import java.util.Map;
 
 public enum Command {
     START("start"),
-    NEW_TASK("task"),
+    TASK("task"),
     CANCEL("cancel"),
     HELP("help"),
     SETTINGS("settings"),
     TIMEZONE("timezone"),
+    TASKS("tasks"),
+    PREVIOUS("previous"),
+    NEXT("next"),
+    DELETE("delete"),
     NOT_A_COMMAND,
     UNKNOWN;
 

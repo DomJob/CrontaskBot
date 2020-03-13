@@ -1,18 +1,17 @@
 package domain.schedule;
 
 import domain.time.Time;
-import domain.time.Timezone;
 
 public abstract class Schedule {
     protected String code;
 
-    public static Schedule parse(String string, Time now, Timezone timezone) {
+    public static Schedule parse(String string, Time now) {
         string = string.toLowerCase();
 
         if (string.matches(TimeSchedule.ABSOLUTE_PATTERN)) {
-            return TimeSchedule.parseAbsoluteTime(string, now.withTimezone(timezone));
+            return TimeSchedule.parseAbsoluteTime(string, now);
         } else if (string.matches(TimeSchedule.RELATIVE_PATTERN)) {
-            return TimeSchedule.parseRelativeTime(string, now.withTimezone(timezone));
+            return TimeSchedule.parseRelativeTime(string, now);
         } else if (string.matches(CronSchedule.PATTERN)) {
             return CronSchedule.parse(string);
         }

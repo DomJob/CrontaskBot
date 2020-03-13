@@ -14,6 +14,7 @@ import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
 import domain.task.Task;
 import domain.task.TaskFactory;
+import domain.task.TaskId;
 import domain.task.TaskRepository;
 import domain.time.Time;
 import domain.user.Language;
@@ -24,7 +25,7 @@ import infrastructure.persistence.SQLRepository;
 import infrastructure.persistence.Sqlite;
 import infrastructure.persistence.TaskRepositoryInMemory;
 import infrastructure.persistence.UserRepositoryInMemory;
-import infrastructure.util.RandomLongGeneratorSpy;
+import infrastructure.util.IncrementalLongGenerator;
 import java.sql.SQLException;
 import org.junit.After;
 import org.junit.Before;
@@ -63,9 +64,8 @@ public class ApplicationTest {
     private MessageFormatter messageFormatter;
     @Spy
     private UserService userService = new UserService(userRepository);
-    private RandomLongGeneratorSpy longGenerator = new RandomLongGeneratorSpy();
     @Spy
-    private TaskFactory taskFactory = new TaskFactory(longGenerator);
+    private TaskFactory taskFactory = new TaskFactory(new IncrementalLongGenerator());
     @Spy
     private TaskService taskService = new TaskService(taskFactory, taskRepository);
 
@@ -129,7 +129,7 @@ public class ApplicationTest {
         checkTasksAt(Time.fromDate(2020, 3, 25, 0, 1)); // Wednesday wrong minute
         checkTasksAt(Time.fromDate(2020, 3, 5, 0, 0)); // Tuesday
 
-        assertThatATaskWasTriggered(3);
+        assertThatTasksWereTriggered(3);
     }
 
     @Test
@@ -143,7 +143,7 @@ public class ApplicationTest {
         checkTasksAt(Time.fromDate(2020, 7, 7, 5, 31)); // NO
         checkTasksAt(Time.fromDate(2020, 7, 9, 5, 30)); // NO
 
-        assertThatATaskWasTriggered(3);
+        assertThatTasksWereTriggered(3);
     }
 
     @Test
@@ -157,7 +157,7 @@ public class ApplicationTest {
         checkTasksAt(Time.fromDate(2020, 9, 22, 6, 0)); // OK
         checkTasksAt(Time.fromDate(2020, 9, 22, 6, 1)); // NO
 
-        assertThatATaskWasTriggered(3);
+        assertThatTasksWereTriggered(3);
     }
 
     @Test
@@ -168,7 +168,7 @@ public class ApplicationTest {
             checkTasksAt(CURRENT_TIME.plusMinutes(i));
         }
 
-        assertThatATaskWasTriggered(12);
+        assertThatTasksWereTriggered(12);
     }
 
     @Test
@@ -251,7 +251,7 @@ public class ApplicationTest {
     public void dismissTask_deletesMessage() {
         createTask(SCHEDULE_EVERY_MINUTE);
 
-        dismissTask();
+        dismissTask(1);
 
         verify(api).deleteMessage(USER_ID, MESSAGE_ID);
     }
@@ -260,7 +260,7 @@ public class ApplicationTest {
     public void snoozeTask_deletesItAndRetriggersItLater() {
         createTask(IN_5_MINUTES);
 
-        snoozeTask();
+        snoozeTask(1);
 
         verify(api).answerCallbackQuery(eq(CALLBACK_QUERY_ID), any(String.class));
         verify(api).deleteMessage(USER_ID, MESSAGE_ID);
@@ -316,6 +316,34 @@ public class ApplicationTest {
         assertThatATaskWasTriggered();
     }
 
+    @Test
+    public void createTask_canDeleteIt() {
+        createTask(IN_5_MINUTES);
+
+        newMessage("/tasks")
+            .send();
+
+        newMessage("/delete 1")
+            .send();
+
+        verify(taskRepository).delete(new TaskId(1));
+    }
+
+    @Test
+    public void deleteTask_itWontTrigger() {
+        createTask(IN_5_MINUTES);
+
+        newMessage("/tasks")
+            .send();
+
+        newMessage("/delete 1")
+            .send();
+
+        checkTasksAt(CURRENT_TIME.plusMinutes(5));
+
+        assertThatNoTaskWasTriggered();
+    }
+
     private void checkTasksAt(Time time) {
         taskService.checkTasks(time, bot::notifyTaskTriggered);
     }
@@ -338,25 +366,25 @@ public class ApplicationTest {
             .send();
     }
 
-    private void snoozeTask() {
-        long taskId = longGenerator.getLastIdGenerated();
-
+    private void snoozeTask(long taskId) {
         CallbackQuery query = new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "snooze " + taskId);
         query.time = CURRENT_TIME;
         bot.handleCallbackQuery(query);
     }
 
-    private void dismissTask() {
-        long taskId = longGenerator.getLastIdGenerated();
+    private void dismissTask(long taskId) {
         bot.handleCallbackQuery(new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "dismiss " + taskId));
     }
 
     private void assertThatATaskWasTriggered() {
-        verify(messageFormatter).formatTaskTriggeredMessage(any(Task.class));
+        assertThatTasksWereTriggered(1);
     }
 
+    private void assertThatNoTaskWasTriggered() {
+        assertThatTasksWereTriggered(0);
+    }
 
-    private void assertThatATaskWasTriggered(int howMany) {
+    private void assertThatTasksWereTriggered(int howMany) {
         verify(messageFormatter, times(howMany)).formatTaskTriggeredMessage(any(Task.class));
     }
 

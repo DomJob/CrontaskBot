@@ -10,7 +10,7 @@ public class CommandTest {
     public void parseCommand() {
         Command command = Command.parse("/task");
 
-        assertEquals(Command.NEW_TASK, command);
+        assertEquals(Command.TASK, command);
     }
 
     @Test
@@ -19,7 +19,7 @@ public class CommandTest {
 
         Command command = Command.parse("/task " + parameter);
 
-        assertEquals(Command.NEW_TASK, command);
+        assertEquals(Command.TASK, command);
 
         assertEquals(parameter, command.getParameters().get(1));
     }

@@ -6,9 +6,11 @@ import bot.message.Message;
 import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
 import domain.schedule.Schedule;
+import domain.task.Task;
 import domain.time.Time;
 import domain.time.Timezone;
 import domain.user.User;
+import java.util.List;
 import service.TaskService;
 import service.UserService;
 
@@ -42,7 +44,7 @@ public class BotContext {
     }
 
     protected void createTask(String name, Schedule schedule) {
-        taskService.createTask(name, user, schedule);
+        bot.createTask(name, user, schedule);
     }
 
     protected void send(String text) {
@@ -100,5 +102,17 @@ public class BotContext {
 
     public void sendInvalidTimezoneMessage() {
         send(messageFormatter.formatInvalidTimezoneMessage());
+    }
+
+    public void sendInvalidCommand() {
+        send(messageFormatter.formatInvalidCommand());
+    }
+
+    public void sendListOfTasksMessage(List<Task> tasks, int from, int to, int nbTasks) {
+        send(messageFormatter.formatTaskListingMessage(tasks, from, to, nbTasks));
+    }
+
+    public List<Task> getTasks() {
+        return taskService.getTasksForUser(user);
     }
 }

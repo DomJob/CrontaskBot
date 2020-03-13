@@ -7,6 +7,7 @@ import bot.message.Message;
 import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
 import bot.states.BotContext;
+import domain.schedule.Schedule;
 import domain.task.Task;
 import domain.task.TaskId;
 import domain.user.User;
@@ -44,7 +45,7 @@ public class CrontaskBot {
         switch (command) {
             case SNOOZE:
                 Task task = taskService.getTask(id);
-                if(!task.getOwner().getId().equals(query.userId)) {
+                if (!task.getOwner().getId().equals(query.userId)) {
                     api.answerCallbackQuery(query.id, "How did you even do this?");
                     return;
                 }
@@ -75,6 +76,10 @@ public class CrontaskBot {
         message.addButton("Snooze", "snooze " + task.getId());
 
         sendMessage(message);
+    }
+
+    public void createTask(String name, User owner, Schedule schedule) {
+        taskService.createTask(name, owner, schedule);
     }
 
     private BotContext getContextForUser(UserId id) {

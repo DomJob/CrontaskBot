@@ -10,7 +10,7 @@ class DefaultState implements BotState {
                 context.sendStartMessage();
 
                 return this;
-            case NEW_TASK:
+            case TASK:
                 context.sendTaskNameRequestMessage();
 
                 return new TaskNameRequestedState();
@@ -18,20 +18,26 @@ class DefaultState implements BotState {
                 context.sendHelpMessage();
 
                 return this;
+            case TIMEZONE:
+                context.sendTimezoneOffsetRequestedMessage(message.time);
+
+                return new TimezoneOffsetRequestedState();
+            case TASKS:
+                return new TasksListedState(context);
             case CANCEL:
                 context.sendNoOngoingOperationMessage();
+
+                return this;
+            case NOT_A_COMMAND:
+                context.sendDefaultMessage();
 
                 return this;
             case UNKNOWN:
                 context.sendUnknownCommandMessage();
 
                 return this;
-            case TIMEZONE:
-                context.sendTimezoneOffsetRequestedMessage(message.time);
-
-                return new TimezoneOffsetRequestedState();
             default:
-                context.sendDefaultMessage();
+                context.sendInvalidCommand();
 
                 return this;
         }

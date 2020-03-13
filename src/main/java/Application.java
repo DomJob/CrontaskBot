@@ -1,7 +1,12 @@
 import bot.CrontaskBot;
 import bot.TelegramApi;
 import display.ConcreteMessageFormatterProvider;
+import domain.schedule.Schedule;
 import domain.task.TaskFactory;
+import domain.time.Time;
+import domain.time.Timezone;
+import domain.user.User;
+import domain.user.UserId;
 import infrastructure.Scheduler;
 import infrastructure.persistence.SQLRepository;
 import infrastructure.telegram.HttpWrapper;
@@ -28,6 +33,8 @@ public class Application {
         TelegramApi api = new TelegramHttpApi(token, new HttpWrapper(), new JsonWrapper());
         CrontaskBot bot = new CrontaskBot(api, taskService, userService, new ConcreteMessageFormatterProvider());
 
-        new Scheduler(bot, api, taskService).start();
+        Scheduler scheduler = new Scheduler(bot, api, taskService);
+
+        scheduler.start();
     }
 }
