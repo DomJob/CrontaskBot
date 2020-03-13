@@ -43,7 +43,13 @@ public class CrontaskBot {
 
         switch (command) {
             case SNOOZE:
-                taskService.snoozeTask(id, query.time);
+                Task task = taskService.getTask(id);
+                if(!task.getOwner().getId().equals(query.userId)) {
+                    api.answerCallbackQuery(query.id, "How did you even do this?");
+                    return;
+                }
+                taskService.snoozeTask(task, query.time);
+
                 api.answerCallbackQuery(query.id, "Snoozed for 15 minutes");
                 api.deleteMessage(query.userId, query.messageId);
                 break;

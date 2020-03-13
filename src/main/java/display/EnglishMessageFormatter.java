@@ -35,7 +35,7 @@ public class EnglishMessageFormatter implements MessageFormatter {
 
     @Override
     public String formatOperationCancelledMessage() {
-        return "Operation cancelled."; // TODO
+        return "Operation cancelled.";
     }
 
     @Override
@@ -50,7 +50,9 @@ public class EnglishMessageFormatter implements MessageFormatter {
             + "You can also set up a one time reminder by giving a date or a time, e.g. 2020-03-25 16:05, 16:05 or just 2020-03-25.\n\n"
             + "Additionally, you can type \"in 5 minutes\" or \"in 3 days and 5 hours\" to set up a reminder for the future without the exact time.\n"
             + "\n"
-            + "This bot checks tasks every minute, and as a result, alerts can be off by up to 30 seconds.";
+            + "This bot checks tasks every minute, and as a result, alerts can be off by up to 30 seconds.\n"
+            + "\n"
+            + "Source code available <a href=\"https://github.com/DomJob/CrontaskBot/\">here</a>";
     }
 
     @Override
@@ -60,7 +62,7 @@ public class EnglishMessageFormatter implements MessageFormatter {
 
     @Override
     public String formatInvalidScheduleFormat() {
-        return "Invalid format, please try again. Or use /help for more information about schedule format"; // TODO
+        return "Invalid format, please try again. Or use /help for more information about schedule format";
     }
 
     @Override
@@ -70,7 +72,7 @@ public class EnglishMessageFormatter implements MessageFormatter {
 
     @Override
     public String formatScheduleRequestedMessage() {
-        return "Enter a schedule for this task. It can follow the cron syntax, or it can be an exact date/time or an amount of time from now."; // TODO
+        return "Enter a schedule for this task. It can follow the cron syntax, or it can be an exact date/time or an amount of time from now.";
     }
 
     @Override

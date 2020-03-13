@@ -24,7 +24,7 @@ public class SQLRepository implements TaskRepository, UserRepository {
     private static final String FIND_TASK_BY_ID = "SELECT * FROM task WHERE id=?";
     private static final String FIND_USER_BY_ID = "SELECT tzOffset FROM user WHERE id = ?";
     private static final String FIND_ALL_TASKS = "SELECT * FROM task";
-    private static final String INSERT_TASK = "INSERT INTO task VALUES(?, ?, ?, ?)";
+    private static final String INSERT_TASK = "INSERT INTO task VALUES(?, ?, ?, ?, ?)";
     private static final String INSERT_USER = "INSERT INTO user VALUES(?, ?)";
     private static final String UPDATE_USER = "UPDATE user SET tzOffset = ? WHERE id = ?";
 
@@ -37,15 +37,7 @@ public class SQLRepository implements TaskRepository, UserRepository {
             ResultSet rs = statement.executeQuery(FIND_ALL_TASKS);
 
             while (rs.next()) {
-                long id = rs.getLong("id");
-                String name = rs.getString("name");
-                long ownerId = rs.getLong("owner");
-                String schedule = rs.getString("schedule");
-
-                User owner = findById(new UserId(ownerId)).get();
-                UserDao ownerDao = UserDao.fromModel(owner);
-
-                TaskDao dao = new TaskDao(id, name, ownerDao, schedule);
+                TaskDao dao = parseTaskResult(rs);
                 daos.add(dao);
             }
         } catch (SQLException e) {
@@ -67,14 +59,7 @@ public class SQLRepository implements TaskRepository, UserRepository {
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {
-                String name = rs.getString("name");
-                long ownerId = rs.getLong("owner");
-                String schedule = rs.getString("schedule");
-
-                User owner = findById(new UserId(ownerId)).get();
-                UserDao ownerDao = UserDao.fromModel(owner);
-
-                TaskDao dao = new TaskDao(id.toLong(), name, ownerDao, schedule);
+                TaskDao dao = parseTaskResult(rs);
 
                 task = dao.toModel();
             }
@@ -101,6 +86,7 @@ public class SQLRepository implements TaskRepository, UserRepository {
             statement.setString(2, dao.name);
             statement.setLong(3, dao.owner.id);
             statement.setString(4, dao.schedule);
+            statement.setLong(5, dao.snoozedUntil);
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -147,5 +133,18 @@ public class SQLRepository implements TaskRepository, UserRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private TaskDao parseTaskResult(ResultSet rs) throws SQLException {
+        long id = rs.getLong("id");
+        String name = rs.getString("name");
+        long ownerId = rs.getLong("owner");
+        String schedule = rs.getString("schedule");
+        long snoozedUntil = rs.getLong("snoozedUntil");
+
+        User owner = findById(new UserId(ownerId)).get();
+        UserDao ownerDao = UserDao.fromModel(owner);
+
+        return new TaskDao(id, name, ownerDao, schedule, snoozedUntil);
     }
 }

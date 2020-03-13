@@ -9,6 +9,7 @@ public class Task {
     private String name;
     private User owner;
     private Schedule schedule;
+    private Time snoozedUntil;
 
     public Task(TaskId id, String name, User owner, Schedule schedule) {
         this.id = id;
@@ -18,7 +19,13 @@ public class Task {
     }
 
     public boolean isTriggered(Time time) {
-        return schedule.isTriggered(time.withTimezone(owner.getTimezone()));
+        Time inOwnerTimezone = time.withTimezone(owner.getTimezone());
+
+        return time.equals(snoozedUntil) || schedule.isTriggered(inOwnerTimezone);
+    }
+
+    public void snoozeUntil(Time time) {
+        snoozedUntil = time;
     }
 
     public TaskId getId() {

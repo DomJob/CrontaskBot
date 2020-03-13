@@ -36,6 +36,7 @@ public class Sqlite {
                 "name VARCHAR," +
                 "owner INTEGER," +
                 "schedule VARCHAR," +
+                "snoozedUntil INTEGER," +
                 "FOREIGN KEY(owner) REFERENCES user(id))");
 
         } catch (SQLException e) {

@@ -1,7 +1,6 @@
 package service;
 
 import domain.schedule.Schedule;
-import domain.schedule.TimeSchedule;
 import domain.task.Task;
 import domain.task.TaskFactory;
 import domain.task.TaskId;
@@ -9,6 +8,7 @@ import domain.task.TaskRepository;
 import domain.time.Time;
 import domain.user.User;
 import java.util.List;
+import java.util.Optional;
 
 public class TaskService {
     private TaskFactory taskFactory;
@@ -32,13 +32,9 @@ public class TaskService {
         // TODO
     }
 
-    public void snoozeTask(TaskId id, Time now) {
-        Task task = taskRepository.findById(id).get();
-
-        Time snoozeUntil = now.plusMinutes(15);
-
-        Task newTask = taskFactory.create(task.getName(), task.getOwner(), new TimeSchedule(snoozeUntil)); // TODO Yeah that's a problem right here
-        taskRepository.save(newTask);
+    public void snoozeTask(Task task, Time now) {
+        task.snoozeUntil(now.plusMinutes(15));
+        taskRepository.save(task);
     }
 
     public void checkTasks(Time now, TaskNotifier taskNotifier) {
@@ -47,5 +43,15 @@ public class TaskService {
                 taskNotifier.notifyTaskTriggered(task);
             }
         }
+    }
+
+    public Task getTask(TaskId id) {
+        Optional<Task> task = taskRepository.findById(id);
+
+        if(task.isPresent()) {
+            return task.get();
+        }
+
+        throw new TaskNotFoundException();
     }
 }
