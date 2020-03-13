@@ -10,7 +10,7 @@ public abstract class Schedule {
         string = string.toLowerCase();
 
         if (string.matches(TimeSchedule.ABSOLUTE_PATTERN)) {
-            return TimeSchedule.parseAbsoluteTime(string, now);
+            return TimeSchedule.parseAbsoluteTime(string, now.withTimezone(timezone));
         } else if (string.matches(TimeSchedule.RELATIVE_PATTERN)) {
             return TimeSchedule.parseRelativeTime(string, now.withTimezone(timezone));
         } else if (string.matches(CronSchedule.PATTERN)) {
