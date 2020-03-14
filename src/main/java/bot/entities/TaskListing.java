@@ -79,4 +79,8 @@ public class TaskListing {
     public boolean empty() {
         return listedTasks.isEmpty();
     }
+
+    public Task getTask(int index) {
+        return listedTasks.get(index).model;
+    }
 }

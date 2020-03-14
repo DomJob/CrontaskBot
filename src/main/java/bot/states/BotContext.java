@@ -8,6 +8,7 @@ import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
 import domain.schedule.Schedule;
 import domain.task.Task;
+import domain.task.TaskId;
 import domain.time.Time;
 import domain.time.Timezone;
 import domain.user.User;
@@ -119,5 +120,9 @@ public class BotContext {
 
     public void sendNoTasksMessage() {
         send(messageFormatter.formatNoTasksMessage());
+    }
+
+    public void deleteTask(Task task) {
+        taskService.deleteTask(task);
     }
 }

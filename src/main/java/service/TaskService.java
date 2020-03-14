@@ -29,7 +29,7 @@ public class TaskService {
     }
 
     public void deleteTask(Task task) {
-        // TODO
+        taskRepository.delete(task.getId());
     }
 
     public void snoozeTask(Task task, Time now) {

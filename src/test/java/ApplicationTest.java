@@ -344,6 +344,45 @@ public class ApplicationTest {
         assertThatNoTaskWasTriggered();
     }
 
+    @Test
+    public void deleteTask_noIndexGiven_sendsErrorMessage() {
+        createTask(IN_5_MINUTES);
+
+        newMessage("/tasks")
+            .send();
+
+        newMessage("/delete")
+            .send();
+
+        verify(messageFormatter).formatInvalidCommand();
+    }
+
+    @Test
+    public void deleteTask_indexNotANumber_sendsErrorMessage() {
+        createTask(IN_5_MINUTES);
+
+        newMessage("/tasks")
+            .send();
+
+        newMessage("/delete asda2")
+            .send();
+
+        verify(messageFormatter).formatInvalidCommand();
+    }
+
+    @Test
+    public void deleteTask_indexTooBig_sendsErrorMessage() {
+        createTask(IN_5_MINUTES);
+
+        newMessage("/tasks")
+            .send();
+
+        newMessage("/delete 2")
+            .send();
+
+        verify(messageFormatter).formatInvalidCommand();
+    }
+
     private void checkTasksAt(Time time) {
         taskService.checkTasks(time, bot::notifyTaskTriggered);
     }

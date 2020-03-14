@@ -1,7 +1,11 @@
 package bot.states;
 
+import bot.command.Command;
 import bot.entities.ReceivedMessage;
 import bot.entities.TaskListing;
+import domain.task.Task;
+import domain.task.TaskId;
+import java.util.List;
 
 public class TasksListedState implements BotState {
     private TaskListing listing;
@@ -12,7 +16,8 @@ public class TasksListedState implements BotState {
 
     @Override
     public BotState handleMessage(ReceivedMessage message, BotContext context) {
-        switch (message.getCommand()) {
+        Command command = message.getCommand();
+        switch (command) {
             case CANCEL:
                 context.sendOperationCancelledMessage();
                 return new DefaultState();
@@ -23,12 +28,31 @@ public class TasksListedState implements BotState {
                 previousPage(context);
                 return this;
             case DELETE:
-                // TODO
-                return new DefaultState();
+                try {
+                    Task task = getSpecifiedTask(command);
+                    context.deleteTask(task);
+                    return new DefaultState();
+                } catch (AssertionError e) {
+                    context.sendInvalidCommand();
+                    return this;
+                }
             default:
                 context.sendInvalidCommand();
                 return this;
         }
+    }
+
+    private Task getSpecifiedTask(Command command) {
+        List<String> parameters = command.getParameters();
+        assert(parameters.size() == 2);
+
+        String indexStr = parameters.get(1);
+        assert(indexStr.matches("^\\d+$"));
+
+        int index = Integer.parseInt(indexStr) - 1;
+        assert(index >= 0 && index < listing.size());
+
+        return listing.getTask(index);
     }
 
     private void previousPage(BotContext context) {

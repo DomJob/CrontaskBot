@@ -44,10 +44,10 @@ public class EnglishMessageFormatter implements MessageFormatter {
     public String formatHelpMessage() {
         return "CrontaskBot lets you set up reminders.\n\n"
             + "/task — Create a new task\n"
-            + "/timezone — Change your timezone\n"
-            + "/cancel — Cancel the ongoing operation\n"
-            + "/help — Display this help message\n"
             + "/tasks — Manage your scheduled tasks\n"
+            + "/timezone — Change your timezone\n"
+            + "/help — Display this help message\n"
+            + "/cancel — Cancel the ongoing operation\n"
             + "\n"
             + "You can set up tasks to remind you periodically following the unix cron format. Use <a href=\"https://crontab.guru/\">this website</a> for more information on the cron syntax.\n\n"
             + "You can also set up a one time reminder by giving a date or a time, e.g. <i>2020-03-25 16:05</i>, <i>16:05</i> or just <i>2020-03-25</i>.\n\n"
@@ -113,6 +113,8 @@ public class EnglishMessageFormatter implements MessageFormatter {
 
         boolean previous = listing.hasPreviousPage();
         boolean next = listing.hasNextPage();
+
+        message.append("Use /delete followed by the number of the task you want to delete.\n");
 
         if (previous && next) {
             message.append("\nUse /previous or /next to see more tasks.");
