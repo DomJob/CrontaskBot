@@ -88,8 +88,12 @@ public class Time implements Comparable<Time> {
         return plusMinutes(timezone.getOffset());
     }
 
-    public boolean isAfter(Time now) {
-        return minutesSinceEpoch > now.minutesSinceEpoch;
+    public boolean isAfter(Time other) {
+        return minutesSinceEpoch > other.minutesSinceEpoch;
+    }
+
+    public boolean isBefore(Time other) {
+        return minutesSinceEpoch < other.minutesSinceEpoch;
     }
 
     @Override

@@ -9,8 +9,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TimeSchedule extends Schedule {
-    protected static final String ABSOLUTE_PATTERN = "^(([0-9]{4}[\\-\\s/])?[0-9]{1,2}[\\-\\s/][0-9]{1,2}\\s)?[0-9]{1,2}[:h][0-9]{1,2}$";
+    protected static final String ABSOLUTE_PATTERN = "^(([0-9]{4}[-\\/])?[0-9]{1,2}[-\\/][0-9]{1,2})?(((?<=[\\s\\S])\\s(?=[\\s\\S]))|((?<![\\s\\S])|(?![\\s\\S])))([0-9]{1,2}[\\:h][0-9]{1,2})?$";
     protected static String RELATIVE_PATTERN = "^(in\\s)?(([0-9]+)\\s(days?|months?|years?|hours?|minutes?)(,|\\sand\\s)?\\s?)+(from\\snow)?$";
+
+    private static String YYYYMMDD_HHMM = "^[0-9]{4}[\\/-][0-9]{1,2}[\\/-][0-9]{1,2}\\s[0-9]{1,2}[\\:h][0-9]{1,2}$";
+    private static String YYYYMMDD = "^[0-9]{4}[\\/-][0-9]{1,2}[\\/-][0-9]{1,2}$";
+    private static String MMDD_HHMM = "^[0-9]{1,2}[\\/-][0-9]{1,2}\\s[0-9]{1,2}[\\:h][0-9]{1,2}$";
+    private static String HHMM = "^[0-9]{1,2}[\\:h][0-9]{1,2}$";
+    private static String MMDD = "^[0-9]{1,2}[\\/-][0-9]{1,2}$";
 
     private Time time;
 
@@ -26,7 +32,6 @@ public class TimeSchedule extends Schedule {
         }
 
         List<Integer> values = extractNumbers(string);
-        Collections.reverse(values);
 
         int year = now.year();
         int month = now.month();
@@ -34,31 +39,59 @@ public class TimeSchedule extends Schedule {
         int hour = now.hour();
         int minute = now.minute();
 
-        int nbNumbers = values.size();
-        switch (nbNumbers) {
-            case 5:
-                year = values.get(4);
-            case 4:
-                month = values.get(3);
-                day = values.get(2);
-            case 2:
-                hour = values.get(1);
-                minute = values.get(0);
-        }
+        Time time = now;
 
-        Time scheduledTime = Time.fromDate(year, month, day, hour, minute);
+        if(string.matches(YYYYMMDD_HHMM)) {
+            year = values.get(0);
+            month = values.get(1);
+            day = values.get(2);
+            hour = values.get(3);
+            minute = values.get(4);
+            time = Time.fromDate(year, month, day, hour, minute);
 
-        if (now.isAfter(scheduledTime)) {
-            if (nbNumbers == 2) {
-                scheduledTime = scheduledTime.plusDays(1);
-            } else if (nbNumbers == 4) {
-                scheduledTime = scheduledTime.plusYears(1);
-            } else {
-                throw new InvalidScheduleException();
+        } else if (string.matches(YYYYMMDD)) {
+            year = values.get(0);
+            month = values.get(1);
+            day = values.get(2);
+            hour = 0;
+            minute = 0;
+
+            time = Time.fromDate(year, month, day, hour, minute);
+        } else if (string.matches(MMDD)) {
+            month = values.get(0);
+            day = values.get(1);
+            hour = 0;
+            minute = 0;
+
+            time = Time.fromDate(year, month, day, hour, minute);
+            if(time.isBefore(now)) {
+                time = time.plusYears(1);
+            }
+        } else if (string.matches(MMDD_HHMM)) {
+            month = values.get(0);
+            day = values.get(1);
+            hour = values.get(2);
+            minute = values.get(3);
+
+            time = Time.fromDate(year, month, day, hour, minute);
+            if(time.isBefore(now)) {
+                time = time.plusYears(1);
+            }
+        } else if (string.matches(HHMM)) {
+            hour = values.get(0);
+            minute = values.get(1);
+
+            time = Time.fromDate(year, month, day, hour, minute);
+            if(time.isBefore(now)) {
+                time = time.plusDays(1);
             }
         }
 
-        return new TimeSchedule(scheduledTime);
+        if(!time.isAfter(now)) {
+            throw new InvalidScheduleException();
+        }
+
+        return new TimeSchedule(time);
     }
 
     public static TimeSchedule parseRelativeTime(String string, Time now) {

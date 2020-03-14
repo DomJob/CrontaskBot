@@ -10,20 +10,22 @@ public class TimeScheduleTest {
 
     @Test
     public void parseFullTime() {
-        String inputString = String.format("%d-%d-%d %d:%d", NOW.year(), NOW.month(), NOW.day(), NOW.hour(), NOW.minute());
+        Time time = NOW.plusMinutes(30);
+        String inputString = String.format("%d-%d-%d %d:%d", time.year(), time.month(), time.day(), time.hour(), time.minute());
 
         Schedule schedule = TimeSchedule.parseAbsoluteTime(inputString, NOW);
 
-        assertTrue(schedule.isTriggered(NOW));
+        assertTrue(schedule.isTriggered(time));
     }
 
     @Test
     public void parseFullTimeWithoutYear() {
-        String inputString = String.format("%d/%d %d:%d", NOW.month(), NOW.day(), NOW.hour(), NOW.minute());
+        Time time = NOW.plusMinutes(30);
+        String inputString = String.format("%d/%d %d:%d", time.month(), time.day(), time.hour(), time.minute());
 
         Schedule schedule = TimeSchedule.parseAbsoluteTime(inputString, NOW);
 
-        assertTrue(schedule.isTriggered(NOW));
+        assertTrue(schedule.isTriggered(time));
     }
 
     @Test
@@ -58,11 +60,22 @@ public class TimeScheduleTest {
     }
 
     @Test
-    public void parseTimeMonthDayYear_rollsOverToNextYear_ifTimereadyPassed() {
+    public void parseTimeMonthDayHourMinute_rollsOverToNextYear_ifTimereadyPassed() {
         Time time = NOW.plusMonths(-1);
         Time expectedTriggerTime = NOW.plusMonths(11);
 
         String inputString = String.format("%d-%d %d:%d", time.month(), time.day(), time.hour(), time.minute());
+
+        Schedule schedule = TimeSchedule.parseAbsoluteTime(inputString, NOW);
+
+        assertTrue(schedule.isTriggered(expectedTriggerTime));
+    }
+
+    @Test
+    public void parseTimeYearMonthDay_setsForMidnightOfThatDay() {
+        Time expectedTriggerTime = Time.fromDate(2020,3,14,0,0);
+
+        String inputString = "2020-03-14";
 
         Schedule schedule = TimeSchedule.parseAbsoluteTime(inputString, NOW);
 

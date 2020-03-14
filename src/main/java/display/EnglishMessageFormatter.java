@@ -12,7 +12,7 @@ import domain.time.Timezone;
 public class EnglishMessageFormatter implements MessageFormatter {
     @Override
     public String formatTaskTriggeredMessage(Task task) {
-        return String.format("<b>Reminder:</b>\n\n%s", sanitize(task.getName()));
+        return sanitize(task.getName());
     }
 
     @Override
@@ -27,7 +27,7 @@ public class EnglishMessageFormatter implements MessageFormatter {
 
     @Override
     public String formatUnknownCommandMessage() {
-        return "Unknown command. Use /help for a list of available commands.";
+        return "Unknown command. Use /help for a list of commands.";
     }
 
     @Override
@@ -80,7 +80,7 @@ public class EnglishMessageFormatter implements MessageFormatter {
 
     @Override
     public String formatTimezoneOffsetRequestedMessage(Timezone currentTimezone, Time now) {
-        return String.format("Enter your timezone's offset from UTC in ±HH:MM format.\n\nFor reference, it is currently <b>%d:%d</b> in UTC time and your timezone is currently set to <b>%s</b>.", now.hour(), now.minute(), currentTimezone.toString());
+        return String.format("Enter your timezone's offset from UTC in ±HH:MM format.\n\nFor reference, it is currently <b>%d:%d</b> in UTC time.\n\nYour timezone is currently set to <b>%s</b>.", now.hour(), now.minute(), currentTimezone.toString());
     }
 
     @Override
@@ -104,8 +104,8 @@ public class EnglishMessageFormatter implements MessageFormatter {
 
         for (ListedTask task : listing.getPage()) {
             String name = task.name;
-            if (name.length() > 10) {
-                name = name.substring(10) + "...";
+            if (name.length() > 15) {
+                name = name.substring(0, 15) + "...";
             }
             message.append(String.format("<b>%d</b>. %s\n", task.index, sanitize(name)));
             message.append(String.format("Scheduled for <b>%s</b>\n\n", task.scheduledFor));
