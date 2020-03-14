@@ -43,11 +43,11 @@ public class EnglishMessageFormatter implements MessageFormatter {
     @Override
     public String formatHelpMessage() {
         return "CrontaskBot lets you set up reminders.\n\n"
-            + "/task — Create a new task\n"
-            + "/tasks — Manage your scheduled tasks\n"
-            + "/timezone — Change your timezone\n"
-            + "/help — Display this help message\n"
-            + "/cancel — Cancel the ongoing operation\n"
+            + "/task \u2014 Create a new task\n"
+            + "/tasks \u2014 Manage your scheduled tasks\n"
+            + "/timezone \u2014 Change your timezone\n"
+            + "/help \u2014 Display this help message\n"
+            + "/cancel \u2014 Cancel the ongoing operation\n"
             + "\n"
             + "You can set up tasks to remind you periodically following the unix cron format. Use <a href=\"https://crontab.guru/\">this website</a> for more information on the cron syntax.\n\n"
             + "You can also set up a one time reminder by giving a date or a time, e.g. <i>2020-03-25 16:05</i>, <i>16:05</i> or just <i>2020-03-25</i>.\n\n"
@@ -80,7 +80,7 @@ public class EnglishMessageFormatter implements MessageFormatter {
 
     @Override
     public String formatTimezoneOffsetRequestedMessage(Timezone currentTimezone, Time now) {
-        return String.format("Enter your timezone's offset from UTC in ±HH:MM format.\n\nFor reference, it is currently <b>%d:%d</b> in UTC time.\n\nYour timezone is currently set to <b>%s</b>.", now.hour(), now.minute(), currentTimezone.toString());
+        return String.format("Enter your timezone's offset from UTC in \u00b1HH:MM format.\n\nFor reference, it is currently <b>%d:%d</b> in UTC time.\n\nYour timezone is currently set to <b>%s</b>.", now.hour(), now.minute(), currentTimezone.toString());
     }
 
     @Override
@@ -100,7 +100,7 @@ public class EnglishMessageFormatter implements MessageFormatter {
 
     @Override
     public String formatTaskListingMessage(TaskListing listing) {
-        StringBuilder message = new StringBuilder(String.format("Showing tasks <b>%d—%d</b> of <b>%d</b>\n\n", listing.getStart() + 1, listing.getEnd(), listing.size()));
+        StringBuilder message = new StringBuilder(String.format("Showing tasks <b>%d\u2014%d</b> of <b>%d</b>\n\n", listing.getStart() + 1, listing.getEnd(), listing.size()));
 
         for (ListedTask task : listing.getPage()) {
             String name = task.name;
