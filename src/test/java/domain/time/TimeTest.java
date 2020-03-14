@@ -148,9 +148,9 @@ public class TimeTest {
 
     @Test
     public void sortTimes() {
-        Time earliest = Time.fromDate(2020,1,1,0,0);
-        Time middle = Time.fromDate(2020,1,5,0,0);
-        Time latest = Time.fromDate(2020,2,1,0,0);
+        Time earliest = Time.fromDate(2020, 1, 1, 0, 0);
+        Time middle = Time.fromDate(2020, 1, 5, 0, 0);
+        Time latest = Time.fromDate(2020, 2, 1, 0, 0);
 
         List<Time> list = Arrays.asList(middle, earliest, latest);
 

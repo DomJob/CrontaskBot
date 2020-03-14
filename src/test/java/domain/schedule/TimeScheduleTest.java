@@ -73,7 +73,7 @@ public class TimeScheduleTest {
 
     @Test
     public void parseTimeYearMonthDay_setsForMidnightOfThatDay() {
-        Time expectedTriggerTime = Time.fromDate(2020,3,14,0,0);
+        Time expectedTriggerTime = Time.fromDate(2020, 3, 14, 0, 0);
 
         String inputString = "2020-03-14";
 

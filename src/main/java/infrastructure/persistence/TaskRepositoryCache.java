@@ -21,8 +21,8 @@ public class TaskRepositoryCache implements TaskRepository {
 
     @Override
     public Collection<Task> findAll() {
-        if(cache.isEmpty()) {
-            for(Task task : repository.findAll()) {
+        if (cache.isEmpty()) {
+            for (Task task : repository.findAll()) {
                 cache.put(task.getId(), task);
             }
         }
@@ -34,9 +34,9 @@ public class TaskRepositoryCache implements TaskRepository {
     public Optional<Task> findById(TaskId id) {
         Task found = cache.get(id);
 
-        if(found == null) {
+        if (found == null) {
             Optional<Task> task = repository.findById(id);
-            if(task.isPresent()) {
+            if (task.isPresent()) {
                 found = task.get();
                 cache.put(id, found);
             }

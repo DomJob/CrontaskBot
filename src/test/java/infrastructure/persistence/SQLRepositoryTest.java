@@ -20,15 +20,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class SQLRepositoryTest {
+    public static final String TEST_DB_FILE_PATH = "crontaskbot_test.db";
     private static final long ANY_EPOCH = 12345678;
     private static final Time ANY_TIME = new Time(ANY_EPOCH);
-
     private static final User USER = new User(new UserId(98765), Timezone.fromOffset(4321));
     private static final Task TASK_1 = new Task(new TaskId(123), "task 1", USER, CronSchedule.parse("1 2 3 4 5"));
     private static final Task TASK_2 = new Task(new TaskId(456), "task 2", USER, CronSchedule.parse("5 4 3 2 1"));
-    public static final String TEST_DB_FILE_PATH = "crontaskbot_test.db";
-
     private SQLRepository repo = new SQLRepository();
+
+    @AfterClass
+    public static void cleanUpFile() {
+        new File(TEST_DB_FILE_PATH).delete();
+    }
 
     @Before
     public void setUp() {
@@ -39,11 +42,6 @@ public class SQLRepositoryTest {
     public void tearDown() throws SQLException {
         Sqlite.getConnection().createStatement().executeUpdate("DELETE FROM task");
         Sqlite.getConnection().createStatement().executeUpdate("DELETE FROM user");
-    }
-
-    @AfterClass
-    public static void cleanUpFile() {
-        new File(TEST_DB_FILE_PATH).delete();
     }
 
     @Test

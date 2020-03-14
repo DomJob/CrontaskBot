@@ -3,7 +3,6 @@ package domain.schedule;
 import static infrastructure.util.Helper.extractNumbers;
 
 import domain.time.Time;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +40,7 @@ public class TimeSchedule extends Schedule {
 
         Time time = now;
 
-        if(string.matches(YYYYMMDD_HHMM)) {
+        if (string.matches(YYYYMMDD_HHMM)) {
             year = values.get(0);
             month = values.get(1);
             day = values.get(2);
@@ -64,7 +63,7 @@ public class TimeSchedule extends Schedule {
             minute = 0;
 
             time = Time.fromDate(year, month, day, hour, minute);
-            if(time.isBefore(now)) {
+            if (time.isBefore(now)) {
                 time = time.plusYears(1);
             }
         } else if (string.matches(MMDD_HHMM)) {
@@ -74,7 +73,7 @@ public class TimeSchedule extends Schedule {
             minute = values.get(3);
 
             time = Time.fromDate(year, month, day, hour, minute);
-            if(time.isBefore(now)) {
+            if (time.isBefore(now)) {
                 time = time.plusYears(1);
             }
         } else if (string.matches(HHMM)) {
@@ -82,12 +81,12 @@ public class TimeSchedule extends Schedule {
             minute = values.get(1);
 
             time = Time.fromDate(year, month, day, hour, minute);
-            if(time.isBefore(now)) {
+            if (time.isBefore(now)) {
                 time = time.plusDays(1);
             }
         }
 
-        if(!time.isAfter(now)) {
+        if (!time.isAfter(now)) {
             throw new InvalidScheduleException();
         }
 

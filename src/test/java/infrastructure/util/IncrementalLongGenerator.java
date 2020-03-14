@@ -7,6 +7,6 @@ public class IncrementalLongGenerator implements LongGenerator {
 
     @Override
     public long generate() {
-        return  id++;
+        return id++;
     }
 }

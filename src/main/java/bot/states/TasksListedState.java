@@ -4,7 +4,6 @@ import bot.command.Command;
 import bot.entities.ReceivedMessage;
 import bot.entities.TaskListing;
 import domain.task.Task;
-import domain.task.TaskId;
 import java.util.List;
 
 public class TasksListedState implements BotState {
@@ -38,20 +37,20 @@ public class TasksListedState implements BotState {
                     return this;
                 }
             default:
-                context.sendInvalidCommand();
+                context.sendInvalidCommandDuringListing();
                 return this;
         }
     }
 
     private Task getSpecifiedTask(Command command) {
         List<String> parameters = command.getParameters();
-        assert(parameters.size() == 2);
+        assert (parameters.size() == 2);
 
         String indexStr = parameters.get(1);
-        assert(indexStr.matches("^\\d+$"));
+        assert (indexStr.matches("^\\d+$"));
 
         int index = Integer.parseInt(indexStr) - 1;
-        assert(index >= 0 && index < listing.size());
+        assert (index >= 0 && index < listing.size());
 
         return listing.getTask(index);
     }

@@ -8,7 +8,6 @@ import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
 import domain.schedule.Schedule;
 import domain.task.Task;
-import domain.task.TaskId;
 import domain.time.Time;
 import domain.time.Timezone;
 import domain.user.User;
@@ -37,11 +36,11 @@ public class BotContext {
         state = state.handleMessage(message, this);
     }
 
-    public Timezone getTimezone() {
+    protected Timezone getTimezone() {
         return user.getTimezone();
     }
 
-    public void setTimezone(Timezone timezone) {
+    protected void setTimezone(Timezone timezone) {
         userService.changeTimezone(user, timezone);
     }
 
@@ -94,43 +93,43 @@ public class BotContext {
         send(messageFormatter.formatScheduleRequestedMessage());
     }
 
-    public void sendTimezoneOffsetRequestedMessage(Time now) {
+    protected void sendTimezoneOffsetRequestedMessage(Time now) {
         send(messageFormatter.formatTimezoneOffsetRequestedMessage(user.getTimezone(), now));
     }
 
-    public void sendTimezoneSetMessage() {
+    protected void sendTimezoneSetMessage() {
         send(messageFormatter.formatTimezoneSetMessage());
     }
 
-    public void sendInvalidTimezoneMessage() {
+    protected void sendInvalidTimezoneMessage() {
         send(messageFormatter.formatInvalidTimezoneMessage());
     }
 
-    public void sendInvalidCommand() {
+    protected void sendInvalidCommand() {
         send(messageFormatter.formatInvalidCommand());
     }
 
-    public void sendInvalidCommandDuringListing() {
+    protected void sendInvalidCommandDuringListing() {
         send(messageFormatter.formatInvalidCommandDuringListing());
     }
 
-    public void sendListOfTasksMessage(TaskListing listing) {
+    protected void sendListOfTasksMessage(TaskListing listing) {
         send(messageFormatter.formatTaskListingMessage(listing));
     }
 
-    public List<Task> getTasks() {
+    protected List<Task> getTasks() {
         return taskService.getTasksForUser(user);
     }
 
-    public void sendNoTasksMessage() {
+    protected void sendNoTasksMessage() {
         send(messageFormatter.formatNoTasksMessage());
     }
 
-    public void deleteTask(Task task) {
+    protected void deleteTask(Task task) {
         taskService.deleteTask(task);
     }
 
-    public void sendDeletedTaskMessage() {
+    protected void sendDeletedTaskMessage() {
         send(messageFormatter.formatTaskDeletedMessage());
     }
 }
