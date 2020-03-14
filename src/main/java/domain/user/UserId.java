@@ -32,8 +32,6 @@ public class UserId {
 
     @Override
     public String toString() {
-        return "UserId{" +
-            "value=" + value +
-            '}';
+        return Long.toString(value);
     }
 }

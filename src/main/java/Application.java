@@ -1,12 +1,7 @@
 import bot.CrontaskBot;
 import bot.TelegramApi;
 import display.ConcreteMessageFormatterProvider;
-import domain.schedule.Schedule;
 import domain.task.TaskFactory;
-import domain.time.Time;
-import domain.time.Timezone;
-import domain.user.User;
-import domain.user.UserId;
 import infrastructure.Scheduler;
 import infrastructure.persistence.SQLRepository;
 import infrastructure.telegram.HttpWrapper;

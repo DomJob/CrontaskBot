@@ -373,7 +373,9 @@ public class ApplicationTest {
     }
 
     private void dismissTask(long taskId) {
-        bot.handleCallbackQuery(new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "dismiss " + taskId));
+        CallbackQuery query = new CallbackQuery(CALLBACK_QUERY_ID, USER_ID, MESSAGE_ID, "dismiss " + taskId);
+        query.time = CURRENT_TIME;
+        bot.handleCallbackQuery(query);
     }
 
     private void assertThatATaskWasTriggered() {

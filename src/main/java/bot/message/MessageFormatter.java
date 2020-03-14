@@ -1,9 +1,9 @@
 package bot.message;
 
+import bot.entities.TaskListing;
 import domain.task.Task;
 import domain.time.Time;
 import domain.time.Timezone;
-import java.util.List;
 
 public interface MessageFormatter {
     String formatTaskTriggeredMessage(Task task);
@@ -36,5 +36,7 @@ public interface MessageFormatter {
 
     String formatInvalidCommand();
 
-    String formatTaskListingMessage(List<Task> tasks, int from, int to, int nbTasks);
+    String formatTaskListingMessage(TaskListing listing);
+
+    String formatNoTasksMessage();
 }

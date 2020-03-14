@@ -10,6 +10,7 @@ import bot.states.BotContext;
 import domain.schedule.Schedule;
 import domain.task.Task;
 import domain.task.TaskId;
+import domain.time.Time;
 import domain.user.User;
 import domain.user.UserId;
 import java.util.HashMap;
@@ -42,19 +43,23 @@ public class CrontaskBot {
 
         TaskId id = TaskId.fromString(command.getParameters().get(1));
 
+        Time now = query.time;
+
         switch (command) {
             case SNOOZE:
                 Task task = taskService.getTask(id);
+
                 if (!task.getOwner().getId().equals(query.userId)) {
                     api.answerCallbackQuery(query.id, "How did you even do this?");
                     return;
                 }
-                taskService.snoozeTask(task, query.time);
 
+                taskService.snoozeTask(task, now);
                 api.answerCallbackQuery(query.id, "Snoozed for 15 minutes");
                 api.deleteMessage(query.userId, query.messageId);
                 break;
             case DISMISS:
+                taskService.dismissTask(id, now);
                 api.answerCallbackQuery(query.id, "Task dismissed");
                 api.deleteMessage(query.userId, query.messageId);
         }

@@ -2,6 +2,7 @@ package bot.states;
 
 import bot.CrontaskBot;
 import bot.entities.ReceivedMessage;
+import bot.entities.TaskListing;
 import bot.message.Message;
 import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
@@ -108,11 +109,15 @@ public class BotContext {
         send(messageFormatter.formatInvalidCommand());
     }
 
-    public void sendListOfTasksMessage(List<Task> tasks, int from, int to, int nbTasks) {
-        send(messageFormatter.formatTaskListingMessage(tasks, from, to, nbTasks));
+    public void sendListOfTasksMessage(TaskListing listing) {
+        send(messageFormatter.formatTaskListingMessage(listing));
     }
 
     public List<Task> getTasks() {
         return taskService.getTasksForUser(user);
+    }
+
+    public void sendNoTasksMessage() {
+        send(messageFormatter.formatNoTasksMessage());
     }
 }

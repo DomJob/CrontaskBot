@@ -7,8 +7,9 @@ import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Objects;
 import java.util.TimeZone;
+import org.jetbrains.annotations.NotNull;
 
-public class Time {
+public class Time implements Comparable<Time> {
     public static final Time NEVER = new Time(0);
 
     private long minutesSinceEpoch;
@@ -29,6 +30,14 @@ public class Time {
 
     public static Time fromLocalDateTime(LocalDateTime time) {
         return new Time(time.toEpochSecond(ZoneOffset.UTC) / 60);
+    }
+
+    public static Time max(Time t1, Time t2) {
+        return t1.isAfter(t2) ? t1 : t2;
+    }
+
+    public static Time min(Time t1, Time t2) {
+        return t2.isAfter(t1) ? t1 : t2;
     }
 
     public int year() {
@@ -93,8 +102,13 @@ public class Time {
     }
 
     @Override
+    public int compareTo(@NotNull Time other) {
+        return Long.compare(minutesSinceEpoch, other.minutesSinceEpoch);
+    }
+
+    @Override
     public String toString() {
-        return String.format("%d-%d-%d %d:%d", year(), month(), day(), hour(), minute());
+        return String.format("%d-%02d-%02d %02d:%02d", year(), month(), day(), hour(), minute());
     }
 
     @Override

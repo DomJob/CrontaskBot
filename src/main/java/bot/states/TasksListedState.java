@@ -1,26 +1,13 @@
 package bot.states;
 
-import static java.lang.Integer.min;
-
 import bot.entities.ReceivedMessage;
-import domain.task.Task;
-import java.util.List;
+import bot.entities.TaskListing;
 
 public class TasksListedState implements BotState {
-    private static final int TASKS_PER_PAGE = 10;
+    private TaskListing listing;
 
-    private BotContext context;
-    private List<Task> tasks;
-    private int offset;
-    private int nbTasks;
-
-    public TasksListedState(BotContext context) {
-        this.context = context;
-        tasks = context.getTasks();
-        nbTasks = tasks.size();
-        offset = 0;
-
-        sendPage();
+    public TasksListedState(TaskListing listing) {
+        this.listing = listing;
     }
 
     @Override
@@ -30,10 +17,10 @@ public class TasksListedState implements BotState {
                 context.sendOperationCancelledMessage();
                 return new DefaultState();
             case NEXT:
-                nextPage();
+                nextPage(context);
                 return this;
             case PREVIOUS:
-                previousPage();
+                previousPage(context);
                 return this;
             case DELETE:
                 // TODO
@@ -44,32 +31,21 @@ public class TasksListedState implements BotState {
         }
     }
 
-    private void previousPage() {
-        if (offset - TASKS_PER_PAGE < 0) {
+    private void previousPage(BotContext context) {
+        try {
+            listing.previousPage();
+            context.sendListOfTasksMessage(listing);
+        } catch (IllegalStateException e) {
             context.sendInvalidCommand();
-            return;
         }
-
-        offset -= TASKS_PER_PAGE;
-        sendPage();
     }
 
-    private void nextPage() {
-        if (offset + TASKS_PER_PAGE >= nbTasks) {
+    private void nextPage(BotContext context) {
+        try {
+            listing.nextPage();
+            context.sendListOfTasksMessage(listing);
+        } catch (IllegalStateException e) {
             context.sendInvalidCommand();
-            return;
         }
-
-        offset += TASKS_PER_PAGE;
-        sendPage();
-    }
-
-    private void sendPage() {
-        int from = offset;
-        int to = min(offset + TASKS_PER_PAGE, nbTasks);
-
-        List<Task> subList = tasks.subList(from, to);
-
-        context.sendListOfTasksMessage(subList, from, to, nbTasks);
     }
 }

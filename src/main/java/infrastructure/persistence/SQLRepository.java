@@ -28,6 +28,7 @@ public class SQLRepository implements TaskRepository, UserRepository {
     private static final String INSERT_TASK = "INSERT INTO task VALUES(?, ?, ?, ?, ?)";
     private static final String INSERT_USER = "INSERT INTO user VALUES(?, ?)";
     private static final String UPDATE_USER = "UPDATE user SET tzOffset = ? WHERE id = ?";
+    private static final String UPDATE_TASK = "UPDATE task SET snoozedUntil = ? WHERE id = ?";
     private static final String DELETE_TASK = "DELETE FROM tasks WHERE id = ?";
 
     @Override
@@ -76,23 +77,9 @@ public class SQLRepository implements TaskRepository, UserRepository {
     public void save(Task task) {
         Optional<Task> existingTask = findById(task.getId());
         if (existingTask.isPresent()) {
-            return;
-        }
-
-        try {
-            PreparedStatement statement = getConnection().prepareStatement(INSERT_TASK);
-
-            TaskDao dao = TaskDao.fromModel(task);
-
-            statement.setLong(1, dao.id);
-            statement.setString(2, dao.name);
-            statement.setLong(3, dao.owner.id);
-            statement.setString(4, dao.schedule);
-            statement.setLong(5, dao.snoozedUntil);
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            updateTask(task);
+        } else {
+            insertTask(task);
         }
     }
 
@@ -203,4 +190,38 @@ public class SQLRepository implements TaskRepository, UserRepository {
             e.printStackTrace();
         }
     }
+
+
+    private void updateTask(Task task) {
+        try {
+            PreparedStatement statement = getConnection().prepareStatement(UPDATE_TASK);
+            TaskDao dao = TaskDao.fromModel(task);
+
+            statement.setLong(1, dao.snoozedUntil);
+            statement.setLong(2, dao.id);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void insertTask(Task task) {
+        try {
+            PreparedStatement statement = getConnection().prepareStatement(INSERT_TASK);
+
+            TaskDao dao = TaskDao.fromModel(task);
+
+            statement.setLong(1, dao.id);
+            statement.setString(2, dao.name);
+            statement.setLong(3, dao.owner.id);
+            statement.setString(4, dao.schedule);
+            statement.setLong(5, dao.snoozedUntil);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

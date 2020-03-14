@@ -2,11 +2,12 @@ package display;
 
 import static display.FormattingUtils.sanitize;
 
+import bot.entities.ListedTask;
+import bot.entities.TaskListing;
 import bot.message.MessageFormatter;
 import domain.task.Task;
 import domain.time.Time;
 import domain.time.Timezone;
-import java.util.List;
 
 public class EnglishMessageFormatter implements MessageFormatter {
     @Override
@@ -46,7 +47,7 @@ public class EnglishMessageFormatter implements MessageFormatter {
             + "/timezone — Change your timezone\n"
             + "/cancel — Cancel the ongoing operation\n"
             + "/help — Display this help message\n"
-            + "/tasks — Manage your scheduled tasks"
+            + "/tasks — Manage your scheduled tasks\n"
             + "\n"
             + "You can set up tasks to remind you periodically following the unix cron format. Use <a href=\"https://crontab.guru/\">this website</a> for more information on the cron syntax.\n\n"
             + "You can also set up a one time reminder by giving a date or a time, e.g. <i>2020-03-25 16:05</i>, <i>16:05</i> or just <i>2020-03-25</i>.\n\n"
@@ -98,27 +99,34 @@ public class EnglishMessageFormatter implements MessageFormatter {
     }
 
     @Override
-    public String formatTaskListingMessage(List<Task> tasks, int from, int to, int nbTasks) {
-        StringBuilder message = new StringBuilder(String.format("Showing tasks <b>%d—%d</b> of <b>%d</b>\n\n", from + 1, to, nbTasks));
+    public String formatTaskListingMessage(TaskListing listing) {
+        StringBuilder message = new StringBuilder(String.format("Showing tasks <b>%d—%d</b> of <b>%d</b>\n\n", listing.getStart() + 1, listing.getEnd(), listing.size()));
 
-        int n = from;
-        for (Task task : tasks) {
-            message.append(String.format("<b>%d</b>. %s\n", ++n, task.getName()));
-            // TODO Trim names
-            // TODO Show next trigger
+        for (ListedTask task : listing.getPage()) {
+            String name = task.name;
+            if (name.length() > 10) {
+                name = name.substring(10) + "...";
+            }
+            message.append(String.format("<b>%d</b>. %s\n", task.index, sanitize(name)));
+            message.append(String.format("Scheduled for <b>%s</b>\n\n", task.scheduledFor));
         }
 
-        boolean previous = from > 0;
-        boolean next = to < nbTasks;
+        boolean previous = listing.hasPreviousPage();
+        boolean next = listing.hasNextPage();
 
         if (previous && next) {
-            message.append("\nUse /previous and /next to navigate.");
+            message.append("\nUse /previous or /next to see more tasks.");
         } else if (previous) {
-            message.append("\nUse /previous to navigate.");
+            message.append("\nUse /previous to see previous tasks.");
         } else if (next) {
-            message.append("\nUse /next to navigate.");
+            message.append("\nUse /next to see more tasks.");
         }
 
         return message.toString();
+    }
+
+    @Override
+    public String formatNoTasksMessage() {
+        return "You don't have any tasks at the moment.";
     }
 }

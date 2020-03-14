@@ -1,6 +1,7 @@
 package bot.states;
 
 import bot.entities.ReceivedMessage;
+import bot.entities.TaskListing;
 
 class DefaultState implements BotState {
     @Override
@@ -23,7 +24,14 @@ class DefaultState implements BotState {
 
                 return new TimezoneOffsetRequestedState();
             case TASKS:
-                return new TasksListedState(context);
+                TaskListing listing = new TaskListing(context.getTasks(), message.time);
+                if (!listing.empty()) {
+                    context.sendListOfTasksMessage(listing);
+                    return new TasksListedState(listing);
+                } else {
+                    context.sendNoTasksMessage();
+                    return this;
+                }
             case CANCEL:
                 context.sendNoOngoingOperationMessage();
 

@@ -25,16 +25,24 @@ public class TaskService {
     }
 
     public List<Task> getTasksForUser(User user) {
-        return taskRepository.getTasksForUser(user.getId()); // TODO Filter those who will never trigger
+        return taskRepository.getTasksForUser(user.getId());
     }
 
-    public void deleteTask(TaskId id) {
+    public void deleteTask(Task task) {
         // TODO
     }
 
     public void snoozeTask(Task task, Time now) {
         task.snoozeUntil(now.plusMinutes(15));
         taskRepository.save(task);
+    }
+
+    public void dismissTask(TaskId id, Time now) {
+        Task task = getTask(id);
+
+        if (task.scheduledFor(now).equals(Time.NEVER)) {
+            deleteTask(task);
+        }
     }
 
     public void checkTasks(Time now, TaskNotifier taskNotifier) {

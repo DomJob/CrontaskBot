@@ -94,7 +94,7 @@ public class CronSchedule extends Schedule {
 
     @Override
     public Time nextTrigger(Time now) {
-        Time st = now;
+        Time st = now.plusMinutes(1);
 
         while (true) {
             if (!month.match(st.month())) {

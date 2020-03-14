@@ -1,7 +1,11 @@
 package domain.task;
 
+import static domain.time.Time.max;
+import static domain.time.Time.min;
+
 import domain.schedule.Schedule;
 import domain.time.Time;
+import domain.time.Timezone;
 import domain.user.User;
 
 public class Task {
@@ -9,7 +13,7 @@ public class Task {
     private String name;
     private User owner;
     private Schedule schedule;
-    private Time snoozedUntil;
+    private Time snoozedUntil = Time.NEVER;
 
     public Task(TaskId id, String name, User owner, Schedule schedule) {
         this.id = id;
@@ -38,5 +42,23 @@ public class Task {
 
     public User getOwner() {
         return owner;
+    }
+
+    public Time scheduledFor(Time now) {
+        Timezone timezone = owner.getTimezone();
+        now = now.withTimezone(timezone);
+
+        Time snoozedUntilInTimeZone = snoozedUntil.withTimezone(timezone);
+        Time nextTrigger = schedule.nextTrigger(now);
+
+        Time soonerTrigger = min(snoozedUntilInTimeZone, nextTrigger);
+        Time laterTrigger = max(snoozedUntilInTimeZone, nextTrigger);
+
+        if (now.isAfter(laterTrigger)) {
+            return Time.NEVER;
+        }
+
+
+        return now.isAfter(soonerTrigger) ? laterTrigger : soonerTrigger;
     }
 }

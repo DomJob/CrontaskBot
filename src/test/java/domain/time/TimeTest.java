@@ -1,7 +1,10 @@
 package domain.time;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
 
 public class TimeTest {
@@ -141,5 +144,20 @@ public class TimeTest {
         assertEquals(now.day(), later.day());
         assertEquals(now.hour(), later.hour());
         assertEquals(now.minute(), later.minute());
+    }
+
+    @Test
+    public void sortTimes() {
+        Time earliest = Time.fromDate(2020,1,1,0,0);
+        Time middle = Time.fromDate(2020,1,5,0,0);
+        Time latest = Time.fromDate(2020,2,1,0,0);
+
+        List<Time> list = Arrays.asList(middle, earliest, latest);
+
+        list.sort(Time::compareTo);
+
+        assertSame(earliest, list.get(0));
+        assertSame(middle, list.get(1));
+        assertSame(latest, list.get(2));
     }
 }

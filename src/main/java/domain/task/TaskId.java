@@ -36,8 +36,6 @@ public class TaskId {
 
     @Override
     public String toString() {
-        return "TaskId{" +
-            "value=" + value +
-            '}';
+        return Long.toString(value);
     }
 }
