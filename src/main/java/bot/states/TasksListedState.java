@@ -31,6 +31,7 @@ public class TasksListedState implements BotState {
                 try {
                     Task task = getSpecifiedTask(command);
                     context.deleteTask(task);
+                    context.sendDeletedTaskMessage();
                     return new DefaultState();
                 } catch (AssertionError e) {
                     context.sendInvalidCommand();

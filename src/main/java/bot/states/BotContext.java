@@ -110,6 +110,10 @@ public class BotContext {
         send(messageFormatter.formatInvalidCommand());
     }
 
+    public void sendInvalidCommandDuringListing() {
+        send(messageFormatter.formatInvalidCommandDuringListing());
+    }
+
     public void sendListOfTasksMessage(TaskListing listing) {
         send(messageFormatter.formatTaskListingMessage(listing));
     }
@@ -124,5 +128,9 @@ public class BotContext {
 
     public void deleteTask(Task task) {
         taskService.deleteTask(task);
+    }
+
+    public void sendDeletedTaskMessage() {
+        send(messageFormatter.formatTaskDeletedMessage());
     }
 }

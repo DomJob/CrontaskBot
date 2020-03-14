@@ -95,7 +95,7 @@ public class EnglishMessageFormatter implements MessageFormatter {
 
     @Override
     public String formatInvalidCommand() {
-        return "Invalid command. Use /cancel to exit the listing.";
+        return "Invalid command.";
     }
 
     @Override
@@ -130,5 +130,15 @@ public class EnglishMessageFormatter implements MessageFormatter {
     @Override
     public String formatNoTasksMessage() {
         return "You don't have any tasks at the moment.";
+    }
+
+    @Override
+    public String formatTaskDeletedMessage() {
+        return "Task deleted.";
+    }
+
+    @Override
+    public String formatInvalidCommandDuringListing() {
+        return "Invalid command. Use /cancel to exit the listing.";
     }
 }

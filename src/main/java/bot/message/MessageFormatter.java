@@ -39,4 +39,8 @@ public interface MessageFormatter {
     String formatTaskListingMessage(TaskListing listing);
 
     String formatNoTasksMessage();
+
+    String formatTaskDeletedMessage();
+
+    String formatInvalidCommandDuringListing();
 }

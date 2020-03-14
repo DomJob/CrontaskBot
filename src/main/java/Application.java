@@ -4,6 +4,7 @@ import display.ConcreteMessageFormatterProvider;
 import domain.task.TaskFactory;
 import infrastructure.Scheduler;
 import infrastructure.persistence.SQLRepository;
+import infrastructure.persistence.TaskRepositoryCache;
 import infrastructure.telegram.HttpWrapper;
 import infrastructure.telegram.JsonWrapper;
 import infrastructure.telegram.TelegramHttpApi;
@@ -23,7 +24,7 @@ public class Application {
         TaskFactory taskFactory = new TaskFactory(new RandomLongGenerator());
 
         UserService userService = new UserService(repo);
-        TaskService taskService = new TaskService(taskFactory, repo);
+        TaskService taskService = new TaskService(taskFactory, new TaskRepositoryCache(repo));
 
         TelegramApi api = new TelegramHttpApi(token, new HttpWrapper(), new JsonWrapper());
         CrontaskBot bot = new CrontaskBot(api, taskService, userService, new ConcreteMessageFormatterProvider());

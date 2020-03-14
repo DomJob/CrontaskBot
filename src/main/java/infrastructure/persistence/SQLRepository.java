@@ -29,7 +29,7 @@ public class SQLRepository implements TaskRepository, UserRepository {
     private static final String INSERT_USER = "INSERT INTO user VALUES(?, ?)";
     private static final String UPDATE_USER = "UPDATE user SET tzOffset = ? WHERE id = ?";
     private static final String UPDATE_TASK = "UPDATE task SET snoozedUntil = ? WHERE id = ?";
-    private static final String DELETE_TASK = "DELETE FROM tasks WHERE id = ?";
+    private static final String DELETE_TASK = "DELETE FROM task WHERE id = ?";
 
     @Override
     public Collection<Task> findAll() {
