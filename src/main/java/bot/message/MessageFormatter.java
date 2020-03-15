@@ -1,6 +1,6 @@
 package bot.message;
 
-import bot.entities.TaskListing;
+import bot.models.TaskListing;
 import domain.task.Task;
 import domain.time.Time;
 import domain.time.Timezone;

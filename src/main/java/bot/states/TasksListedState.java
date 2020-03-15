@@ -1,10 +1,9 @@
 package bot.states;
 
 import bot.command.Command;
-import bot.entities.ReceivedMessage;
-import bot.entities.TaskListing;
+import bot.models.ReceivedMessage;
+import bot.models.TaskListing;
 import domain.task.Task;
-import java.util.List;
 
 public class TasksListedState implements BotState {
     private TaskListing listing;
@@ -27,32 +26,27 @@ public class TasksListedState implements BotState {
                 previousPage(context);
                 return this;
             case DELETE:
-                try {
-                    Task task = getSpecifiedTask(command);
-                    context.deleteTask(task);
-                    context.sendDeletedTaskMessage();
-                    return new DefaultState();
-                } catch (AssertionError e) {
-                    context.sendInvalidCommand();
-                    return this;
-                }
+                return delete(context, command);
             default:
                 context.sendInvalidCommandDuringListing();
                 return this;
         }
     }
 
-    private Task getSpecifiedTask(Command command) {
-        List<String> parameters = command.getParameters();
-        assert (parameters.size() == 2);
+    private BotState delete(BotContext context, Command command) {
+        try {
+            int index = Integer.parseInt(command.getParameter(1)) - 1;
 
-        String indexStr = parameters.get(1);
-        assert (indexStr.matches("^\\d+$"));
+            Task task = listing.getTask(index);
 
-        int index = Integer.parseInt(indexStr) - 1;
-        assert (index >= 0 && index < listing.size());
+            context.deleteTask(task);
 
-        return listing.getTask(index);
+            context.sendDeletedTaskMessage();
+            return new DefaultState();
+        } catch (IndexOutOfBoundsException e) {
+            context.sendInvalidCommand();
+            return this;
+        }
     }
 
     private void previousPage(BotContext context) {

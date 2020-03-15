@@ -8,10 +8,10 @@ import static org.mockito.Mockito.when;
 
 import bot.CrontaskBot;
 import bot.TelegramApi;
-import bot.entities.CallbackQuery;
-import bot.entities.ReceivedMessage;
 import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
+import bot.models.CallbackQuery;
+import bot.models.ReceivedMessage;
 import domain.task.Task;
 import domain.task.TaskFactory;
 import domain.task.TaskId;

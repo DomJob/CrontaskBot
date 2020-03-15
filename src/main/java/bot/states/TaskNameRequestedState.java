@@ -1,7 +1,7 @@
 package bot.states;
 
 import bot.command.Command;
-import bot.entities.ReceivedMessage;
+import bot.models.ReceivedMessage;
 
 class TaskNameRequestedState implements BotState {
     @Override

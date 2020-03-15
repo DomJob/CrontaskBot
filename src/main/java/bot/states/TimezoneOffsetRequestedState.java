@@ -1,7 +1,7 @@
 package bot.states;
 
 import bot.command.Command;
-import bot.entities.ReceivedMessage;
+import bot.models.ReceivedMessage;
 import domain.time.Timezone;
 
 public class TimezoneOffsetRequestedState implements BotState {

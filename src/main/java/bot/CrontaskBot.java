@@ -1,11 +1,11 @@
 package bot;
 
 import bot.command.CallbackCommand;
-import bot.entities.CallbackQuery;
-import bot.entities.ReceivedMessage;
 import bot.message.Message;
 import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
+import bot.models.CallbackQuery;
+import bot.models.ReceivedMessage;
 import bot.states.BotContext;
 import domain.schedule.Schedule;
 import domain.task.Task;

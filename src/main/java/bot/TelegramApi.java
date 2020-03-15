@@ -1,7 +1,7 @@
 package bot;
 
-import bot.entities.Update;
 import bot.message.Message;
+import bot.models.Update;
 import domain.user.UserId;
 import java.util.List;
 

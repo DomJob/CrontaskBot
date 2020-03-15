@@ -1,6 +1,6 @@
 package bot.message;
 
-import bot.entities.Button;
+import bot.models.Button;
 import domain.user.User;
 import domain.user.UserId;
 import java.util.ArrayList;

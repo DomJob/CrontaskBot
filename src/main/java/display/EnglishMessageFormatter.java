@@ -2,9 +2,9 @@ package display;
 
 import static display.FormattingUtils.sanitize;
 
-import bot.entities.ListedTask;
-import bot.entities.TaskListing;
 import bot.message.MessageFormatter;
+import bot.models.ListedTask;
+import bot.models.TaskListing;
 import domain.task.Task;
 import domain.time.Time;
 import domain.time.Timezone;

@@ -1,7 +1,7 @@
 package bot.states;
 
-import bot.entities.ReceivedMessage;
-import bot.entities.TaskListing;
+import bot.models.ReceivedMessage;
+import bot.models.TaskListing;
 
 class DefaultState implements BotState {
     @Override

@@ -1,11 +1,11 @@
 package bot.states;
 
 import bot.CrontaskBot;
-import bot.entities.ReceivedMessage;
-import bot.entities.TaskListing;
 import bot.message.Message;
 import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
+import bot.models.ReceivedMessage;
+import bot.models.TaskListing;
 import domain.schedule.Schedule;
 import domain.task.Task;
 import domain.time.Time;

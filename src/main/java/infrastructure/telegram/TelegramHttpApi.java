@@ -1,8 +1,8 @@
 package infrastructure.telegram;
 
 import bot.TelegramApi;
-import bot.entities.Update;
 import bot.message.Message;
+import bot.models.Update;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.user.UserId;
 import java.util.List;

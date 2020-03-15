@@ -1,4 +1,4 @@
-package bot.entities;
+package bot.models;
 
 import bot.command.Command;
 import domain.time.Time;

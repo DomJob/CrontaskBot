@@ -64,4 +64,16 @@ public enum Command {
     public List<String> getParameters() {
         return Collections.unmodifiableList(parameters);
     }
+
+    public String getParameter(int i) {
+        if (i < 0 || i >= parameters.size()) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        return parameters.get(i);
+    }
+
+    public int getNbParameters() {
+        return parameters.size();
+    }
 }

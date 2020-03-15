@@ -1,4 +1,4 @@
-package bot.entities;
+package bot.models;
 
 import static java.lang.Integer.min;
 
@@ -81,6 +81,9 @@ public class TaskListing {
     }
 
     public Task getTask(int index) {
+        if (index < 0 || index >= nbTasks) {
+            throw new IndexOutOfBoundsException();
+        }
         return listedTasks.get(index).model;
     }
 }
