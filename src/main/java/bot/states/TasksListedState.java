@@ -43,8 +43,8 @@ public class TasksListedState implements BotState {
 
             context.sendDeletedTaskMessage();
             return new DefaultState();
-        } catch (IndexOutOfBoundsException e) {
-            context.sendInvalidCommand();
+        } catch (IndexOutOfBoundsException | NumberFormatException e) {
+            context.sendInvalidDeleteCommand();
             return this;
         }
     }

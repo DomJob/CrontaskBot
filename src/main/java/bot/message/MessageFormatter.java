@@ -43,4 +43,6 @@ public interface MessageFormatter {
     String formatTaskDeletedMessage();
 
     String formatInvalidCommandDuringListing();
+
+    String formatInvalidDeleteCommand();
 }

@@ -132,4 +132,8 @@ public class BotContext {
     protected void sendDeletedTaskMessage() {
         send(messageFormatter.formatTaskDeletedMessage());
     }
+
+    protected void sendInvalidDeleteCommand() {
+        send(messageFormatter.formatInvalidDeleteCommand());
+    }
 }

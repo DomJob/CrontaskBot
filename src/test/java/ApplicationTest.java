@@ -354,7 +354,7 @@ public class ApplicationTest {
         newMessage("/delete")
             .send();
 
-        verify(messageFormatter).formatInvalidCommand();
+        verify(messageFormatter).formatInvalidDeleteCommand();
     }
 
     @Test
@@ -367,7 +367,7 @@ public class ApplicationTest {
         newMessage("/delete asda2")
             .send();
 
-        verify(messageFormatter).formatInvalidCommand();
+        verify(messageFormatter).formatInvalidDeleteCommand();
     }
 
     @Test
@@ -380,7 +380,7 @@ public class ApplicationTest {
         newMessage("/delete 2")
             .send();
 
-        verify(messageFormatter).formatInvalidCommand();
+        verify(messageFormatter).formatInvalidDeleteCommand();
     }
 
     private void checkTasksAt(Time time) {

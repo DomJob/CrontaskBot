@@ -45,7 +45,7 @@ public class EnglishMessageFormatter implements MessageFormatter {
         return "CrontaskBot lets you set up reminders.\n\n"
             + "/task \u2014 Create a new task\n"
             + "/tasks \u2014 Manage your scheduled tasks\n"
-            + "/timezone \u2014 Change your timezone\n"
+            + "/timezone \u2014 Change your timezone settings\n"
             + "/help \u2014 Display this help message\n"
             + "/cancel \u2014 Cancel the ongoing operation\n"
             + "\n"
@@ -140,5 +140,10 @@ public class EnglishMessageFormatter implements MessageFormatter {
     @Override
     public String formatInvalidCommandDuringListing() {
         return "Invalid command. Use /cancel to exit the listing.";
+    }
+
+    @Override
+    public String formatInvalidDeleteCommand() {
+        return "Invalid format \u2014 Please select a valid number in the list above.";
     }
 }
