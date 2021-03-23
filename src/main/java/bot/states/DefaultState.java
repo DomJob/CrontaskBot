@@ -44,6 +44,8 @@ class DefaultState implements BotState {
                 context.sendUnknownCommandMessage();
 
                 return this;
+            case NOT_A_MESSAGE:
+                return this;
             default:
                 context.sendInvalidCommand();
 

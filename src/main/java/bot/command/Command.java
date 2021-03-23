@@ -18,6 +18,7 @@ public enum Command {
     NEXT("next"),
     DELETE("delete"),
     NOT_A_COMMAND,
+    NOT_A_MESSAGE,
     UNKNOWN;
 
     private static final Map<String, Command> lookup = new HashMap<>();
@@ -39,6 +40,9 @@ public enum Command {
     }
 
     public static Command parse(String message) {
+        if(message == null) {
+            return NOT_A_MESSAGE;
+        }
         if (!message.startsWith("/")) {
             return NOT_A_COMMAND;
         }
