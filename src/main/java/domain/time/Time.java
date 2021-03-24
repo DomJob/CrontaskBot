@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 public class Time implements Comparable<Time> {
     public static final Time NEVER = new Time(0);
 
-    private long minutesSinceEpoch;
-    private LocalDateTime time;
+    private final long minutesSinceEpoch;
+    private final LocalDateTime time;
 
     public Time(long minutesSinceEpoch) {
         this.minutesSinceEpoch = minutesSinceEpoch;

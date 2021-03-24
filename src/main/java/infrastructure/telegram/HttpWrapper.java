@@ -9,7 +9,7 @@ import okhttp3.RequestBody;
 public class HttpWrapper {
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    private OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client = new OkHttpClient();
 
     public String post(String url, String jsonBody) {
         try {

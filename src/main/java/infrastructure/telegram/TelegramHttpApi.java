@@ -8,10 +8,10 @@ import domain.user.UserId;
 import java.util.List;
 
 public class TelegramHttpApi implements TelegramApi {
-    private String token;
-    private ObjectMapper objectMapper = new ObjectMapper();
-    private HttpWrapper httpWrapper;
-    private JsonWrapper jsonWrapper;
+    private final String token;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final HttpWrapper httpWrapper;
+    private final JsonWrapper jsonWrapper;
 
     public TelegramHttpApi(String token, HttpWrapper httpWrapper, JsonWrapper jsonWrapper) {
         this.token = token;

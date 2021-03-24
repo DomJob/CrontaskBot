@@ -45,4 +45,10 @@ public interface MessageFormatter {
     String formatInvalidCommandDuringListing();
 
     String formatInvalidDeleteCommand();
+
+    String formatLanguageInformationMessage();
+
+    String formatInvalidLangageMessage();
+
+    String formatLanguageSetMessage();
 }

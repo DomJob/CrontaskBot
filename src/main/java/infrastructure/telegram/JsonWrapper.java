@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class JsonWrapper {
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public String formatMessageRequest(long chatId, String text, List<Button> buttons) {
         List<Parameter> parameters = new ArrayList<Parameter>() {{

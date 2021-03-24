@@ -10,9 +10,9 @@ import java.util.concurrent.TimeUnit;
 import service.TaskService;
 
 public class Scheduler {
-    private CrontaskBot bot;
-    private TelegramApi api;
-    private TaskService taskService;
+    private final CrontaskBot bot;
+    private final TelegramApi api;
+    private final TaskService taskService;
     private long lastUpdate = 0;
 
     public Scheduler(CrontaskBot bot, TelegramApi api, TaskService taskService) {

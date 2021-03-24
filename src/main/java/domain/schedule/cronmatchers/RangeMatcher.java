@@ -3,8 +3,8 @@ package domain.schedule.cronmatchers;
 import domain.schedule.InvalidScheduleException;
 
 public class RangeMatcher extends CronMatcher {
-    private int start;
-    private int end;
+    private final int start;
+    private final int end;
 
     public RangeMatcher(int start, int end) {
         if (start >= end) {

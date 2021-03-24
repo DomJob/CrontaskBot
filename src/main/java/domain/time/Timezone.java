@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Timezone {
     public static final Timezone UTC = new Timezone(0);
     private static final String TIMEZONE_OFFSET_PATTERN = "^[-+]?([0-9]+)(:([0-9]+))?$";
-    private int offset;
+    private final int offset;
 
     private Timezone(int offset) {
         this.offset = offset;

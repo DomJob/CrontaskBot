@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConcreteMessageFormatterProvider implements MessageFormatterProvider {
-    private static Map<Language, MessageFormatter> formatters = new HashMap<>();
+    private static final Map<Language, MessageFormatter> formatters = new HashMap<>();
 
     static {
         formatters.put(Language.ENGLISH, new EnglishMessageFormatter());

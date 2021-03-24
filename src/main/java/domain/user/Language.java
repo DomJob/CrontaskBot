@@ -1,13 +1,11 @@
 package domain.user;
 
-import bot.command.Command;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public enum Language {
-    ENGLISH("en"),
-    FRENCH("fr");
+    ENGLISH("en", "English"),
+    FRENCH("fr", "Français");
 
     private static final Map<String, Language> lookup = new HashMap<>();
 
@@ -17,10 +15,12 @@ public enum Language {
         }
     }
 
-    private String code;
+    private final String code;
+    private final String displayName;
 
-    Language(String code) {
+    Language(String code, String displayName) {
         this.code = code;
+        this.displayName = displayName;
     }
 
     public String getCode() {
@@ -33,5 +33,9 @@ public enum Language {
         }
 
         return lookup.get(code);
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 }

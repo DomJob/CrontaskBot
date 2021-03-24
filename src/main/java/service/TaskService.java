@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class TaskService {
-    private TaskFactory taskFactory;
-    private TaskRepository taskRepository;
+    private final TaskFactory taskFactory;
+    private final TaskRepository taskRepository;
 
     public TaskService(TaskFactory taskFactory, TaskRepository taskRepository) {
         this.taskFactory = taskFactory;

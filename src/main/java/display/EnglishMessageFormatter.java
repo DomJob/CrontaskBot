@@ -8,6 +8,7 @@ import bot.models.TaskListing;
 import domain.task.Task;
 import domain.time.Time;
 import domain.time.Timezone;
+import domain.user.Language;
 
 public class EnglishMessageFormatter implements MessageFormatter {
     @Override
@@ -145,5 +146,26 @@ public class EnglishMessageFormatter implements MessageFormatter {
     @Override
     public String formatInvalidDeleteCommand() {
         return "Invalid format \u2014 Please select a valid number in the list above.";
+    }
+
+    @Override
+    public String formatLanguageInformationMessage() {
+        StringBuilder sb = new StringBuilder("Use /language followed by the two-letter code desired language.\n\nCurrently, the following languages are supported:\n\n");
+
+        for(Language langage : Language.values()) {
+            sb.append(String.format(" \u2014 %s (<b>%s</b>)\n", langage.getDisplayName(), langage.getCode()));
+        }
+
+        return sb.toString();
+    }
+
+    @Override
+    public String formatInvalidLangageMessage() {
+        return "Invalid language. Use /language to see a list of the supported languages.";
+    }
+
+    @Override
+    public String formatLanguageSetMessage() {
+        return "Language successfully set!";
     }
 }

@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class UserRepositoryInMemory implements UserRepository {
-    private Map<UserId, User> users = new HashMap<>();
+    private final Map<UserId, User> users = new HashMap<>();
 
     @Override
     public Optional<User> findById(UserId id) {

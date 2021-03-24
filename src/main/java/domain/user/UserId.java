@@ -3,7 +3,7 @@ package domain.user;
 import java.util.Objects;
 
 public class UserId {
-    private long value;
+    private final long value;
 
     public UserId(long value) {
         this.value = value;

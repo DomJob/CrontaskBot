@@ -19,12 +19,12 @@ import service.TaskService;
 import service.UserService;
 
 public class CrontaskBot {
-    private TelegramApi api;
-    private TaskService taskService;
-    private UserService userService;
-    private MessageFormatterProvider messageFormatterProvider;
+    private final TelegramApi api;
+    private final TaskService taskService;
+    private final UserService userService;
+    private final MessageFormatterProvider messageFormatterProvider;
 
-    private Map<UserId, BotContext> contexts = new HashMap<>();
+    private final Map<UserId, BotContext> contexts = new HashMap<>();
 
     public CrontaskBot(TelegramApi api, TaskService taskService, UserService userService, MessageFormatterProvider messageFormatterProvider) {
         this.api = api;

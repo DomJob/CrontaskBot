@@ -7,6 +7,7 @@ import domain.task.Task;
 import domain.task.TaskId;
 import domain.time.Time;
 import domain.time.Timezone;
+import domain.user.Language;
 import domain.user.User;
 import domain.user.UserId;
 import org.junit.Test;
@@ -18,7 +19,7 @@ public class TaskDaoTest {
 
     @Test
     public void fromModel_correctValues() {
-        User user = new User(new UserId(2), Timezone.fromOffset(60));
+        User user = new User(new UserId(2), Timezone.fromOffset(60), Language.ENGLISH);
         String schedule = "1 2 3 4 5";
         Task task = new Task(new TaskId(1), "Hello", user, Schedule.parse(schedule, TIME.withTimezone(user.getTimezone())));
 

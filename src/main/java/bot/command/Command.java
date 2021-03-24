@@ -17,6 +17,7 @@ public enum Command {
     PREVIOUS("previous"),
     NEXT("next"),
     DELETE("delete"),
+    LANGUAGE("language"),
     NOT_A_COMMAND,
     NOT_A_MESSAGE,
     UNKNOWN;

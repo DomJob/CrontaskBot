@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class SQLRepository implements TaskRepository, UserRepository {
     private static final String FIND_TASK_BY_ID = "SELECT * FROM task WHERE id=?";
     private static final String FIND_TASK_BY_OWNER_ID = "SELECT * FROM task WHERE owner=?";
-    private static final String FIND_USER_BY_ID = "SELECT tzOffset FROM user WHERE id = ?";
+    private static final String FIND_USER_BY_ID = "SELECT tzOffset, language FROM user WHERE id = ?";
     private static final String FIND_ALL_TASKS = "SELECT * FROM task";
     private static final String INSERT_TASK = "INSERT INTO task VALUES(?, ?, ?, ?, ?)";
     private static final String INSERT_USER = "INSERT INTO user VALUES(?, ?, ?)";

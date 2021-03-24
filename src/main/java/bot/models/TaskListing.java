@@ -10,8 +10,8 @@ import java.util.List;
 public class TaskListing {
     private static final int TASKS_PER_PAGE = 10;
 
-    private List<ListedTask> listedTasks;
-    private int nbTasks;
+    private final List<ListedTask> listedTasks;
+    private final int nbTasks;
     private int start;
 
     public TaskListing(List<Task> tasks, Time now) {

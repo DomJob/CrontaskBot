@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TaskRepositoryInMemory implements TaskRepository {
-    private Map<TaskId, Task> tasks = new HashMap<>();
+    private final Map<TaskId, Task> tasks = new HashMap<>();
 
     @Override
     public Collection<Task> findAll() {

@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.Test;
 
 public class JsonWrapperTest {
-    private JsonWrapper jsonWrapper = new JsonWrapper();
+    private final JsonWrapper jsonWrapper = new JsonWrapper();
 
     @Test
     public void formatMessageRequest_withKeyboard() {

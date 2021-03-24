@@ -9,10 +9,10 @@ import domain.time.Timezone;
 import domain.user.User;
 
 public class Task {
-    private TaskId id;
-    private String name;
-    private User owner;
-    private Schedule schedule;
+    private final TaskId id;
+    private final String name;
+    private final User owner;
+    private final Schedule schedule;
     private Time snoozedUntil = Time.NEVER;
 
     public Task(TaskId id, String name, User owner, Schedule schedule) {

@@ -8,11 +8,11 @@ import domain.time.Time;
 public class CronSchedule extends Schedule {
     protected static String PATTERN = "^((?:[\\s]|^)(\\*(/[0-9]+)?|([0-9]+-[0-9]+)|([0-9]+,)*[0-9]+)(?=[\\s]|$)){5}$";
 
-    private CronMatcher minute;
-    private CronMatcher hour;
-    private CronMatcher day;
-    private CronMatcher month;
-    private CronMatcher weekday;
+    private final CronMatcher minute;
+    private final CronMatcher hour;
+    private final CronMatcher day;
+    private final CronMatcher month;
+    private final CronMatcher weekday;
 
     public CronSchedule(CronMatcher minute, CronMatcher hour, CronMatcher day, CronMatcher month, CronMatcher weekday) {
         this.minute = minute;

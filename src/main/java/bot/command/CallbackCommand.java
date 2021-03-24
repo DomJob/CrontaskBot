@@ -18,7 +18,7 @@ public enum CallbackCommand {
         }
     }
 
-    private String text;
+    private final String text;
     private List<String> parameters;
 
     CallbackCommand(String text) {

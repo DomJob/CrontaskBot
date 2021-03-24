@@ -6,6 +6,7 @@ import bot.models.TaskListing;
 import domain.task.Task;
 import domain.time.Time;
 import domain.time.Timezone;
+import domain.user.Language;
 
 import static display.FormattingUtils.sanitize;
 
@@ -22,7 +23,7 @@ public class FrenchMessageFormatter implements MessageFormatter {
 
     @Override
     public String formatStartMessage() {
-        return "Bienvenue! Utilisez /help pour de l'information sur comment utiliser ce bot.";
+        return "Bienvenue ! Utilisez /help pour de l'information sur comment utiliser ce bot.";
     }
 
     @Override
@@ -49,7 +50,7 @@ public class FrenchMessageFormatter implements MessageFormatter {
             + "/help \u2014 Afficher ce message d'information\n"
             + "/cancel \u2014 Annuler l'opération en cours\n"
             + "\n"
-            + "Vous pouvez planifier des rappels pour en suivant le format cron d'Unix. Utilisez <a href=\"https://crontab.guru/\">cet site web</a> pour plus d'information sur la syntaxe cron.\n\n"
+            + "Vous pouvez planifier des rappels pour en suivant le format cron d'Unix. Utilisez <a href=\"https://crontab.guru/\">ce site web</a> pour plus d'information sur la syntaxe cron.\n\n"
             + "Vous pouvez aussi planifier un rappel unique en fournissant une date ou un moment à la minute près, e.g. <i>2020-03-25 16:05</i>, <i>16:05</i> ou simplement <i>2020-03-25</i>.\n\n"
             + "De plus, vous pouvez écrire  \"in 5 minutes\" ou \"in 3 days and 5 hours\" (en anglais seulement) pour planifier un rappel dans le futur sans le temps exact.\n"
             + "\n"
@@ -70,7 +71,7 @@ public class FrenchMessageFormatter implements MessageFormatter {
 
     @Override
     public String formatTaskCreatedMessage() {
-        return "Tâche créée avec succès!";
+        return "Tâche créée avec succès !";
     }
 
     @Override
@@ -85,7 +86,7 @@ public class FrenchMessageFormatter implements MessageFormatter {
 
     @Override
     public String formatTimezoneSetMessage() {
-        return "Fuseau horaire réglé avec succès!";
+        return "Fuseau horaire réglé avec succès !";
     }
 
     @Override
@@ -145,5 +146,26 @@ public class FrenchMessageFormatter implements MessageFormatter {
     @Override
     public String formatInvalidDeleteCommand() {
         return "Format invalide. \u2014 Veuillez sélectionner un nombre valide dans la liste ci-dessus.";
+    }
+
+    @Override
+    public String formatLanguageInformationMessage() {
+        StringBuilder sb = new StringBuilder("Utilisez /language suivi du code à deux lettres du langage désiré.\n\nActuellement, les langages suivant sont supportés:\n\n");
+
+        for(Language langage : Language.values()) {
+            sb.append(String.format(" \u2014 %s (<b>%s</b>)\n", langage.getDisplayName(), langage.getCode()));
+        }
+
+        return sb.toString();
+    }
+
+    @Override
+    public String formatInvalidLangageMessage() {
+        return "Code de langage invalide. Utilisez /language pour voir la liste des langages supportés.";
+    }
+
+    @Override
+    public String formatLanguageSetMessage() {
+        return "Langage modifié avec succès !";
     }
 }

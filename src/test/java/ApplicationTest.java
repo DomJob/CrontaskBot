@@ -51,7 +51,7 @@ public class ApplicationTest {
     private static final UserId USER_ID = new UserId(12345678L);
     private static final UserId OTHER_USER_ID = new UserId(789456L);
     private static boolean SQL = false;
-    private static User USER = new User(USER_ID);
+    private static final User USER = new User(USER_ID);
 
     private TaskRepository taskRepository = spy(new TaskRepositoryInMemory());
     private UserRepository userRepository = spy(new UserRepositoryInMemory());
@@ -63,11 +63,11 @@ public class ApplicationTest {
     @Mock
     private MessageFormatter messageFormatter;
     @Spy
-    private UserService userService = new UserService(userRepository);
+    private final UserService userService = new UserService(userRepository);
     @Spy
-    private TaskFactory taskFactory = new TaskFactory(new IncrementalLongGenerator());
+    private final TaskFactory taskFactory = new TaskFactory(new IncrementalLongGenerator());
     @Spy
-    private TaskService taskService = new TaskService(taskFactory, taskRepository);
+    private final TaskService taskService = new TaskService(taskFactory, taskRepository);
 
     private CrontaskBot bot;
 
@@ -435,8 +435,8 @@ public class ApplicationTest {
     }
 
     private static class MessageBuilder {
-        private ReceivedMessage message = new ReceivedMessage(USER_ID, "");
-        private CrontaskBot bot;
+        private final ReceivedMessage message = new ReceivedMessage(USER_ID, "");
+        private final CrontaskBot bot;
 
         MessageBuilder(CrontaskBot bot, String text) {
             this.bot = bot;
