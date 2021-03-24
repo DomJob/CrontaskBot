@@ -5,10 +5,18 @@ import domain.time.Timezone;
 public class User {
     private UserId id;
     private Timezone timezone;
+    private Language language;
 
     public User(UserId id, Timezone timezone) {
         this.id = id;
         this.timezone = timezone;
+        this.language = Language.ENGLISH;
+    }
+
+    public User(UserId id, Timezone timezone, Language language) {
+        this.id = id;
+        this.timezone = timezone;
+        this.language = language;
     }
 
     public User(UserId id) {
@@ -17,7 +25,7 @@ public class User {
     }
 
     public Language getLanguage() {
-        return Language.FRENCH;
+        return language;
     }
 
     public UserId getId() {

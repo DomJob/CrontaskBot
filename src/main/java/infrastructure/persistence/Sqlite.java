@@ -29,7 +29,8 @@ public class Sqlite {
 
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS user(" +
                 "id INTEGER PRIMARY KEY," +
-                "tzOffset INTEGER)");
+                "tzOffset INTEGER," +
+                "language VARCHAR)");
 
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS task(" +
                 "id INTEGER PRIMARY KEY," +

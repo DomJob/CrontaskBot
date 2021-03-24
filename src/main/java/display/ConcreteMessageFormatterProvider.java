@@ -16,6 +16,9 @@ public class ConcreteMessageFormatterProvider implements MessageFormatterProvide
 
     @Override
     public MessageFormatter provide(Language language) {
+        if(language == null) {
+            return formatters.get(Language.ENGLISH);
+        }
         return formatters.get(language);
     }
 }
