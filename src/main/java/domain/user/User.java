@@ -17,7 +17,7 @@ public class User {
     }
 
     public Language getLanguage() {
-        return Language.ENGLISH;
+        return Language.FRENCH;
     }
 
     public UserId getId() {

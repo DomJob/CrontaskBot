@@ -11,6 +11,7 @@ public class ConcreteMessageFormatterProvider implements MessageFormatterProvide
 
     static {
         formatters.put(Language.ENGLISH, new EnglishMessageFormatter());
+        formatters.put(Language.FRENCH, new FrenchMessageFormatter());
     }
 
     @Override
