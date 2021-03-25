@@ -62,6 +62,8 @@ public class ApplicationTest {
     private MessageFormatterProvider messageFormatterProvider;
     @Mock
     private MessageFormatter messageFormatter;
+    @Mock
+    private MessageFormatter alternativeMessageFormatter;
     @Spy
     private final UserService userService = new UserService(userRepository);
     @Spy
@@ -75,7 +77,7 @@ public class ApplicationTest {
     public void setUp() {
         bot = new CrontaskBot(api, taskService, userService, messageFormatterProvider);
 
-        when(messageFormatterProvider.provide(any(Language.class))).thenReturn(messageFormatter);
+        when(messageFormatterProvider.provide(Language.ENGLISH)).thenReturn(messageFormatter);
     }
 
     @After
@@ -381,6 +383,36 @@ public class ApplicationTest {
             .send();
 
         verify(messageFormatter).formatInvalidDeleteCommand();
+    }
+
+    @Test
+    public void changeLanguage_noArgument_showsLanguageInfo() {
+        newMessage("/language")
+                .send();
+
+        verify(messageFormatter).formatLanguageInformationMessage();
+    }
+
+    @Test
+    public void changeLanguage_invalidArgument_showsLanguageInfo() {
+        newMessage("/language s5a")
+                .send();
+
+        verify(messageFormatter).formatInvalidLangageMessage();
+    }
+
+    @Test
+    public void changeLanguage_validArgument_changesLanguage() {
+        newMessage("/language")
+                .send();
+
+        verify(messageFormatter).formatLanguageInformationMessage();
+        when(messageFormatterProvider.provide(Language.FRENCH)).thenReturn(alternativeMessageFormatter);
+
+        newMessage("/language fr")
+                .send();
+
+        verify(alternativeMessageFormatter).formatLanguageSetMessage();
     }
 
     private void checkTasksAt(Time time) {
