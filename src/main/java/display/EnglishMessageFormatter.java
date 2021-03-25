@@ -47,6 +47,7 @@ public class EnglishMessageFormatter implements MessageFormatter {
             + "/task \u2014 Create a new task\n"
             + "/tasks \u2014 Manage your scheduled tasks\n"
             + "/timezone \u2014 Change your timezone settings\n"
+            + "/language \u2014 Change the language\n"
             + "/help \u2014 Display this help message\n"
             + "/cancel \u2014 Cancel the ongoing operation\n"
             + "\n"

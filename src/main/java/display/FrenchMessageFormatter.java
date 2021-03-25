@@ -47,6 +47,7 @@ public class FrenchMessageFormatter implements MessageFormatter {
             + "/task \u2014 Créer une nouvelle tâche\n"
             + "/tasks \u2014 Gérer vos tâches planifiées\n"
             + "/timezone \u2014 Changer les paramètres de fuseau horaire\n"
+            + "/language \u2014 Changer les paramètres de langue\n"
             + "/help \u2014 Afficher ce message d'information\n"
             + "/cancel \u2014 Annuler l'opération en cours\n"
             + "\n"
