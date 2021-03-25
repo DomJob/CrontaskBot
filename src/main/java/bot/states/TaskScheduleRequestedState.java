@@ -7,7 +7,7 @@ import domain.schedule.Schedule;
 import domain.time.Time;
 
 class TaskScheduleRequestedState implements BotState {
-    private String taskName;
+    private final String taskName;
 
     public TaskScheduleRequestedState(String taskName) {
         this.taskName = taskName;

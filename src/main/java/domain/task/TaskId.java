@@ -3,7 +3,7 @@ package domain.task;
 import java.util.Objects;
 
 public class TaskId {
-    private long value;
+    private final long value;
 
     public TaskId(long value) {
         this.value = value;

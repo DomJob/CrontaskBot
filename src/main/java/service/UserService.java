@@ -1,13 +1,15 @@
 package service;
 
 import domain.time.Timezone;
+import domain.user.Language;
 import domain.user.User;
 import domain.user.UserId;
 import domain.user.UserRepository;
+
 import java.util.Optional;
 
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -27,6 +29,11 @@ public class UserService {
 
     public void changeTimezone(User user, Timezone timezone) {
         user.setTimezone(timezone);
+        userRepository.save(user);
+    }
+
+    public void changeLanguage(User user, Language language) {
+        user.setLanguage(language);
         userRepository.save(user);
     }
 }

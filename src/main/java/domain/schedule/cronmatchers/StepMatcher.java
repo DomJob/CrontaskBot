@@ -1,7 +1,7 @@
 package domain.schedule.cronmatchers;
 
 public class StepMatcher extends CronMatcher {
-    private int step;
+    private final int step;
 
     public StepMatcher(int step) {
         this.step = step;

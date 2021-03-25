@@ -1,10 +1,5 @@
 package domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import domain.schedule.Schedule;
 import domain.task.Task;
 import domain.task.TaskId;
@@ -17,10 +12,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 public class TaskTest {
 
-    private static Time NOW = Time.fromDate(2020, 3, 15, 20, 18);
+    private static final Time NOW = Time.fromDate(2020, 3, 15, 20, 18);
     @Mock
     private Schedule schedule;
     private Task task;

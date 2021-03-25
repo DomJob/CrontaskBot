@@ -1,7 +1,7 @@
 package domain.schedule.cronmatchers;
 
 public class SpecificMatcher extends CronMatcher {
-    private int value;
+    private final int value;
 
     public SpecificMatcher(int value) {
         this.value = value;

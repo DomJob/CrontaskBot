@@ -1,15 +1,16 @@
 package infrastructure.telegram;
 
-import static org.junit.Assert.assertEquals;
-
 import bot.models.Button;
 import bot.models.Update;
-import java.util.Arrays;
-import java.util.List;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
 public class JsonWrapperTest {
-    private JsonWrapper jsonWrapper = new JsonWrapper();
+    private final JsonWrapper jsonWrapper = new JsonWrapper();
 
     @Test
     public void formatMessageRequest_withKeyboard() {
@@ -44,10 +45,10 @@ public class JsonWrapperTest {
     @Test
     public void deserializeUpdates() {
         String updatesJson = "{\"ok\":true,\"result\":[{\"update_id\":751621864,\n" +
-            "\"message\":{\"message_id\":1,\"from\":{\"id\":123456789,\"is_bot\":false,\"first_name\":\"anyone\",\"last_name\":\"\\u2602\\ufe0f\",\"username\":\"username\"}," +
-            "\"chat\":{\"id\":12345678,\"first_name\":\"anyone\",\"last_name\":\"\\u2602\\ufe0f\",\"username\":\"username\",\"type\":\"private\"}," +
-            "\"date\":1583571293," +
-            "\"text\":\"/start\",\"entities\":[{\"offset\":0,\"length\":6,\"type\":\"bot_command\"}]}}]}";
+                "\"message\":{\"message_id\":1,\"from\":{\"id\":123456789,\"is_bot\":false,\"first_name\":\"anyone\",\"last_name\":\"\\u2602\\ufe0f\",\"username\":\"username\"}," +
+                "\"chat\":{\"id\":12345678,\"first_name\":\"anyone\",\"last_name\":\"\\u2602\\ufe0f\",\"username\":\"username\",\"type\":\"private\"}," +
+                "\"date\":1583571293," +
+                "\"text\":\"/start\",\"entities\":[{\"offset\":0,\"length\":6,\"type\":\"bot_command\"}]}}]}";
 
         List<Update> updates = jsonWrapper.deSerializeUpdates(updatesJson);
 

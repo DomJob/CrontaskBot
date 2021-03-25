@@ -1,6 +1,7 @@
 package infrastructure.util;
 
 import domain.util.LongGenerator;
+
 import java.security.SecureRandom;
 
 public class RandomLongGenerator implements LongGenerator {

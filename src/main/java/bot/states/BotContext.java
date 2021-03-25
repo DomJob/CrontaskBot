@@ -10,16 +10,19 @@ import domain.schedule.Schedule;
 import domain.task.Task;
 import domain.time.Time;
 import domain.time.Timezone;
+import domain.user.Language;
 import domain.user.User;
-import java.util.List;
 import service.TaskService;
 import service.UserService;
 
+import java.util.List;
+
 public class BotContext {
-    private CrontaskBot bot;
-    private User user;
-    private TaskService taskService;
-    private UserService userService;
+    private final CrontaskBot bot;
+    private final User user;
+    private final TaskService taskService;
+    private final UserService userService;
+    private final MessageFormatterProvider messageFormatterProvider;
     private MessageFormatter messageFormatter;
 
     private BotState state = new DefaultState();
@@ -29,6 +32,7 @@ public class BotContext {
         this.taskService = taskService;
         this.userService = userService;
         this.user = user;
+        this.messageFormatterProvider = messageFormatterProvider;
         this.messageFormatter = messageFormatterProvider.provide(user.getLanguage());
     }
 
@@ -42,6 +46,11 @@ public class BotContext {
 
     protected void setTimezone(Timezone timezone) {
         userService.changeTimezone(user, timezone);
+    }
+
+    protected void setLanguage(Language language) {
+        userService.changeLanguage(user, language);
+        this.messageFormatter = messageFormatterProvider.provide(language);
     }
 
     protected void createTask(String name, Schedule schedule) {
@@ -135,5 +144,17 @@ public class BotContext {
 
     protected void sendInvalidDeleteCommand() {
         send(messageFormatter.formatInvalidDeleteCommand());
+    }
+
+    protected void sendLanguageInformationMessage() {
+        send(messageFormatter.formatLanguageInformationMessage());
+    }
+
+    protected void sendInvalidLanguageMessage() {
+        send(messageFormatter.formatInvalidLangageMessage());
+    }
+
+    protected void sendLanguageSetMessage() {
+        send(messageFormatter.formatLanguageSetMessage());
     }
 }

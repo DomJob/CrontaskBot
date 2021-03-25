@@ -1,32 +1,34 @@
 package infrastructure.persistence;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 import domain.schedule.CronSchedule;
 import domain.task.Task;
 import domain.task.TaskId;
 import domain.time.Time;
 import domain.time.Timezone;
+import domain.user.Language;
 import domain.user.User;
 import domain.user.UserId;
-import java.io.File;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Optional;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 public class SQLRepositoryTest {
     public static final String TEST_DB_FILE_PATH = "crontaskbot_test.db";
     private static final long ANY_EPOCH = 12345678;
     private static final Time ANY_TIME = new Time(ANY_EPOCH);
-    private static final User USER = new User(new UserId(98765), Timezone.fromOffset(4321));
+    private static final User USER = new User(new UserId(98765), Timezone.fromOffset(4321), Language.ENGLISH);
     private static final Task TASK_1 = new Task(new TaskId(123), "task 1", USER, CronSchedule.parse("1 2 3 4 5"));
     private static final Task TASK_2 = new Task(new TaskId(456), "task 2", USER, CronSchedule.parse("5 4 3 2 1"));
-    private SQLRepository repo = new SQLRepository();
+    private final SQLRepository repo = new SQLRepository();
 
     @AfterClass
     public static void cleanUpFile() {

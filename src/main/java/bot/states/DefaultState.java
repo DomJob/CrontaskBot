@@ -1,12 +1,15 @@
 package bot.states;
 
+import bot.command.Command;
 import bot.models.ReceivedMessage;
 import bot.models.TaskListing;
+import domain.user.Language;
 
 class DefaultState implements BotState {
     @Override
     public BotState handleMessage(ReceivedMessage message, BotContext context) {
-        switch (message.getCommand()) {
+        Command command = message.getCommand();
+        switch (command) {
             case START:
                 context.sendStartMessage();
 
@@ -40,6 +43,10 @@ class DefaultState implements BotState {
                 context.sendDefaultMessage();
 
                 return this;
+            case LANGUAGE:
+                handleLanguageCommand(context, command);
+
+                return this;
             case UNKNOWN:
                 context.sendUnknownCommandMessage();
 
@@ -50,6 +57,24 @@ class DefaultState implements BotState {
                 context.sendInvalidCommand();
 
                 return this;
+        }
+    }
+
+    private void handleLanguageCommand(BotContext context, Command command) {
+        if (command.getNbParameters() == 1) {
+            context.sendLanguageInformationMessage();
+        } else {
+            String code = command.getParameter(1);
+
+            try {
+                Language language = Language.lookup(code);
+
+                context.setLanguage(language);
+                context.sendLanguageSetMessage();
+
+            } catch (IllegalArgumentException e) {
+                context.sendInvalidLanguageMessage();
+            }
         }
     }
 }

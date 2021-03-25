@@ -5,7 +5,7 @@ import domain.user.User;
 import domain.util.LongGenerator;
 
 public class TaskFactory {
-    private LongGenerator longGenerator;
+    private final LongGenerator longGenerator;
 
     public TaskFactory(LongGenerator longGenerator) {
         this.longGenerator = longGenerator;

@@ -3,7 +3,7 @@ package domain.schedule.cronmatchers;
 import java.util.Set;
 
 public class ListMatcher extends CronMatcher {
-    private Set<Integer> values;
+    private final Set<Integer> values;
 
     public ListMatcher(Set<Integer> values) {
         this.values = values;

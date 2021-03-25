@@ -13,18 +13,19 @@ import domain.task.TaskId;
 import domain.time.Time;
 import domain.user.User;
 import domain.user.UserId;
-import java.util.HashMap;
-import java.util.Map;
 import service.TaskService;
 import service.UserService;
 
-public class CrontaskBot {
-    private TelegramApi api;
-    private TaskService taskService;
-    private UserService userService;
-    private MessageFormatterProvider messageFormatterProvider;
+import java.util.HashMap;
+import java.util.Map;
 
-    private Map<UserId, BotContext> contexts = new HashMap<>();
+public class CrontaskBot {
+    private final TelegramApi api;
+    private final TaskService taskService;
+    private final UserService userService;
+    private final MessageFormatterProvider messageFormatterProvider;
+
+    private final Map<UserId, BotContext> contexts = new HashMap<>();
 
     public CrontaskBot(TelegramApi api, TaskService taskService, UserService userService, MessageFormatterProvider messageFormatterProvider) {
         this.api = api;

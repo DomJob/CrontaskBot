@@ -1,10 +1,6 @@
 package bot.command;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public enum CallbackCommand {
     DISMISS("dismiss"),
@@ -18,7 +14,7 @@ public enum CallbackCommand {
         }
     }
 
-    private String text;
+    private final String text;
     private List<String> parameters;
 
     CallbackCommand(String text) {

@@ -6,7 +6,7 @@ import bot.models.TaskListing;
 import domain.task.Task;
 
 public class TasksListedState implements BotState {
-    private TaskListing listing;
+    private final TaskListing listing;
 
     public TasksListedState(TaskListing listing) {
         this.listing = listing;

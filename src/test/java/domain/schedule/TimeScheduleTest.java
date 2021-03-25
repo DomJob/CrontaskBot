@@ -1,9 +1,9 @@
 package domain.schedule;
 
-import static org.junit.Assert.assertTrue;
-
 import domain.time.Time;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 public class TimeScheduleTest {
     public static final Time NOW = Time.fromDate(2020, 3, 1, 15, 20);

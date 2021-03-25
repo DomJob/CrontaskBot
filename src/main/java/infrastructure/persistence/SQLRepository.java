@@ -1,7 +1,5 @@
 package infrastructure.persistence;
 
-import static infrastructure.persistence.Sqlite.getConnection;
-
 import domain.task.Task;
 import domain.task.TaskId;
 import domain.task.TaskRepository;
@@ -10,6 +8,7 @@ import domain.user.UserId;
 import domain.user.UserRepository;
 import infrastructure.persistence.entities.TaskDao;
 import infrastructure.persistence.entities.UserDao;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,14 +19,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static infrastructure.persistence.Sqlite.getConnection;
+
 public class SQLRepository implements TaskRepository, UserRepository {
     private static final String FIND_TASK_BY_ID = "SELECT * FROM task WHERE id=?";
     private static final String FIND_TASK_BY_OWNER_ID = "SELECT * FROM task WHERE owner=?";
-    private static final String FIND_USER_BY_ID = "SELECT tzOffset FROM user WHERE id = ?";
+    private static final String FIND_USER_BY_ID = "SELECT tzOffset, language FROM user WHERE id = ?";
     private static final String FIND_ALL_TASKS = "SELECT * FROM task";
     private static final String INSERT_TASK = "INSERT INTO task VALUES(?, ?, ?, ?, ?)";
-    private static final String INSERT_USER = "INSERT INTO user VALUES(?, ?)";
-    private static final String UPDATE_USER = "UPDATE user SET tzOffset = ? WHERE id = ?";
+    private static final String INSERT_USER = "INSERT INTO user VALUES(?, ?, ?)";
+    private static final String UPDATE_USER = "UPDATE user SET tzOffset = ?, language = ? WHERE id = ?";
     private static final String UPDATE_TASK = "UPDATE task SET snoozedUntil = ? WHERE id = ?";
     private static final String DELETE_TASK = "DELETE FROM task WHERE id = ?";
 
@@ -129,8 +130,9 @@ public class SQLRepository implements TaskRepository, UserRepository {
 
             if (rs.next()) {
                 int tzOffset = rs.getInt("tzOffset");
+                String language = rs.getString("language");
 
-                UserDao dao = new UserDao(id.toLong(), tzOffset);
+                UserDao dao = new UserDao(id.toLong(), tzOffset, language);
 
                 user = dao.toModel();
             }
@@ -169,7 +171,8 @@ public class SQLRepository implements TaskRepository, UserRepository {
             UserDao dao = UserDao.fromModel(user);
 
             statement.setInt(1, dao.tzOffset);
-            statement.setLong(2, dao.id);
+            statement.setString(2, dao.language);
+            statement.setLong(3, dao.id);
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -184,6 +187,7 @@ public class SQLRepository implements TaskRepository, UserRepository {
 
             statement.setLong(1, dao.id);
             statement.setInt(2, dao.tzOffset);
+            statement.setString(3, dao.language);
 
             statement.executeUpdate();
         } catch (SQLException e) {

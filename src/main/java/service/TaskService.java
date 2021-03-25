@@ -7,12 +7,13 @@ import domain.task.TaskId;
 import domain.task.TaskRepository;
 import domain.time.Time;
 import domain.user.User;
+
 import java.util.List;
 import java.util.Optional;
 
 public class TaskService {
-    private TaskFactory taskFactory;
-    private TaskRepository taskRepository;
+    private final TaskFactory taskFactory;
+    private final TaskRepository taskRepository;
 
     public TaskService(TaskFactory taskFactory, TaskRepository taskRepository) {
         this.taskFactory = taskFactory;
