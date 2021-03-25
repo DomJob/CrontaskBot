@@ -4,6 +4,7 @@ import domain.schedule.Schedule;
 import domain.task.Task;
 import domain.task.TaskId;
 import domain.time.Time;
+
 import java.lang.reflect.Field;
 
 public class TaskDao {
@@ -47,10 +48,10 @@ public class TaskDao {
         }
 
         return new TaskDao(task.getId().toLong(),
-            task.getName(),
-            UserDao.fromModel(task.getOwner()),
-            scheduleStr,
-            snoozedUntil);
+                task.getName(),
+                UserDao.fromModel(task.getOwner()),
+                scheduleStr,
+                snoozedUntil);
     }
 
     public Task toModel() {

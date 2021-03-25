@@ -1,11 +1,3 @@
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import bot.CrontaskBot;
 import bot.TelegramApi;
 import bot.message.MessageFormatter;
@@ -26,7 +18,6 @@ import infrastructure.persistence.Sqlite;
 import infrastructure.persistence.TaskRepositoryInMemory;
 import infrastructure.persistence.UserRepositoryInMemory;
 import infrastructure.util.IncrementalLongGenerator;
-import java.sql.SQLException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +27,12 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import service.TaskService;
 import service.UserService;
+
+import java.sql.SQLException;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationTest {
@@ -50,12 +47,16 @@ public class ApplicationTest {
     private static final int MESSAGE_ID = 456;
     private static final UserId USER_ID = new UserId(12345678L);
     private static final UserId OTHER_USER_ID = new UserId(789456L);
-    private static boolean SQL = false;
     private static final User USER = new User(USER_ID);
-
+    private static boolean SQL = false;
+    @Spy
+    private final TaskFactory taskFactory = new TaskFactory(new IncrementalLongGenerator());
     private TaskRepository taskRepository = spy(new TaskRepositoryInMemory());
+    @Spy
+    private final TaskService taskService = new TaskService(taskFactory, taskRepository);
     private UserRepository userRepository = spy(new UserRepositoryInMemory());
-
+    @Spy
+    private final UserService userService = new UserService(userRepository);
     @Mock
     private TelegramApi api;
     @Mock
@@ -64,13 +65,6 @@ public class ApplicationTest {
     private MessageFormatter messageFormatter;
     @Mock
     private MessageFormatter alternativeMessageFormatter;
-    @Spy
-    private final UserService userService = new UserService(userRepository);
-    @Spy
-    private final TaskFactory taskFactory = new TaskFactory(new IncrementalLongGenerator());
-    @Spy
-    private final TaskService taskService = new TaskService(taskFactory, taskRepository);
-
     private CrontaskBot bot;
 
     @Before
@@ -226,25 +220,25 @@ public class ApplicationTest {
     @Test
     public void canBeUsedByTwoUsersAtSameTime() {
         newMessage("/task")
-            .send();
+                .send();
 
         newMessage("/task")
-            .from(OTHER_USER_ID)
-            .send();
+                .from(OTHER_USER_ID)
+                .send();
 
         newMessage(TASK_NAME)
-            .send();
+                .send();
 
         newMessage(TASK_NAME)
-            .from(OTHER_USER_ID)
-            .send();
+                .from(OTHER_USER_ID)
+                .send();
 
         newMessage(IN_5_MINUTES)
-            .from(OTHER_USER_ID)
-            .send();
+                .from(OTHER_USER_ID)
+                .send();
 
         newMessage(SCHEDULE_EVERY_MINUTE)
-            .send();
+                .send();
 
         verify(messageFormatter, times(2)).formatTaskCreatedMessage();
     }
@@ -323,10 +317,10 @@ public class ApplicationTest {
         createTask(IN_5_MINUTES);
 
         newMessage("/tasks")
-            .send();
+                .send();
 
         newMessage("/delete 1")
-            .send();
+                .send();
 
         verify(taskRepository).delete(new TaskId(1));
     }
@@ -336,10 +330,10 @@ public class ApplicationTest {
         createTask(IN_5_MINUTES);
 
         newMessage("/tasks")
-            .send();
+                .send();
 
         newMessage("/delete 1")
-            .send();
+                .send();
 
         checkTasksAt(CURRENT_TIME.plusMinutes(5));
 
@@ -351,10 +345,10 @@ public class ApplicationTest {
         createTask(IN_5_MINUTES);
 
         newMessage("/tasks")
-            .send();
+                .send();
 
         newMessage("/delete")
-            .send();
+                .send();
 
         verify(messageFormatter).formatInvalidDeleteCommand();
     }
@@ -364,10 +358,10 @@ public class ApplicationTest {
         createTask(IN_5_MINUTES);
 
         newMessage("/tasks")
-            .send();
+                .send();
 
         newMessage("/delete asda2")
-            .send();
+                .send();
 
         verify(messageFormatter).formatInvalidDeleteCommand();
     }
@@ -377,10 +371,10 @@ public class ApplicationTest {
         createTask(IN_5_MINUTES);
 
         newMessage("/tasks")
-            .send();
+                .send();
 
         newMessage("/delete 2")
-            .send();
+                .send();
 
         verify(messageFormatter).formatInvalidDeleteCommand();
     }
@@ -421,20 +415,20 @@ public class ApplicationTest {
 
     private void createTask(String schedule) {
         newMessage("/task")
-            .send();
+                .send();
 
         newMessage(TASK_NAME)
-            .send();
+                .send();
 
         newMessage(schedule)
-            .send();
+                .send();
     }
 
     private void setTimezone(String offsetString) {
         newMessage("/timezone")
-            .send();
+                .send();
         newMessage(offsetString)
-            .send();
+                .send();
     }
 
     private void snoozeTask(long taskId) {

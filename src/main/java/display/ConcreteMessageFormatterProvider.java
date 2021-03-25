@@ -3,6 +3,7 @@ package display;
 import bot.message.MessageFormatter;
 import bot.message.MessageFormatterProvider;
 import domain.user.Language;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ public class ConcreteMessageFormatterProvider implements MessageFormatterProvide
 
     @Override
     public MessageFormatter provide(Language language) {
-        if(language == null) {
+        if (language == null) {
             return formatters.get(Language.ENGLISH);
         }
         return formatters.get(language);

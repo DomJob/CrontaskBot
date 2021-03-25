@@ -1,5 +1,7 @@
 package domain.time;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -7,7 +9,6 @@ import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Objects;
 import java.util.TimeZone;
-import org.jetbrains.annotations.NotNull;
 
 public class Time implements Comparable<Time> {
     public static final Time NEVER = new Time(0);

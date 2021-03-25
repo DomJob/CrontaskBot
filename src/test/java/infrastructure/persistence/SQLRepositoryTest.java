@@ -1,8 +1,5 @@
 package infrastructure.persistence;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 import domain.schedule.CronSchedule;
 import domain.task.Task;
 import domain.task.TaskId;
@@ -11,14 +8,18 @@ import domain.time.Timezone;
 import domain.user.Language;
 import domain.user.User;
 import domain.user.UserId;
-import java.io.File;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Optional;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class SQLRepositoryTest {
     public static final String TEST_DB_FILE_PATH = "crontaskbot_test.db";

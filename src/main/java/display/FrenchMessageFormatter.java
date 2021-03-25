@@ -44,20 +44,20 @@ public class FrenchMessageFormatter implements MessageFormatter {
     @Override
     public String formatHelpMessage() {
         return "CrontaskBot vous permet de planifier des rappels.\n\n"
-            + "/task \u2014 Créer une nouvelle tâche\n"
-            + "/tasks \u2014 Gérer vos tâches planifiées\n"
-            + "/timezone \u2014 Changer les paramètres de fuseau horaire\n"
-            + "/language \u2014 Changer les paramètres de langue\n"
-            + "/help \u2014 Afficher ce message d'information\n"
-            + "/cancel \u2014 Annuler l'opération en cours\n"
-            + "\n"
-            + "Vous pouvez planifier des rappels pour en suivant le format cron d'Unix. Utilisez <a href=\"https://crontab.guru/\">ce site web</a> pour plus d'information sur la syntaxe cron.\n\n"
-            + "Vous pouvez aussi planifier un rappel unique en fournissant une date ou un moment à la minute près, e.g. <i>2020-03-25 16:05</i>, <i>16:05</i> ou simplement <i>2020-03-25</i>.\n\n"
-            + "De plus, vous pouvez écrire  \"in 5 minutes\" ou \"in 3 days and 5 hours\" (en anglais seulement) pour planifier un rappel dans le futur sans le temps exact.\n"
-            + "\n"
-            + "Ce bot vérifie les rappels à chaque minute, donc les notifications peuvent être en retard ou en avance jusqu'à 30 secondes.\n"
-            + "\n"
-            + "Code source disponible <a href=\"https://github.com/DomJob/CrontaskBot/\">ici</a>";
+                + "/task \u2014 Créer une nouvelle tâche\n"
+                + "/tasks \u2014 Gérer vos tâches planifiées\n"
+                + "/timezone \u2014 Changer les paramètres de fuseau horaire\n"
+                + "/language \u2014 Changer les paramètres de langue\n"
+                + "/help \u2014 Afficher ce message d'information\n"
+                + "/cancel \u2014 Annuler l'opération en cours\n"
+                + "\n"
+                + "Vous pouvez planifier des rappels pour en suivant le format cron d'Unix. Utilisez <a href=\"https://crontab.guru/\">ce site web</a> pour plus d'information sur la syntaxe cron.\n\n"
+                + "Vous pouvez aussi planifier un rappel unique en fournissant une date ou un moment à la minute près, e.g. <i>2020-03-25 16:05</i>, <i>16:05</i> ou simplement <i>2020-03-25</i>.\n\n"
+                + "De plus, vous pouvez écrire  \"in 5 minutes\" ou \"in 3 days and 5 hours\" (en anglais seulement) pour planifier un rappel dans le futur sans le temps exact.\n"
+                + "\n"
+                + "Ce bot vérifie les rappels à chaque minute, donc les notifications peuvent être en retard ou en avance jusqu'à 30 secondes.\n"
+                + "\n"
+                + "Code source disponible <a href=\"https://github.com/DomJob/CrontaskBot/\">ici</a>";
     }
 
     @Override
@@ -153,7 +153,7 @@ public class FrenchMessageFormatter implements MessageFormatter {
     public String formatLanguageInformationMessage() {
         StringBuilder sb = new StringBuilder("Utilisez /language suivi du code à deux lettres du langage désiré.\n\nActuellement, les langages suivant sont supportés:\n\n");
 
-        for(Language langage : Language.values()) {
+        for (Language langage : Language.values()) {
             sb.append(String.format(" \u2014 %s (<b>%s</b>)\n", langage.getDisplayName(), langage.getCode()));
         }
 

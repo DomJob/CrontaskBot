@@ -1,10 +1,6 @@
 package bot.command;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public enum Command {
     START("start"),
@@ -41,7 +37,7 @@ public enum Command {
     }
 
     public static Command parse(String message) {
-        if(message == null) {
+        if (message == null) {
             return NOT_A_MESSAGE;
         }
         if (!message.startsWith("/")) {

@@ -28,17 +28,17 @@ public class Sqlite {
             Statement statement = getConnection().createStatement();
 
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS user(" +
-                "id INTEGER PRIMARY KEY," +
-                "tzOffset INTEGER," +
-                "language VARCHAR)");
+                    "id INTEGER PRIMARY KEY," +
+                    "tzOffset INTEGER," +
+                    "language VARCHAR)");
 
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS task(" +
-                "id INTEGER PRIMARY KEY," +
-                "name VARCHAR," +
-                "owner INTEGER," +
-                "schedule VARCHAR," +
-                "snoozedUntil INTEGER," +
-                "FOREIGN KEY(owner) REFERENCES user(id))");
+                    "id INTEGER PRIMARY KEY," +
+                    "name VARCHAR," +
+                    "owner INTEGER," +
+                    "schedule VARCHAR," +
+                    "snoozedUntil INTEGER," +
+                    "FOREIGN KEY(owner) REFERENCES user(id))");
 
         } catch (SQLException e) {
             e.printStackTrace();

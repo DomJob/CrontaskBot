@@ -61,7 +61,7 @@ class DefaultState implements BotState {
     }
 
     private void handleLanguageCommand(BotContext context, Command command) {
-        if(command.getNbParameters() == 1) {
+        if (command.getNbParameters() == 1) {
             context.sendLanguageInformationMessage();
         } else {
             String code = command.getParameter(1);

@@ -23,16 +23,16 @@ public enum Language {
         this.displayName = displayName;
     }
 
-    public String getCode() {
-        return code;
-    }
-
     public static Language lookup(String code) {
-        if(!lookup.containsKey(code)) {
+        if (!lookup.containsKey(code)) {
             throw new IllegalArgumentException("Invalid language code " + code);
         }
 
         return lookup.get(code);
+    }
+
+    public String getCode() {
+        return code;
     }
 
     public String getDisplayName() {

@@ -1,22 +1,21 @@
 package domain.schedule;
 
-import static infrastructure.util.Helper.extractNumbers;
-
 import domain.time.Time;
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static infrastructure.util.Helper.extractNumbers;
+
 public class TimeSchedule extends Schedule {
     protected static final String ABSOLUTE_PATTERN = "^(([0-9]{4}[-\\/])?[0-9]{1,2}[-\\/][0-9]{1,2})?(((?<=[\\s\\S])\\s(?=[\\s\\S]))|((?<![\\s\\S])|(?![\\s\\S])))([0-9]{1,2}[\\:h][0-9]{1,2})?$";
-    protected static String RELATIVE_PATTERN = "^(in\\s)?(([0-9]+)\\s(days?|months?|years?|hours?|minutes?)(,|\\sand\\s)?\\s?)+(from\\snow)?$";
-
     private static final String YYYYMMDD_HHMM = "^[0-9]{4}[\\/-][0-9]{1,2}[\\/-][0-9]{1,2}\\s[0-9]{1,2}[\\:h][0-9]{1,2}$";
     private static final String YYYYMMDD = "^[0-9]{4}[\\/-][0-9]{1,2}[\\/-][0-9]{1,2}$";
     private static final String MMDD_HHMM = "^[0-9]{1,2}[\\/-][0-9]{1,2}\\s[0-9]{1,2}[\\:h][0-9]{1,2}$";
     private static final String HHMM = "^[0-9]{1,2}[\\:h][0-9]{1,2}$";
     private static final String MMDD = "^[0-9]{1,2}[\\/-][0-9]{1,2}$";
-
+    protected static String RELATIVE_PATTERN = "^(in\\s)?(([0-9]+)\\s(days?|months?|years?|hours?|minutes?)(,|\\sand\\s)?\\s?)+(from\\snow)?$";
     private final Time time;
 
     public TimeSchedule(Time time) {

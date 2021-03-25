@@ -1,11 +1,12 @@
 package bot.models;
 
-import static java.lang.Integer.min;
-
 import domain.task.Task;
 import domain.time.Time;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Integer.min;
 
 public class TaskListing {
     private static final int TASKS_PER_PAGE = 10;

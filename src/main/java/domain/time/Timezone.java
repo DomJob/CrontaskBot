@@ -1,9 +1,9 @@
 package domain.time;
 
-import static infrastructure.util.Helper.extractNumbers;
-
 import java.util.List;
 import java.util.Objects;
+
+import static infrastructure.util.Helper.extractNumbers;
 
 public class Timezone {
     public static final Timezone UTC = new Timezone(0);

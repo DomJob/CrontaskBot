@@ -4,10 +4,11 @@ import bot.CrontaskBot;
 import bot.TelegramApi;
 import bot.models.Update;
 import domain.time.Time;
+import service.TaskService;
+
 import java.time.Instant;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import service.TaskService;
 
 public class Scheduler {
     private final CrontaskBot bot;

@@ -9,12 +9,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.user.UserId;
 import infrastructure.telegram.entities.ResultsEntity;
 import infrastructure.telegram.entities.UpdateEntity;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JsonWrapper {
@@ -36,8 +33,8 @@ public class JsonWrapper {
 
     public String formatAnswerCallbackQueryRequest(String id, String text) {
         return serializeParameters(
-            new Parameter("callback_query_id", id),
-            new Parameter("text", text));
+                new Parameter("callback_query_id", id),
+                new Parameter("text", text));
     }
 
     public String formatGetUpdatesRequest(long offset) {
@@ -73,9 +70,9 @@ public class JsonWrapper {
 
         if (updateEntity.callback_query != null) {
             CallbackQuery query = new CallbackQuery(updateEntity.callback_query.id,
-                new UserId(updateEntity.callback_query.from.id),
-                updateEntity.callback_query.message.message_id,
-                updateEntity.callback_query.data);
+                    new UserId(updateEntity.callback_query.from.id),
+                    updateEntity.callback_query.message.message_id,
+                    updateEntity.callback_query.data);
 
             return new Update(updateEntity.update_id, query);
         }
@@ -85,19 +82,19 @@ public class JsonWrapper {
 
     private String serializeButtons(List<Button> buttons) {
         List<Map<String, String>> buttonRow =
-            buttons.stream()
-                .map(b -> new HashMap<String, String>() {{
-                    put("text", b.text);
-                    put("callback_data", b.data);
-                }})
-                .collect(Collectors.toList());
+                buttons.stream()
+                        .map(b -> new HashMap<String, String>() {{
+                            put("text", b.text);
+                            put("callback_data", b.data);
+                        }})
+                        .collect(Collectors.toList());
 
         return serializeParameters(new Parameter("inline_keyboard", Collections.singleton(buttonRow)));
     }
 
     public String formatDeleteMessageRequest(long chatId, long messageId) {
         return serializeParameters(new Parameter("chat_id", chatId),
-            new Parameter("message_id", messageId));
+                new Parameter("message_id", messageId));
     }
 
     private String serializeParameters(Parameter... parameters) {

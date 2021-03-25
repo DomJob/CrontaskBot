@@ -18,8 +18,8 @@ public class UserDao {
 
     public static UserDao fromModel(User user) {
         return new UserDao(user.getId().toLong(),
-            user.getTimezone().getOffset(),
-            user.getLanguage().getCode());
+                user.getTimezone().getOffset(),
+                user.getLanguage().getCode());
     }
 
     public User toModel() {

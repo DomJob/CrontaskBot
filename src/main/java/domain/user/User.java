@@ -23,6 +23,10 @@ public class User {
         return language;
     }
 
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
     public UserId getId() {
         return id;
     }
@@ -33,9 +37,5 @@ public class User {
 
     public void setTimezone(Timezone timezone) {
         this.timezone = timezone;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
     }
 }

@@ -1,9 +1,9 @@
 package domain.schedule;
 
-import static infrastructure.util.Helper.extractNumbers;
-
 import domain.schedule.cronmatchers.CronMatcher;
 import domain.time.Time;
+
+import static infrastructure.util.Helper.extractNumbers;
 
 public class CronSchedule extends Schedule {
     protected static String PATTERN = "^((?:[\\s]|^)(\\*(/[0-9]+)?|([0-9]+-[0-9]+)|([0-9]+,)*[0-9]+)(?=[\\s]|$)){5}$";
@@ -32,11 +32,11 @@ public class CronSchedule extends Schedule {
         validateMatchers(matchers);
 
         CronSchedule schedule = new CronSchedule(
-            CronMatcher.parse(matchers[0]),
-            CronMatcher.parse(matchers[1]),
-            CronMatcher.parse(matchers[2]),
-            CronMatcher.parse(matchers[3]),
-            CronMatcher.parse(matchers[4])
+                CronMatcher.parse(matchers[0]),
+                CronMatcher.parse(matchers[1]),
+                CronMatcher.parse(matchers[2]),
+                CronMatcher.parse(matchers[3]),
+                CronMatcher.parse(matchers[4])
         );
 
         schedule.code = string;
@@ -48,7 +48,7 @@ public class CronSchedule extends Schedule {
         if (matchers.length != 5) {
             throw new InvalidScheduleException();
         }
-        int[] maxDaysInMonth = new int[] {-1, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        int[] maxDaysInMonth = new int[]{-1, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
         for (int minuteNumber : extractNumbers(matchers[0])) {
             if (minuteNumber >= 60) {
@@ -86,10 +86,10 @@ public class CronSchedule extends Schedule {
     @Override
     public boolean isTriggered(Time time) {
         return minute.match(time.minute())
-            && hour.match(time.hour())
-            && day.match(time.day())
-            && month.match(time.month())
-            && weekday.match(time.weekday());
+                && hour.match(time.hour())
+                && day.match(time.day())
+                && month.match(time.month())
+                && weekday.match(time.weekday());
     }
 
     @Override

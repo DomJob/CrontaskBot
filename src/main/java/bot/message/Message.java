@@ -3,14 +3,15 @@ package bot.message;
 import bot.models.Button;
 import domain.user.User;
 import domain.user.UserId;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Message {
-    private User receiver;
     private final String text;
     private final List<Button> buttons = new ArrayList<>();
+    private User receiver;
 
     public Message(String text) {
         this.text = text;

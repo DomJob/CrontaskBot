@@ -1,7 +1,5 @@
 package infrastructure.persistence;
 
-import static infrastructure.persistence.Sqlite.getConnection;
-
 import domain.task.Task;
 import domain.task.TaskId;
 import domain.task.TaskRepository;
@@ -10,6 +8,7 @@ import domain.user.UserId;
 import domain.user.UserRepository;
 import infrastructure.persistence.entities.TaskDao;
 import infrastructure.persistence.entities.UserDao;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,6 +18,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static infrastructure.persistence.Sqlite.getConnection;
 
 public class SQLRepository implements TaskRepository, UserRepository {
     private static final String FIND_TASK_BY_ID = "SELECT * FROM task WHERE id=?";

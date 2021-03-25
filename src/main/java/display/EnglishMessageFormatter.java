@@ -1,7 +1,5 @@
 package display;
 
-import static display.FormattingUtils.sanitize;
-
 import bot.message.MessageFormatter;
 import bot.models.ListedTask;
 import bot.models.TaskListing;
@@ -9,6 +7,8 @@ import domain.task.Task;
 import domain.time.Time;
 import domain.time.Timezone;
 import domain.user.Language;
+
+import static display.FormattingUtils.sanitize;
 
 public class EnglishMessageFormatter implements MessageFormatter {
     @Override
@@ -44,20 +44,20 @@ public class EnglishMessageFormatter implements MessageFormatter {
     @Override
     public String formatHelpMessage() {
         return "CrontaskBot lets you set up reminders.\n\n"
-            + "/task \u2014 Create a new task\n"
-            + "/tasks \u2014 Manage your scheduled tasks\n"
-            + "/timezone \u2014 Change your timezone settings\n"
-            + "/language \u2014 Change the language\n"
-            + "/help \u2014 Display this help message\n"
-            + "/cancel \u2014 Cancel the ongoing operation\n"
-            + "\n"
-            + "You can set up tasks to remind you periodically following the unix cron format. Use <a href=\"https://crontab.guru/\">this website</a> for more information on the cron syntax.\n\n"
-            + "You can also set up a one time reminder by giving a date or a time, e.g. <i>2020-03-25 16:05</i>, <i>16:05</i> or just <i>2020-03-25</i>.\n\n"
-            + "Additionally, you can type \"in 5 minutes\" or \"in 3 days and 5 hours\" to set up a reminder for the future without the exact time.\n"
-            + "\n"
-            + "This bot checks tasks every minute, and as a result, alerts can be off by up to 30 seconds.\n"
-            + "\n"
-            + "Source code available <a href=\"https://github.com/DomJob/CrontaskBot/\">here</a>";
+                + "/task \u2014 Create a new task\n"
+                + "/tasks \u2014 Manage your scheduled tasks\n"
+                + "/timezone \u2014 Change your timezone settings\n"
+                + "/language \u2014 Change the language\n"
+                + "/help \u2014 Display this help message\n"
+                + "/cancel \u2014 Cancel the ongoing operation\n"
+                + "\n"
+                + "You can set up tasks to remind you periodically following the unix cron format. Use <a href=\"https://crontab.guru/\">this website</a> for more information on the cron syntax.\n\n"
+                + "You can also set up a one time reminder by giving a date or a time, e.g. <i>2020-03-25 16:05</i>, <i>16:05</i> or just <i>2020-03-25</i>.\n\n"
+                + "Additionally, you can type \"in 5 minutes\" or \"in 3 days and 5 hours\" to set up a reminder for the future without the exact time.\n"
+                + "\n"
+                + "This bot checks tasks every minute, and as a result, alerts can be off by up to 30 seconds.\n"
+                + "\n"
+                + "Source code available <a href=\"https://github.com/DomJob/CrontaskBot/\">here</a>";
     }
 
     @Override
@@ -153,7 +153,7 @@ public class EnglishMessageFormatter implements MessageFormatter {
     public String formatLanguageInformationMessage() {
         StringBuilder sb = new StringBuilder("Use /language followed by the two-letter code desired language.\n\nCurrently, the following languages are supported:\n\n");
 
-        for(Language langage : Language.values()) {
+        for (Language langage : Language.values()) {
             sb.append(String.format(" \u2014 %s (<b>%s</b>)\n", langage.getDisplayName(), langage.getCode()));
         }
 

@@ -1,7 +1,5 @@
 package infrastructure.persistence.entities;
 
-import static org.junit.Assert.assertEquals;
-
 import domain.schedule.Schedule;
 import domain.task.Task;
 import domain.task.TaskId;
@@ -11,6 +9,8 @@ import domain.user.Language;
 import domain.user.User;
 import domain.user.UserId;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class TaskDaoTest {
 
